@@ -32,29 +32,30 @@ public class FriendCommand {
     }
 
     @Execute(min = 1, route = "invite", aliases = "zapros")
-    public void invite(Player sender, @Arg @Name("player") Player target){
+    public void invite(Player sender, @Arg @Name("player") Player target) {
         announcer.announceMessage(sender.getUniqueId(), "&aWyslano zaproszenie do znajomych graczowi &f" + target.getName());
         //TODO invite sending
     }
 
     @Execute(route = "list", aliases = "lista")
-    public void list(Player sender){
-        if(profileManager.getProfileByUUID(sender.getUniqueId()) == null){
+    public void list(Player sender) {
+        if (profileManager.getProfileByUUID(sender.getUniqueId()) == null) {
             announcer.announceMessage(sender.getUniqueId(), "&cBlad! Nie znaleziono twojego profilu!");
             return;
         }
+
         Profile profile = profileManager.getProfileByUUID(sender.getUniqueId());
         StringBuilder builder = new StringBuilder();
-        if(profile.getFriends().size() == 0){
-            for(UUID uuid : profile.getFriends()){
+        if (profile.getFriends().size() == 0) {
+            for (UUID uuid : profile.getFriends()) {
                 builder.append("&7" + Bukkit.getServer().getOfflinePlayer(uuid).getName() + "&7, ");
             }
-        }else {
+        } else {
             builder.append("&cbrak :(");
         }
+
         announcer.announceMessage(sender.getUniqueId(), builder.toString());
     }
-
 
 
 }
