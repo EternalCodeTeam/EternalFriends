@@ -16,6 +16,6 @@ public class FriendCommand {
 
     @Execute
     void main(Player player) {
-        this.mainGui.getMainInventory().open(player);
+        this.mainGui.openInventory(player);
     }
 }

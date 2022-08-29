@@ -1,35 +1,36 @@
 package com.eternalcode.friends.gui;
 
-import com.eternalcode.friends.config.implementation.MessagesConfig;
-import com.eternalcode.friends.util.ColorUtil;
 import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.guis.Gui;
 import dev.triumphteam.gui.guis.GuiItem;
-import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 
 public class MainGUI {
 
-    private final MessagesConfig messages;
+    private final MiniMessage miniMessage;
 
-    private final String mainInvTitle = "Friends", friendListItemName = "Friend List";
-    private final Gui mainInventory;
+    private final String mainInventoryTitle = "Friends", friendListItemName = "Friend List";
 
-    public MainGUI(MessagesConfig messages) {
-        this.messages = messages;
+    public MainGUI(MiniMessage miniMessage) {
+        this.miniMessage = miniMessage;
+    }
+
+    public void openInventory(Player player) {
 
         GuiItem friendList = ItemBuilder.from(Material.BOOK)
-                .name(Component.text(ColorUtil.colored("")))
+                .name(this.miniMessage.deserialize("&a" + this.friendListItemName))
                 .asGuiItem();
-        mainInventory = Gui.gui()
-                .title(Component.text(ColorUtil.colored(mainInvTitle)))
+
+        Gui gui = Gui.gui()
+                .title(this.miniMessage.deserialize(mainInventoryTitle))
                 .rows(3)
                 .disableItemTake()
                 .create();
-        mainInventory.setItem(2, 3, friendList);
-    }
 
-    public Gui getMainInventory() {
-        return mainInventory;
+        gui.setItem(2, 3, friendList);
+
+        gui.open(player);
     }
 }

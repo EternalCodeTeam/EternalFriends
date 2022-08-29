@@ -7,6 +7,7 @@ import com.eternalcode.friends.config.ConfigManager;
 import com.eternalcode.friends.config.implementation.MessagesConfig;
 import com.eternalcode.friends.config.implementation.PluginConfig;
 import com.eternalcode.friends.gui.MainGUI;
+import com.eternalcode.friends.util.legacy.LegacyColorProcessor;
 import dev.rollczi.litecommands.LiteCommands;
 import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
 import dev.rollczi.litecommands.bukkit.tools.BukkitOnlyPlayerContextual;
@@ -51,12 +52,12 @@ public class EternalFriends extends JavaPlugin {
         this.configManager.load(this.config);
         this.configManager.load(this.messages);
 
-        this.mainGui = new MainGUI(this.messages);
+        this.mainGui = new MainGUI(this.miniMessage);
 
         Metrics metrics = new Metrics(this, 16297);
 
         this.audienceProvider = BukkitAudiences.create(this);
-        this.miniMessage = MiniMessage.builder().build();
+        this.miniMessage = MiniMessage.builder().postProcessor(new LegacyColorProcessor()).build();
 
         this.liteCommands = LiteBukkitFactory.builder(server, "friends")
 
