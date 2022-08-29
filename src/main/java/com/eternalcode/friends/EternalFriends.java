@@ -7,6 +7,7 @@ import com.eternalcode.friends.config.ConfigManager;
 import com.eternalcode.friends.config.implementation.MessagesConfig;
 import com.eternalcode.friends.config.implementation.PluginConfig;
 import com.eternalcode.friends.gui.MainGUI;
+import com.eternalcode.friends.profile.ProfileJoinListener;
 import com.eternalcode.friends.profile.ProfileManager;
 import com.eternalcode.friends.profile.ProfileRepositoryImpl;
 import com.eternalcode.friends.util.legacy.LegacyColorProcessor;
@@ -36,6 +37,7 @@ public class EternalFriends extends JavaPlugin {
     private MainGUI mainGui;
 
     private ProfileManager profileManager;
+    private ProfileJoinListener profileJoinListener;
 
     private AudienceProvider audienceProvider;
     private MiniMessage miniMessage;
@@ -63,6 +65,9 @@ public class EternalFriends extends JavaPlugin {
         this.mainGui = new MainGUI(this.miniMessage);
 
         this.profileManager = new ProfileManager(new ProfileRepositoryImpl());
+
+        this.profileJoinListener = new ProfileJoinListener(profileManager);
+        getServer().getPluginManager().registerEvents(profileJoinListener, this);
 
         Metrics metrics = new Metrics(this, 16297);
 
