@@ -8,7 +8,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 public class ProfileJoinListener implements Listener {
 
-    private ProfileManager profileManager;
+    private final ProfileManager profileManager;
 
     public ProfileJoinListener(ProfileManager manager){
         this.profileManager = manager;
@@ -17,8 +17,12 @@ public class ProfileJoinListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event){
         Player player = event.getPlayer();
-        if(profileManager.hasProfile(player.getUniqueId()))return;
-        profileManager.addProfile(player.getUniqueId());
+
+        if (profileManager.hasProfile(player.getUniqueId())) {
+            return;
+        }
+
+        profileManager.createProfile(player.getUniqueId());
 
     }
 }

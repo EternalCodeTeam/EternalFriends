@@ -46,11 +46,12 @@ public class FriendCommand {
 
         Profile profile = profileManager.getProfileByUUID(sender.getUniqueId());
         StringBuilder builder = new StringBuilder();
+
         if (profile.getFriends().size() == 0) {
             for (UUID uuid : profile.getFriends()) {
                 builder.append("&7" + Bukkit.getServer().getOfflinePlayer(uuid).getName() + "&7, ");
             }
-        }else {
+        } else {
             builder.append("&cbrak :(");
         }
 
