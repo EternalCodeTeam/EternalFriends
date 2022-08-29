@@ -13,6 +13,7 @@ import com.eternalcode.friends.util.legacy.LegacyColorProcessor;
 import dev.rollczi.litecommands.LiteCommands;
 import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
 import dev.rollczi.litecommands.bukkit.tools.BukkitOnlyPlayerContextual;
+import dev.rollczi.litecommands.bukkit.tools.BukkitPlayerArgument;
 import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -66,13 +67,14 @@ public class EternalFriends extends JavaPlugin {
         Metrics metrics = new Metrics(this, 16297);
 
         this.liteCommands = LiteBukkitFactory.builder(server, "friends")
+                .argument(Player.class, new BukkitPlayerArgument(server, this.messages.argument.playerNotFound))
 
                 .invalidUsageHandler(new InvalidUsage(this.messages, this.announcer))
                 .permissionHandler(new PermissionMessage(this.messages, this.announcer))
 
                 .contextualBind(Player.class, new BukkitOnlyPlayerContextual<>(this.messages.argument.playerOnly))
 
-                .commandInstance(new FriendCommand(this.mainGui))
+                .commandInstance(new FriendCommand(this.mainGui, this.profileManager, this.announcer))
 
                 .register();
     }
