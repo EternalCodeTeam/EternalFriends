@@ -11,7 +11,8 @@ public class MainGUI {
 
     private final MiniMessage miniMessage;
 
-    private final String mainInventoryTitle = "Friends", friendListItemName = "Friend List";
+    private final String mainInventoryTitle = "Friends",
+            friendListItemName = "Friend List";
 
     public MainGUI(MiniMessage miniMessage) {
         this.miniMessage = miniMessage;

@@ -42,6 +42,9 @@ public class EternalFriends extends JavaPlugin {
         instance = this;
         Server server = this.getServer();
 
+        this.audienceProvider = BukkitAudiences.create(this);
+        this.miniMessage = MiniMessage.builder().postProcessor(new LegacyColorProcessor()).build();
+
         this.announcer = new NotificationAnnouncer(this.audienceProvider, this.miniMessage);
 
         this.configManager = new ConfigManager(this.getDataFolder());
@@ -55,9 +58,6 @@ public class EternalFriends extends JavaPlugin {
         this.mainGui = new MainGUI(this.miniMessage);
 
         Metrics metrics = new Metrics(this, 16297);
-
-        this.audienceProvider = BukkitAudiences.create(this);
-        this.miniMessage = MiniMessage.builder().postProcessor(new LegacyColorProcessor()).build();
 
         this.liteCommands = LiteBukkitFactory.builder(server, "friends")
 
