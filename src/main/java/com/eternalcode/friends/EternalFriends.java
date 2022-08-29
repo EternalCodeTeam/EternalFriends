@@ -72,7 +72,7 @@ public class EternalFriends extends JavaPlugin {
         Metrics metrics = new Metrics(this, 16297);
 
         this.liteCommands = LiteBukkitFactory.builder(server, "friends")
-                .argument(Player.class, new BukkitPlayerArgument(server, this.messages.argument.playerNotFound))
+                .argument(Player.class, new BukkitPlayerArgument<>(server, this.messages.argument.playerNotFound))
 
                 .invalidUsageHandler(new InvalidUsage(this.messages, this.announcer))
                 .permissionHandler(new PermissionMessage(this.messages, this.announcer))
