@@ -1,7 +1,7 @@
 package com.eternalcode.friends.gui;
 
-import com.eternalcode.friends.EternalFriends;
-import com.eternalcode.friends.util.ChatUtils;
+import com.eternalcode.friends.config.implementation.MessagesConfig;
+import com.eternalcode.friends.util.ColorUtil;
 import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.guis.Gui;
 import dev.triumphteam.gui.guis.GuiItem;
@@ -10,25 +10,26 @@ import org.bukkit.Material;
 
 public class MainGUI {
 
-    private final String mainInvTitle = "Friends",
-            friendListItemName = "Friend List";
+    private final MessagesConfig messages;
 
+    private final String mainInvTitle = "Friends", friendListItemName = "Friend List";
+    private final Gui mainInventory;
 
-    private Gui mainInv;
+    public MainGUI(MessagesConfig messages) {
+        this.messages = messages;
 
-    public MainGUI(){
         GuiItem friendList = ItemBuilder.from(Material.BOOK)
-                .name(Component.text(ChatUtils.colored(friendListItemName)))
+                .name(Component.text(ColorUtil.colored("")))
                 .asGuiItem();
-        mainInv = Gui.gui()
-                .title(Component.text(ChatUtils.colored(mainInvTitle)))
+        mainInventory = Gui.gui()
+                .title(Component.text(ColorUtil.colored(mainInvTitle)))
                 .rows(3)
                 .disableItemTake()
                 .create();
-        mainInv.setItem(2, 3, friendList);
+        mainInventory.setItem(2, 3, friendList);
     }
 
-    public Gui getMainInv() {
-        return mainInv;
+    public Gui getMainInventory() {
+        return mainInventory;
     }
 }

@@ -7,4 +7,15 @@ import org.bukkit.entity.Player;
 
 @Section(route = "friend", aliases = {"friends", "przyjaciele", "znajomi"})
 public class FriendCommand {
+
+    private final MainGUI mainGui;
+
+    public FriendCommand(MainGUI mainGui) {
+        this.mainGui = mainGui;
+    }
+
+    @Execute
+    void main(Player player) {
+        this.mainGui.getMainInventory().open(player);
+    }
 }

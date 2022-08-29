@@ -38,9 +38,6 @@ dependencies {
 
     // triumph gui
     implementation("dev.triumphteam:triumph-gui:3.1.2")
-
-
-    bukkitLibrary("com.google.code.gson", "gson", "2.8.7") // Bukkit only
 }
 
 tasks.withType<JavaCompile> {
