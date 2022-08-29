@@ -6,6 +6,7 @@ import com.eternalcode.friends.config.implementation.MessagesConfig;
 import com.eternalcode.friends.config.implementation.PluginConfig;
 import dev.rollczi.litecommands.LiteCommands;
 import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
+import dev.triumphteam.gui.guis.Gui;
 import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -36,6 +37,7 @@ public class EternalFriends extends JavaPlugin {
 
         this.config = new PluginConfig();
         this.messages = new MessagesConfig();
+
 
         this.configManager.load(this.config);
         this.configManager.load(this.messages);

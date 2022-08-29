@@ -35,6 +35,12 @@ dependencies {
 
     // bstats
     implementation("org.bstats:bstats-bukkit:3.0.0")
+
+    // triumph gui
+    implementation("dev.triumphteam:triumph-gui:3.1.2")
+
+
+    bukkitLibrary("com.google.code.gson", "gson", "2.8.7") // Bukkit only
 }
 
 tasks.withType<JavaCompile> {
@@ -42,12 +48,12 @@ tasks.withType<JavaCompile> {
 }
 
 bukkit {
-    name = "EternalFriends"
     main = "com.eternalcode.friends.EternalFriends"
-    prefix = "EternalFriends"
-    author = "igoyek"
-    version = project.version as String
     apiVersion = "1.13"
+    name = "EternalFriends"
+    prefix = "EternalFriends"
+    authors = listOf("igoyek", "Kamicjusz")
+    version = "${project.version}"
     description = "EternalFriends is a plugin that allows you to manage your friends list."
 }
 
@@ -72,12 +78,13 @@ tasks.withType<ShadowJar> {
     val prefix = "com.eternalcode.friends.libs"
 
     listOf(
-        "panda",
-        "org.panda_lang",
-        "org.bstats",
-        "net.dzikoysk",
-        "net.kyori",
-        "dev.rollczi"
+            "panda",
+            "org.panda_lang",
+            "org.bstats",
+            "net.dzikoysk",
+            "net.kyori",
+            "dev.rollczi",
+            "dev.triumphteam",
     ).forEach { pack ->
         relocate(pack, "$prefix.$pack")
     }
