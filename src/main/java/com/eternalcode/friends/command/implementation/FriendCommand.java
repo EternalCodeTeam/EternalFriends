@@ -7,10 +7,4 @@ import org.bukkit.entity.Player;
 
 @Section(route = "friend", aliases = {"friends", "przyjaciele", "znajomi"})
 public class FriendCommand {
-
-
-    @Execute
-    public void cmd(Player sender){
-        sender.openInventory(new MainGUI().getMainInv().getInventory());
-    }
 }
