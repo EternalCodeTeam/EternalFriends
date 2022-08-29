@@ -8,6 +8,7 @@ import com.eternalcode.friends.config.implementation.MessagesConfig;
 import com.eternalcode.friends.config.implementation.PluginConfig;
 import com.eternalcode.friends.gui.MainGUI;
 import com.eternalcode.friends.profile.ProfileManager;
+import com.eternalcode.friends.profile.ProfileRepositoryImpl;
 import com.eternalcode.friends.util.legacy.LegacyColorProcessor;
 import dev.rollczi.litecommands.LiteCommands;
 import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
@@ -60,7 +61,7 @@ public class EternalFriends extends JavaPlugin {
 
         this.mainGui = new MainGUI(this.miniMessage);
 
-        this.profileManager = new ProfileManager();
+        this.profileManager = new ProfileManager(new ProfileRepositoryImpl());
 
         Metrics metrics = new Metrics(this, 16297);
 
