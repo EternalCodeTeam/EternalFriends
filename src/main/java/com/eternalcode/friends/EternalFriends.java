@@ -37,7 +37,6 @@ public class EternalFriends extends JavaPlugin {
     private MainGUI mainGui;
 
     private ProfileManager profileManager;
-    private ProfileJoinListener profileJoinListener;
 
     private AudienceProvider audienceProvider;
     private MiniMessage miniMessage;
@@ -66,8 +65,7 @@ public class EternalFriends extends JavaPlugin {
 
         this.profileManager = new ProfileManager(new ProfileRepositoryImpl());
 
-        this.profileJoinListener = new ProfileJoinListener(profileManager);
-        getServer().getPluginManager().registerEvents(profileJoinListener, this);
+        getServer().getPluginManager().registerEvents(new ProfileJoinListener(profileManager), this);
 
         Metrics metrics = new Metrics(this, 16297);
 
