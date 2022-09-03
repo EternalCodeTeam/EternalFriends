@@ -14,13 +14,14 @@ repositories {
     mavenCentral()
     mavenLocal()
 
-    maven { url = uri("https://papermc.io/repo/repository/maven-public/")}
+    maven { url = uri("https://papermc.io/repo/repository/maven-public/") }
     maven { url = uri("https://repo.panda-lang.org/releases") }
+    maven { url = uri("https://repo.eternalcode.pl/releases") }
 }
 
 dependencies {
     // spigot api
-    compileOnly("org.spigotmc:spigot-api:1.19-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT")
 
     // kyori adventure
     implementation("net.kyori:adventure-platform-bukkit:4.1.2")
@@ -37,7 +38,7 @@ dependencies {
     implementation("org.bstats:bstats-bukkit:3.0.0")
 
     // triumph gui
-    implementation("dev.triumphteam:triumph-gui:3.1.2")
+    implementation("dev.triumphteam:triumph-gui:3.1.3")
 }
 
 tasks.withType<JavaCompile> {
@@ -75,13 +76,13 @@ tasks.withType<ShadowJar> {
     val prefix = "com.eternalcode.friends.libs"
 
     listOf(
-            "panda",
-            "org.panda_lang",
-            "org.bstats",
-            "net.dzikoysk",
-            "net.kyori",
-            "dev.rollczi",
-            "dev.triumphteam",
+        "panda",
+        "org.panda_lang",
+        "org.bstats",
+        "net.dzikoysk",
+        "net.kyori",
+        "dev.rollczi",
+        "dev.triumphteam",
     ).forEach { pack ->
         relocate(pack, "$prefix.$pack")
     }
