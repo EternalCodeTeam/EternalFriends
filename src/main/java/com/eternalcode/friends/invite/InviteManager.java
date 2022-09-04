@@ -2,7 +2,13 @@ package com.eternalcode.friends.invite;
 
 import org.bukkit.Bukkit;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
 
 public class InviteManager {
 
