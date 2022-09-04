@@ -1,16 +1,24 @@
 package com.eternalcode.friends.profile;
 
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class Profile {
 
-    private UUID uuid;
-    private List<UUID> friends = new ArrayList<>();
-    private boolean receiveInvites, friendsJoinNotification;
+    private final UUID uuid;
+    private final List<UUID> friends = new ArrayList<>();
 
-    public Profile(UUID uuid){
+    //Map where key is uuid of player who invite when value is uuid of player who was invited
+    //private final Map<UUID, UUID> invites = new HashMap<>();
+
+    private boolean receiveInvites;
+    private boolean friendsJoinNotification;
+
+    public Profile(UUID uuid) {
+        this.uuid = uuid;
         this.receiveInvites = true;
         this.friendsJoinNotification = true;
     }
@@ -19,16 +27,16 @@ public class Profile {
         return uuid;
     }
 
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
-
     public List<UUID> getFriends() {
         return friends;
     }
 
     public void addFriend(UUID uuid) {
         this.friends.add(uuid);
+    }
+
+    public void removeFriend(UUID uuid) {
+        this.friends.remove(uuid);
     }
 
     public boolean isReceiveInvites() {
@@ -46,4 +54,22 @@ public class Profile {
     public void setFriendsJoinNotification(boolean friendsJoinNotification) {
         this.friendsJoinNotification = friendsJoinNotification;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Profile)) {
+            return false;
+        }
+        Profile profile = (Profile) o;
+        return uuid.equals(profile.uuid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(uuid);
+    }
+
 }
