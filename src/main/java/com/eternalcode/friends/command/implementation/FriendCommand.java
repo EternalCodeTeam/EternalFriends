@@ -28,53 +28,12 @@ public class FriendCommand {
     private final InviteManager inviteManager;
     private final MessagesConfig messages;
 
-    private String PROFILE_NOT_FOUND;
-    private String YOUR_PROFILE_NOT_FOUND;
-    private String INVITE_SENT;
-    private String INVITE_RECEIVED;
-    private String EMPTY_FRIEND_LIST;
-    private String PLAYER_HAVE_EMPTY_FRIEND_LIST;
-    private String YOU_ACCEPTED_FRIEND_INVITE;
-    private String YOUR_INVITATION_HAS_BEEN_ACCEPTED;
-    private String ALREADY_ON_YOUR_FRIEND_LIST;
-    private String CANT_SEND_YOURSELF;
-    private String INVITE_NOT_FOUND;
-    private String PLAYER_IS_NOT_YOUR_FRIEND;
-    private String YOU_KICKED_PLAYER_FROM_FRIENDS;
-    private String PLAYER_KICKED_YOU_FROM_FRIENDS;
-    private String FRIEND_LIST_HEADER;
-    private String FRIEND_LIST_HEADER_ADMIN;
-    private String FRIEND_LIST_ENTER;
-    private String ALREADY_RECEIVED_INVITE;
-    private String ALREADY_SENDT_INVITE;
-
-
     public FriendCommand(MainGUI mainGui, ProfileManager profileManager, NotificationAnnouncer announcer, InviteManager inviteManager, MessagesConfig messages) {
         this.mainGui = mainGui;
         this.profileManager = profileManager;
         this.announcer = announcer;
         this.inviteManager = inviteManager;
         this.messages = messages;
-
-        this.PROFILE_NOT_FOUND = messages.friends.profileNotFound;
-        this.YOUR_PROFILE_NOT_FOUND = messages.friends.yourProfileNotFound;
-        this.INVITE_SENT = messages.friends.inviteSent;
-        this.INVITE_RECEIVED = messages.friends.inviteReceived;
-        this.EMPTY_FRIEND_LIST = messages.friends.emptyFriendList;
-        this.PLAYER_HAVE_EMPTY_FRIEND_LIST = messages.friends.emptyFriendListAdmin;
-        this.YOU_ACCEPTED_FRIEND_INVITE = messages.friends.acceptedInvite;
-        this.YOUR_INVITATION_HAS_BEEN_ACCEPTED = messages.friends.yourInvitationHasBeenAccepted;
-        this.ALREADY_ON_YOUR_FRIEND_LIST = messages.friends.alreadyFriend;
-        this.CANT_SEND_YOURSELF = messages.friends.yourselfCommand;
-        this.INVITE_NOT_FOUND = messages.friends.inviteNotFound;
-        this.PLAYER_IS_NOT_YOUR_FRIEND = messages.friends.playerIsNotYourFriend;
-        this.YOU_KICKED_PLAYER_FROM_FRIENDS = messages.friends.youKickedFriend;
-        this.PLAYER_KICKED_YOU_FROM_FRIENDS = messages.friends.friendKickedYou;
-        this.FRIEND_LIST_HEADER = messages.friends.friendListHeader;
-        this.FRIEND_LIST_HEADER_ADMIN = messages.friends.friendListHeaderAdmin;
-        this.FRIEND_LIST_ENTER = messages.friends.friendListPlayer;
-        this.ALREADY_RECEIVED_INVITE = messages.friends.alreadyReceivedInvite;
-        this.ALREADY_SENDT_INVITE = messages.friends.alreadySentInvite;
     }
 
     @Execute(max = 0, required = 0)
@@ -84,39 +43,39 @@ public class FriendCommand {
 
     @Execute(min = 1, route = "invite", aliases = "zapros", required = 1)
     public void invite(Player sender, @Arg @Name("player") Player target) {
-        if(sender.getUniqueId().equals(target.getUniqueId())){
-            announcer.announceMessage(sender.getUniqueId(), CANT_SEND_YOURSELF);
+        if(sender.getUniqueId().equals(target.getUniqueId())) {
+            announcer.announceMessage(sender.getUniqueId(), messages.friends.yourselfCommand);
             return;
         }
         Optional<Profile> senderOptional = profileManager.getProfileByUUID(sender.getUniqueId());
         if (senderOptional.isEmpty()) {
-            announcer.announceMessage(sender.getUniqueId(), YOUR_PROFILE_NOT_FOUND);
+            announcer.announceMessage(sender.getUniqueId(), messages.friends.yourProfileNotFound);
             return;
         }
         Profile senderProfile = senderOptional.get();
-        if(senderProfile.getFriends().contains(target.getUniqueId())){
-            announcer.announceMessage(sender.getUniqueId(), ALREADY_ON_YOUR_FRIEND_LIST);
+        if(senderProfile.getFriends().contains(target.getUniqueId())) {
+            announcer.announceMessage(sender.getUniqueId(), messages.friends.alreadyFriend);
             return;
         }
-        if(inviteManager.hasReceivedInvite(target.getUniqueId(), sender.getUniqueId()) || inviteManager.hasSendedInvite(target.getUniqueId(), sender.getUniqueId())){
-            announcer.announceMessage(sender.getUniqueId(), ALREADY_RECEIVED_INVITE);
+        if(inviteManager.hasReceivedInvite(target.getUniqueId(), sender.getUniqueId()) || inviteManager.hasSendedInvite(target.getUniqueId(), sender.getUniqueId())) {
+            announcer.announceMessage(sender.getUniqueId(), messages.friends.alreadyReceivedInvite);
             return;
         }
-        if(inviteManager.hasSendedInvite(sender.getUniqueId(), target.getUniqueId()) || inviteManager.hasReceivedInvite(sender.getUniqueId(), target.getUniqueId())){
-            announcer.announceMessage(sender.getUniqueId(), ALREADY_SENDT_INVITE);
+        if(inviteManager.hasSendedInvite(sender.getUniqueId(), target.getUniqueId()) || inviteManager.hasReceivedInvite(sender.getUniqueId(), target.getUniqueId())) {
+            announcer.announceMessage(sender.getUniqueId(), messages.friends.alreadySentInvite);
             return;
         }
 
         inviteManager.addInvite(sender.getUniqueId(), target.getUniqueId());
-        announcer.announceMessage(sender.getUniqueId(), INVITE_SENT.replace("{invited}", target.getName()));
-        announcer.announceMessage(target.getUniqueId(), INVITE_RECEIVED.replace("{player}", sender.getName()));
+        announcer.announceMessage(sender.getUniqueId(), messages.friends.inviteSent.replace("{invited}", target.getName()));
+        announcer.announceMessage(target.getUniqueId(), messages.friends.inviteReceived.replace("{player}", sender.getName()));
     }
 
     @Execute(route = "list", aliases = "lista", required = 0)
     public void list(Player sender) {
         Optional<Profile> playerOptional = profileManager.getProfileByUUID(sender.getUniqueId());
         if (playerOptional.isEmpty()) {
-            announcer.announceMessage(sender.getUniqueId(), YOUR_PROFILE_NOT_FOUND);
+            announcer.announceMessage(sender.getUniqueId(), messages.friends.yourProfileNotFound);
             return;
         }
 
@@ -124,11 +83,12 @@ public class FriendCommand {
         StringBuilder builder = new StringBuilder();
 
         if (profile.getFriends().size() == 0) {
-            builder.append(EMPTY_FRIEND_LIST);
-        } else {
-            builder.append(FRIEND_LIST_HEADER);
+            builder.append(messages.friends.emptyFriendList);
+        }
+        else {
+            builder.append(messages.friends.friendListHeader);
             for (UUID uuid : profile.getFriends()) {
-                builder.append(FRIEND_LIST_ENTER.replace("{player}", Bukkit.getServer().getOfflinePlayer(uuid).getName()));
+                builder.append(messages.friends.friendListPlayer.replace("{player}", Bukkit.getServer().getOfflinePlayer(uuid).getName()));
             }
         }
 
@@ -140,7 +100,7 @@ public class FriendCommand {
     public void listAdmin(Player sender, @Arg @Name("player") Player player) {
         Optional<Profile> playerOptional = profileManager.getProfileByUUID(player.getUniqueId());
         if (playerOptional.isEmpty()) {
-            announcer.announceMessage(sender.getUniqueId(), PROFILE_NOT_FOUND);
+            announcer.announceMessage(sender.getUniqueId(), messages.friends.profileNotFound);
             return;
         }
 
@@ -148,11 +108,12 @@ public class FriendCommand {
         StringBuilder builder = new StringBuilder();
 
         if (profile.getFriends().size() == 0) {
-            builder.append(PLAYER_HAVE_EMPTY_FRIEND_LIST);
-        } else {
-            builder.append(FRIEND_LIST_HEADER_ADMIN.replace("{player}", player.getName()));
+            builder.append(messages.friends.emptyFriendListAdmin);
+        }
+        else {
+            builder.append(messages.friends.friendListHeaderAdmin.replace("{player}", player.getName()));
             for (UUID uuid : profile.getFriends()) {
-                builder.append(FRIEND_LIST_ENTER.replace("{player}", Bukkit.getServer().getOfflinePlayer(uuid).getName()));
+                builder.append(messages.friends.emptyFriendList.replace("{player}", Bukkit.getServer().getOfflinePlayer(uuid).getName()));
             }
         }
         announcer.announceMessage(sender.getUniqueId(), builder.toString());
@@ -160,18 +121,18 @@ public class FriendCommand {
 
     @Execute(route = "accept", aliases = "akceptuj", required = 1)
     public void accept(Player sender, @Arg @Name("player") Player player) {
-        if(sender.getUniqueId().equals(player.getUniqueId())){
-            announcer.announceMessage(sender.getUniqueId(), CANT_SEND_YOURSELF);
+        if(sender.getUniqueId().equals(player.getUniqueId())) {
+            announcer.announceMessage(sender.getUniqueId(), messages.friends.yourselfCommand);
             return;
         }
         Optional<Profile> playerOptional = profileManager.getProfileByUUID(player.getUniqueId());
         Optional<Profile> senderOptional = profileManager.getProfileByUUID(sender.getUniqueId());
         if (playerOptional.isEmpty()) {
-            announcer.announceMessage(sender.getUniqueId(), PROFILE_NOT_FOUND);
+            announcer.announceMessage(sender.getUniqueId(), messages.friends.profileNotFound);
             return;
         }
         if (senderOptional.isEmpty()) {
-            announcer.announceMessage(sender.getUniqueId(), YOUR_PROFILE_NOT_FOUND);
+            announcer.announceMessage(sender.getUniqueId(), messages.friends.yourProfileNotFound);
             return;
         }
         Profile senderProfile = senderOptional.get();
@@ -180,46 +141,47 @@ public class FriendCommand {
         UUID senderUuid = sender.getUniqueId();
         UUID playerUuid = player.getUniqueId();
 
-        if(inviteManager.hasReceivedInvite(playerUuid, senderUuid)){
+        if(inviteManager.hasReceivedInvite(playerUuid, senderUuid)) {
             senderProfile.addFriend(playerUuid);
             playerProfile.addFriend(senderUuid);
 
             inviteManager.removeInvite(playerUuid, senderUuid);
 
-            announcer.announceMessage(senderUuid, YOU_ACCEPTED_FRIEND_INVITE.replace("{player}", player.getName()));
-            announcer.announceMessage(playerUuid, YOUR_INVITATION_HAS_BEEN_ACCEPTED.replace("{player}", sender.getName()));
-        }else {
-            announcer.announceMessage(sender.getUniqueId(), INVITE_NOT_FOUND);
+            announcer.announceMessage(senderUuid, messages.friends.acceptedInvite.replace("{player}", player.getName()));
+            announcer.announceMessage(playerUuid, messages.friends.yourInvitationHasBeenAccepted.replace("{player}", sender.getName()));
+        }
+        else {
+            announcer.announceMessage(sender.getUniqueId(), messages.friends.inviteNotFound);
         }
     }
 
     @Execute(route = "kick", aliases = "wyrzuc", required = 1)
     public void kick(Player sender, @Arg @Name("player") Player player){
-        if(sender.getUniqueId().equals(player.getUniqueId())){
-            announcer.announceMessage(sender.getUniqueId(), CANT_SEND_YOURSELF);
+        if(sender.getUniqueId().equals(player.getUniqueId())) {
+            announcer.announceMessage(sender.getUniqueId(), messages.friends.yourselfCommand);
             return;
         }
         Optional<Profile> playerOptional = profileManager.getProfileByUUID(player.getUniqueId());
         Optional<Profile> senderOptional = profileManager.getProfileByUUID(sender.getUniqueId());
         if (playerOptional.isEmpty()) {
-            announcer.announceMessage(sender.getUniqueId(), PROFILE_NOT_FOUND);
+            announcer.announceMessage(sender.getUniqueId(), messages.friends.profileNotFound);
             return;
         }
         if (senderOptional.isEmpty()) {
-            announcer.announceMessage(sender.getUniqueId(), YOUR_PROFILE_NOT_FOUND);
+            announcer.announceMessage(sender.getUniqueId(), messages.friends.yourProfileNotFound);
             return;
         }
         Profile senderProfile = senderOptional.get();
         Profile playerProfile = playerOptional.get();
 
-        if(!senderProfile.getFriends().contains(player.getUniqueId())){
-            announcer.announceMessage(sender.getUniqueId(), PLAYER_IS_NOT_YOUR_FRIEND);
+        if(!senderProfile.getFriends().contains(player.getUniqueId())) {
+            announcer.announceMessage(sender.getUniqueId(), messages.friends.playerIsNotYourFriend);
             return;
         }
 
         senderProfile.removeFriend(player.getUniqueId());
         playerProfile.removeFriend(sender.getUniqueId());
-        announcer.announceMessage(sender.getUniqueId(), YOU_KICKED_PLAYER_FROM_FRIENDS.replace("{player}", player.getName()));
-        announcer.announceMessage(player.getUniqueId(), PLAYER_KICKED_YOU_FROM_FRIENDS.replace("{player}", sender.getName()));
+        announcer.announceMessage(sender.getUniqueId(), messages.friends.youKickedFriend.replace("{player}", player.getName()));
+        announcer.announceMessage(player.getUniqueId(), messages.friends.friendKickedYou.replace("{player}", sender.getName()));
     }
 }
