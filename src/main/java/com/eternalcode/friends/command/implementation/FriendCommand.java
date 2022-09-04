@@ -12,6 +12,7 @@ import dev.rollczi.litecommands.command.execute.Execute;
 import dev.rollczi.litecommands.command.permission.Permission;
 import dev.rollczi.litecommands.command.section.Section;
 import org.bukkit.Bukkit;
+import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.checkerframework.checker.units.qual.A;
 
@@ -27,13 +28,15 @@ public class FriendCommand {
     private final NotificationAnnouncer announcer;
     private final InviteManager inviteManager;
     private final MessagesConfig messages;
+    private final Server server;
 
-    public FriendCommand(MainGUI mainGui, ProfileManager profileManager, NotificationAnnouncer announcer, InviteManager inviteManager, MessagesConfig messages) {
+    public FriendCommand(MainGUI mainGui, ProfileManager profileManager, NotificationAnnouncer announcer, InviteManager inviteManager, MessagesConfig messages, Server server) {
         this.mainGui = mainGui;
         this.profileManager = profileManager;
         this.announcer = announcer;
         this.inviteManager = inviteManager;
         this.messages = messages;
+        this.server = server;
     }
 
     @Execute(max = 0, required = 0)
@@ -43,7 +46,7 @@ public class FriendCommand {
 
     @Execute(min = 1, route = "invite", aliases = "zapros", required = 1)
     public void invite(Player sender, @Arg @Name("player") Player target) {
-        if(sender.getUniqueId().equals(target.getUniqueId())) {
+        if (sender.getUniqueId().equals(target.getUniqueId())) {
             announcer.announceMessage(sender.getUniqueId(), messages.friends.yourselfCommand);
             return;
         }
@@ -53,15 +56,15 @@ public class FriendCommand {
             return;
         }
         Profile senderProfile = senderOptional.get();
-        if(senderProfile.getFriends().contains(target.getUniqueId())) {
+        if (senderProfile.getFriends().contains(target.getUniqueId())) {
             announcer.announceMessage(sender.getUniqueId(), messages.friends.alreadyFriend);
             return;
         }
-        if(inviteManager.hasReceivedInvite(target.getUniqueId(), sender.getUniqueId()) || inviteManager.hasSendedInvite(target.getUniqueId(), sender.getUniqueId())) {
+        if (inviteManager.hasReceivedInvite(target.getUniqueId(), sender.getUniqueId()) || inviteManager.hasSendedInvite(target.getUniqueId(), sender.getUniqueId())) {
             announcer.announceMessage(sender.getUniqueId(), messages.friends.alreadyReceivedInvite);
             return;
         }
-        if(inviteManager.hasSendedInvite(sender.getUniqueId(), target.getUniqueId()) || inviteManager.hasReceivedInvite(sender.getUniqueId(), target.getUniqueId())) {
+        if (inviteManager.hasSendedInvite(sender.getUniqueId(), target.getUniqueId()) || inviteManager.hasReceivedInvite(sender.getUniqueId(), target.getUniqueId())) {
             announcer.announceMessage(sender.getUniqueId(), messages.friends.alreadySentInvite);
             return;
         }
@@ -88,7 +91,7 @@ public class FriendCommand {
         else {
             builder.append(messages.friends.friendListHeader);
             for (UUID uuid : profile.getFriends()) {
-                builder.append(messages.friends.friendListPlayer.replace("{player}", Bukkit.getServer().getOfflinePlayer(uuid).getName()));
+                builder.append(messages.friends.friendListPlayer.replace("{player}", server.getOfflinePlayer(uuid).getName()));
             }
         }
 
@@ -113,7 +116,7 @@ public class FriendCommand {
         else {
             builder.append(messages.friends.friendListHeaderAdmin.replace("{player}", player.getName()));
             for (UUID uuid : profile.getFriends()) {
-                builder.append(messages.friends.emptyFriendList.replace("{player}", Bukkit.getServer().getOfflinePlayer(uuid).getName()));
+                builder.append(messages.friends.emptyFriendList.replace("{player}", server.getOfflinePlayer(uuid).getName()));
             }
         }
         announcer.announceMessage(sender.getUniqueId(), builder.toString());
@@ -121,7 +124,7 @@ public class FriendCommand {
 
     @Execute(route = "accept", aliases = "akceptuj", required = 1)
     public void accept(Player sender, @Arg @Name("player") Player player) {
-        if(sender.getUniqueId().equals(player.getUniqueId())) {
+        if (sender.getUniqueId().equals(player.getUniqueId())) {
             announcer.announceMessage(sender.getUniqueId(), messages.friends.yourselfCommand);
             return;
         }
@@ -141,7 +144,7 @@ public class FriendCommand {
         UUID senderUuid = sender.getUniqueId();
         UUID playerUuid = player.getUniqueId();
 
-        if(inviteManager.hasReceivedInvite(playerUuid, senderUuid)) {
+        if (inviteManager.hasReceivedInvite(playerUuid, senderUuid)) {
             senderProfile.addFriend(playerUuid);
             playerProfile.addFriend(senderUuid);
 
@@ -157,7 +160,7 @@ public class FriendCommand {
 
     @Execute(route = "kick", aliases = "wyrzuc", required = 1)
     public void kick(Player sender, @Arg @Name("player") Player player){
-        if(sender.getUniqueId().equals(player.getUniqueId())) {
+        if (sender.getUniqueId().equals(player.getUniqueId())) {
             announcer.announceMessage(sender.getUniqueId(), messages.friends.yourselfCommand);
             return;
         }
@@ -174,7 +177,7 @@ public class FriendCommand {
         Profile senderProfile = senderOptional.get();
         Profile playerProfile = playerOptional.get();
 
-        if(!senderProfile.getFriends().contains(player.getUniqueId())) {
+        if (!senderProfile.getFriends().contains(player.getUniqueId())) {
             announcer.announceMessage(sender.getUniqueId(), messages.friends.playerIsNotYourFriend);
             return;
         }
