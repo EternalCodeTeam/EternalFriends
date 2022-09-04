@@ -18,7 +18,7 @@ public class ProfileJoinListener implements Listener {
     }
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent event){
+    public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
         if (profileManager.hasProfile(player.getUniqueId())) {

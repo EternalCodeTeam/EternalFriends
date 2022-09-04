@@ -9,7 +9,7 @@ public class InviteManager {
     private Map<UUID, List<UUID>> receivedInvites = new HashMap<>();
     private Map<UUID, List<UUID>> sendedInvites = new HashMap<>();
 
-    public void addInvite(UUID from, UUID to){
+    public void addInvite(UUID from, UUID to) {
         if(!sendedInvites.containsKey(from)) {
             sendedInvites.put(from, Arrays.asList(to));
         }
@@ -24,19 +24,19 @@ public class InviteManager {
         }
     }
 
-    public boolean hasSendedInvite(UUID from, UUID to){
+    public boolean hasSendedInvite(UUID from, UUID to) {
         if(!sendedInvites.containsKey(from)) return false;
         if(sendedInvites.get(from).contains(to))return true;
         return false;
     }
 
-    public boolean hasReceivedInvite(UUID from, UUID to){
+    public boolean hasReceivedInvite(UUID from, UUID to) {
         if(!receivedInvites.containsKey(to)) return false;
         if(receivedInvites.get(to).contains(from)) return true;
         return false;
     }
 
-    public void removeInvite(UUID from, UUID to){
+    public void removeInvite(UUID from, UUID to) {
         if(receivedInvites.containsKey(to)) {
             List<UUID> uuids = receivedInvites.get(to);
             if(uuids.contains(from)) {
@@ -45,7 +45,7 @@ public class InviteManager {
                 receivedInvites.replace(to, list);
             }
         }
-        if(sendedInvites.containsKey(from)){
+        if(sendedInvites.containsKey(from)) {
             List<UUID> uuids = sendedInvites.get(from);
             if(uuids.contains(to)) {
                 List<UUID> list = new ArrayList(uuids);
