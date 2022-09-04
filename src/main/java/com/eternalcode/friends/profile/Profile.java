@@ -35,7 +35,9 @@ public class Profile {
         this.friends.add(uuid);
     }
 
-    public void removeFriend(UUID uuid){this.friends.remove(uuid);}
+    public void removeFriend(UUID uuid) {
+        this.friends.remove(uuid);
+    }
 
     public boolean isReceiveInvites() {
         return receiveInvites;
@@ -55,8 +57,12 @@ public class Profile {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Profile)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Profile)) {
+            return false;
+        }
         Profile profile = (Profile) o;
         return uuid.equals(profile.uuid);
     }
