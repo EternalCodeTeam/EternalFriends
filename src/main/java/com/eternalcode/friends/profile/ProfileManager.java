@@ -23,7 +23,7 @@ public class ProfileManager {
     }
 
     public Optional<Profile> getProfileByUUID(UUID uuid) {
-        return profiles.values().stream().filter(profile -> profile.getUuid().toString().equalsIgnoreCase(uuid.toString())).findFirst();
+        return Optional.ofNullable(profiles.get(uuid));
     }
 
     public boolean hasProfile(UUID uuid) {

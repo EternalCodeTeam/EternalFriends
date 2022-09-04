@@ -7,6 +7,7 @@ import com.eternalcode.friends.config.ConfigManager;
 import com.eternalcode.friends.config.implementation.MessagesConfig;
 import com.eternalcode.friends.config.implementation.PluginConfig;
 import com.eternalcode.friends.gui.MainGUI;
+import com.eternalcode.friends.invite.InviteManager;
 import com.eternalcode.friends.profile.ProfileJoinListener;
 import com.eternalcode.friends.profile.ProfileManager;
 import com.eternalcode.friends.profile.ProfileRepositoryImpl;
@@ -24,6 +25,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.stream.Stream;
+
 public class EternalFriends extends JavaPlugin {
 
     private static EternalFriends instance;
@@ -36,6 +39,7 @@ public class EternalFriends extends JavaPlugin {
 
     private MainGUI mainGui;
 
+    private InviteManager inviteManager;
     private ProfileManager profileManager;
 
     private AudienceProvider audienceProvider;
@@ -61,11 +65,15 @@ public class EternalFriends extends JavaPlugin {
         this.configManager.load(this.config);
         this.configManager.load(this.messages);
 
+        this.inviteManager = new InviteManager();
+
         this.mainGui = new MainGUI(this.miniMessage);
 
         this.profileManager = new ProfileManager(new ProfileRepositoryImpl());
 
-        getServer().getPluginManager().registerEvents(new ProfileJoinListener(profileManager), this);
+        Stream.of(
+                new ProfileJoinListener(profileManager)
+        ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
 
         Metrics metrics = new Metrics(this, 16297);
 
@@ -77,7 +85,7 @@ public class EternalFriends extends JavaPlugin {
 
                 .contextualBind(Player.class, new BukkitOnlyPlayerContextual<>(this.messages.argument.playerOnly))
 
-                .commandInstance(new FriendCommand(this.mainGui, this.profileManager, this.announcer))
+                .commandInstance(new FriendCommand(this.mainGui, this.profileManager, this.announcer, this.inviteManager, this.messages))
 
                 .register();
     }

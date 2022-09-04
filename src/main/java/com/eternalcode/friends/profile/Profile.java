@@ -1,6 +1,10 @@
 package com.eternalcode.friends.profile;
 
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 public class Profile {
 
@@ -8,7 +12,7 @@ public class Profile {
     private final List<UUID> friends = new ArrayList<>();
 
     //Map where key is uuid of player who invite when value is uuid of player who was invited
-    private final Map<UUID, UUID> invites = new HashMap<>();
+    //private final Map<UUID, UUID> invites = new HashMap<>();
 
     private boolean receiveInvites;
     private boolean friendsJoinNotification;
@@ -31,48 +35,7 @@ public class Profile {
         this.friends.add(uuid);
     }
 
-    public List<UUID> getReceivedInvites(){
-        List<UUID> list = new ArrayList<>();
-        for(Map.Entry<UUID, UUID> uuid :invites.entrySet()) {
-            if(!uuid.getKey().toString().equalsIgnoreCase(this.uuid.toString())) continue;
-            list.add(uuid.getValue());
-        }
-        return list;
-    }
-
-    public List<UUID> getSendedInvites(){
-        List<UUID> list = new ArrayList<>();
-        for(Map.Entry<UUID, UUID> uuid :invites.entrySet()) {
-            if(uuid.getKey().toString().equalsIgnoreCase(this.uuid.toString())) continue;
-            list.add(uuid.getValue());
-        }
-        return list;
-    }
-
-    public void removeInviteFrom(UUID uuid){
-        for(Map.Entry<UUID, UUID> entry : invites.entrySet()) {
-            if(!entry.getKey().toString().equalsIgnoreCase(this.uuid.toString())) continue;
-            invites.remove(entry.getKey());
-        }
-    }
-
-    public void removeInviteTo(UUID uuid){
-        for(Map.Entry<UUID, UUID> entry : invites.entrySet()) {
-            if(!entry.getValue().toString().equalsIgnoreCase(this.uuid.toString())) continue;
-            invites.remove(entry.getKey(), entry.getValue());
-        }
-    }
-
-
-
-    public void sendInviteTo(UUID uuid) {
-        invites.put(this.uuid, uuid);
-    }
-
-    public void receiveInviteFrom(UUID uuid) {
-        invites.put(uuid, this.uuid);
-    }
-
+    public void removeFriend(UUID uuid){this.friends.remove(uuid);}
 
     public boolean isReceiveInvites() {
         return receiveInvites;
