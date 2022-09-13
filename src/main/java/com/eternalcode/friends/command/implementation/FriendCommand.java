@@ -1,6 +1,7 @@
 package com.eternalcode.friends.command.implementation;
 
 import com.eternalcode.friends.NotificationAnnouncer;
+import com.eternalcode.friends.config.implementation.GuiConfig;
 import com.eternalcode.friends.config.implementation.MessagesConfig;
 import com.eternalcode.friends.gui.MainGUI;
 import com.eternalcode.friends.invite.InviteManager;
@@ -14,6 +15,7 @@ import dev.rollczi.litecommands.command.section.Section;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.checkerframework.checker.units.qual.A;
 
 import java.util.List;
