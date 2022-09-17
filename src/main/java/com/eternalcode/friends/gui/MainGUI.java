@@ -15,6 +15,7 @@ import org.bukkit.inventory.ItemFlag;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class MainGUI {
 
     private final MiniMessage miniMessage;
@@ -32,45 +33,14 @@ public class MainGUI {
     }
 
     private void initializeGui() {
-        ItemBuilder friendListBuilder = ItemBuilder.from(Material.getMaterial(guiConfig.friendListItem.type) != null ? Material.getMaterial(guiConfig.friendListItem.type) : Material.STONE)
-                .name(this.miniMessage.deserialize(guiConfig.friendListItem.name))
-                .lore(fromStringListToComponentList(guiConfig.friendListItem.lore))
-                .flags(ItemFlag.HIDE_ATTRIBUTES)
-                .flags(ItemFlag.HIDE_ENCHANTS);
-        if (guiConfig.friendListItem.enchanted) {
-            friendListBuilder.enchant(Enchantment.LOOT_BONUS_BLOCKS);
-        }
-        GuiItem friendListItem = friendListBuilder.asGuiItem();
 
-        ItemBuilder receivedAndSentInvitesBuilder = ItemBuilder.from(Material.getMaterial(guiConfig.receivedAndSentInvitesItem.type) != null ? Material.getMaterial(guiConfig.receivedAndSentInvitesItem.type) : Material.STONE)
-                .name(this.miniMessage.deserialize(guiConfig.receivedAndSentInvitesItem.name))
-                .lore(fromStringListToComponentList(guiConfig.receivedAndSentInvitesItem.lore))
-                .flags(ItemFlag.HIDE_ATTRIBUTES)
-                .flags(ItemFlag.HIDE_ENCHANTS);
-        if (guiConfig.receivedAndSentInvitesItem.enchanted) {
-            receivedAndSentInvitesBuilder.enchant(Enchantment.LOOT_BONUS_BLOCKS);
-        }
-        GuiItem receivedAndSentInvitesItem = receivedAndSentInvitesBuilder.asGuiItem();
+        GuiItem friendListItem = new GuiItemBuilder(guiConfig.friendListItem, miniMessage).get();
 
-        ItemBuilder sendInvitesBuilder = ItemBuilder.from(Material.getMaterial(guiConfig.sendInvitesItem.type) != null ? Material.getMaterial(guiConfig.sendInvitesItem.type) : Material.STONE)
-                .name(this.miniMessage.deserialize(guiConfig.sendInvitesItem.name))
-                .lore(fromStringListToComponentList(guiConfig.sendInvitesItem.lore))
-                .flags(ItemFlag.HIDE_ATTRIBUTES)
-                .flags(ItemFlag.HIDE_ENCHANTS);
-        if (guiConfig.sendInvitesItem.enchanted) {
-            sendInvitesBuilder.enchant(Enchantment.LOOT_BONUS_BLOCKS);
-        }
-        GuiItem sendInvitesItem = sendInvitesBuilder.asGuiItem();
+        GuiItem receivedAndSentInvitesItem = new GuiItemBuilder(guiConfig.receivedAndSentInvitesItem, miniMessage).get();
 
-        ItemBuilder settingItemBuilder = ItemBuilder.from(Material.getMaterial(guiConfig.settingItem.type) != null ? Material.getMaterial(guiConfig.settingItem.type) : Material.STONE)
-                .name(this.miniMessage.deserialize(guiConfig.settingItem.name))
-                .lore(fromStringListToComponentList(guiConfig.settingItem.lore))
-                .flags(ItemFlag.HIDE_ATTRIBUTES)
-                .flags(ItemFlag.HIDE_ENCHANTS);
-        if (guiConfig.settingItem.enchanted) {
-            settingItemBuilder.enchant(Enchantment.LOOT_BONUS_BLOCKS);
-        }
-        GuiItem settingItemItem = settingItemBuilder.asGuiItem();
+        GuiItem sendInvitesItem = new GuiItemBuilder(guiConfig.sendInvitesItem, miniMessage).get();
+
+        GuiItem settingItemItem = new GuiItemBuilder(guiConfig.settingItem, miniMessage).get();
 
         this.gui = Gui.gui()
                 .title(this.miniMessage.deserialize(guiConfig.mainGui.title))
@@ -86,13 +56,5 @@ public class MainGUI {
 
     public void openInventory(Player player) {
         gui.open(player);
-    }
-
-    private List<Component> fromStringListToComponentList(List<String> lines) {
-        List<Component> lore = new ArrayList<>();
-        for (String line : lines) {
-            lore.add(miniMessage.deserialize(line));
-        }
-        return lore;
     }
 }
