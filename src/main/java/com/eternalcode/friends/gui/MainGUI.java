@@ -33,25 +33,21 @@ public class MainGUI {
     }
 
     private void initializeGui() {
-
-        GuiItem friendListItem = new GuiItemBuilder(guiConfig.friendListItem, miniMessage).get();
-
-        GuiItem receivedAndSentInvitesItem = new GuiItemBuilder(guiConfig.receivedAndSentInvitesItem, miniMessage).get();
-
-        GuiItem sendInvitesItem = new GuiItemBuilder(guiConfig.sendInvitesItem, miniMessage).get();
-
-        GuiItem settingItemItem = new GuiItemBuilder(guiConfig.settingItem, miniMessage).get();
-
+        GuiConfig.MainGui mainGui = guiConfig.mainGui;
+        GuiConfig.ConfigItem friendListItem = guiConfig.friendListItem;
+        GuiConfig.ConfigItem receivedAndSentInvitesItem = guiConfig.receivedAndSentInvitesItem;
+        GuiConfig.ConfigItem sendInvitesItem = guiConfig.sendInvitesItem;
+        GuiConfig.ConfigItem settingItem = guiConfig.settingItem;
         this.gui = Gui.gui()
-                .title(this.miniMessage.deserialize(guiConfig.mainGui.title))
-                .rows(guiConfig.mainGui.rows)
+                .title(this.miniMessage.deserialize(mainGui.title))
+                .rows(mainGui.rows)
                 .disableItemTake()
                 .create();
 
-        gui.setItem(guiConfig.mainGui.friendListItemSlot, friendListItem);
-        gui.setItem(guiConfig.mainGui.receivedAndSentInvitesItemSlot, receivedAndSentInvitesItem);
-        gui.setItem(guiConfig.mainGui.sendInviteItemSlot, sendInvitesItem);
-        gui.setItem(guiConfig.mainGui.settingsItemSlot, settingItemItem);
+        gui.setItem(friendListItem.slot, friendListItem.get());
+        gui.setItem(receivedAndSentInvitesItem.slot, receivedAndSentInvitesItem.get());
+        gui.setItem(sendInvitesItem.slot, sendInvitesItem.get());
+        gui.setItem(settingItem.slot, settingItem.get());
     }
 
     public void openInventory(Player player) {
