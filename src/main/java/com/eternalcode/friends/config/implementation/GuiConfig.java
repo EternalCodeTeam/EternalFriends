@@ -38,6 +38,7 @@ public class GuiConfig implements ReloadableConfig {
         @Description("# Rows of inventory (up to 6)")
         public int rows = 3;
 
+        @Description("# Title of inventory")
         public String title = "&bFriends";
     }
 
@@ -50,11 +51,13 @@ public class GuiConfig implements ReloadableConfig {
 
         public String name = "&fItem name";
 
+        @Description("# Description of item")
         public List<String> lore = Arrays.asList("&fFirst line of lore", "&9Second line of lore");
 
+        @Description("# Item should be enchanted or not")
         public boolean enchanted = false;
 
-        public GuiItem get() {
+        public GuiItem toGuiItem() {
             ItemBuilder builder = ItemBuilder.from(this.type)
                     .name(Legacy.component(this.name))
                     .lore(this.lore.stream().map(Legacy::component).collect(Collectors.toList()))

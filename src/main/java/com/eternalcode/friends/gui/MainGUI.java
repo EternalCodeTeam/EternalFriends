@@ -44,10 +44,10 @@ public class MainGUI {
                 .disableItemTake()
                 .create();
 
-        gui.setItem(friendListItem.slot, friendListItem.get());
-        gui.setItem(receivedAndSentInvitesItem.slot, receivedAndSentInvitesItem.get());
-        gui.setItem(sendInvitesItem.slot, sendInvitesItem.get());
-        gui.setItem(settingItem.slot, settingItem.get());
+        gui.setItem(friendListItem.slot, friendListItem.toGuiItem());
+        gui.setItem(receivedAndSentInvitesItem.slot, receivedAndSentInvitesItem.toGuiItem());
+        gui.setItem(sendInvitesItem.slot, sendInvitesItem.toGuiItem());
+        gui.setItem(settingItem.slot, settingItem.toGuiItem());
     }
 
     public void openInventory(Player player) {
