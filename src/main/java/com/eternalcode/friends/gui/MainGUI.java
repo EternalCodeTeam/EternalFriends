@@ -34,20 +34,18 @@ public class MainGUI {
 
     private void initializeGui() {
         GuiConfig.MainGui mainGui = guiConfig.mainGui;
-        List<GuiConfig.ConfigItem> items = new ArrayList<>();
-        items.add(guiConfig.friendListItem);
-        items.add(guiConfig.receivedAndSentInvitesItem);
-        items.add(guiConfig.sendInvitesItem);
-        items.add(guiConfig.settingItem);
         this.gui = Gui.gui()
                 .title(this.miniMessage.deserialize(mainGui.title))
                 .rows(mainGui.rows)
                 .disableItemTake()
                 .create();
 
-        for(GuiConfig.ConfigItem item : items) {
-            this.gui.setItem(item.slot, item.toGuiItem());
-        }
+        List.of(
+                guiConfig.friendListItem,
+                guiConfig.receivedAndSentInvitesItem,
+                guiConfig.sendInvitesItem,
+                guiConfig.settingItem
+        ).forEach(item -> this.gui.setItem(item.slot, item.toGuiItem()));
     }
 
     public void openInventory(Player player) {
