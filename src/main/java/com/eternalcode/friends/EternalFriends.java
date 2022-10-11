@@ -4,8 +4,10 @@ import com.eternalcode.friends.command.handler.InvalidUsage;
 import com.eternalcode.friends.command.handler.PermissionMessage;
 import com.eternalcode.friends.command.implementation.FriendCommand;
 import com.eternalcode.friends.config.ConfigManager;
+import com.eternalcode.friends.config.implementation.GuiConfig;
 import com.eternalcode.friends.config.implementation.MessagesConfig;
 import com.eternalcode.friends.config.implementation.PluginConfig;
+import com.eternalcode.friends.gui.FriendListGUI;
 import com.eternalcode.friends.gui.MainGUI;
 import com.eternalcode.friends.invite.InviteManager;
 import com.eternalcode.friends.profile.ProfileJoinListener;
@@ -37,7 +39,11 @@ public class EternalFriends extends JavaPlugin {
     private PluginConfig config;
     private MessagesConfig messages;
 
+    private GuiConfig guiConfig;
+
     private MainGUI mainGui;
+
+    private FriendListGUI friendListGui;
 
     private InviteManager inviteManager;
     private ProfileManager profileManager;
@@ -61,15 +67,19 @@ public class EternalFriends extends JavaPlugin {
 
         this.config = new PluginConfig();
         this.messages = new MessagesConfig();
+        this.guiConfig = new GuiConfig();
 
         this.configManager.load(this.config);
         this.configManager.load(this.messages);
+        this.configManager.load(this.guiConfig);
 
         this.inviteManager = new InviteManager();
 
-        this.mainGui = new MainGUI(this.miniMessage);
-
         this.profileManager = new ProfileManager(new ProfileRepositoryImpl());
+
+
+        this.friendListGui = new FriendListGUI(this.miniMessage, this.guiConfig, this.profileManager, this.announcer, this.messages, this.getServer());
+        this.mainGui = new MainGUI(this.miniMessage, this.guiConfig, this.friendListGui);
 
         Stream.of(
                 new ProfileJoinListener(profileManager)

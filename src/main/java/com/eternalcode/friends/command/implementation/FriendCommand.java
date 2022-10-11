@@ -1,6 +1,7 @@
 package com.eternalcode.friends.command.implementation;
 
 import com.eternalcode.friends.NotificationAnnouncer;
+import com.eternalcode.friends.config.implementation.GuiConfig;
 import com.eternalcode.friends.config.implementation.MessagesConfig;
 import com.eternalcode.friends.gui.MainGUI;
 import com.eternalcode.friends.invite.InviteManager;
@@ -14,6 +15,7 @@ import dev.rollczi.litecommands.command.section.Section;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.checkerframework.checker.units.qual.A;
 
 import java.util.List;
@@ -76,13 +78,13 @@ public class FriendCommand {
 
     @Execute(route = "list", aliases = "lista", required = 0)
     public void list(Player sender) {
-        Optional<Profile> playerOptional = profileManager.getProfileByUUID(sender.getUniqueId());
-        if (playerOptional.isEmpty()) {
+        Optional<Profile> profileOptional = profileManager.getProfileByUUID(sender.getUniqueId());
+        if (profileOptional.isEmpty()) {
             announcer.announceMessage(sender.getUniqueId(), messages.friends.yourProfileNotFound);
             return;
         }
 
-        Profile profile = playerOptional.get();
+        Profile profile = profileOptional.get();
         StringBuilder builder = new StringBuilder();
 
         if (profile.getFriends().size() == 0) {
@@ -101,13 +103,13 @@ public class FriendCommand {
     @Execute(route = "list", aliases = "lista", required = 1)
     @Permission("eternalfriends.admin")
     public void listAdmin(Player sender, @Arg @Name("player") Player player) {
-        Optional<Profile> playerOptional = profileManager.getProfileByUUID(player.getUniqueId());
-        if (playerOptional.isEmpty()) {
+        Optional<Profile> profileOptional = profileManager.getProfileByUUID(player.getUniqueId());
+        if (profileOptional.isEmpty()) {
             announcer.announceMessage(sender.getUniqueId(), messages.friends.profileNotFound);
             return;
         }
 
-        Profile profile = playerOptional.get();
+        Profile profile = profileOptional.get();
         StringBuilder builder = new StringBuilder();
 
         if (profile.getFriends().size() == 0) {
