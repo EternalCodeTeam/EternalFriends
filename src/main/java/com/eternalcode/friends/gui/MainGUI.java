@@ -42,7 +42,7 @@ public class MainGUI {
 
         GuiItem guiItem = guiConfig.friendListItem.toGuiItem();
         guiItem.setAction(event -> {
-            friendListGUI.openInventory((Player) event.getWhoClicked());
+            friendListGUI.openInventory((Player) event.getWhoClicked(), player -> openInventory(player));
             });
         this.gui.setItem(guiConfig.friendListItem.slot, guiItem);
 

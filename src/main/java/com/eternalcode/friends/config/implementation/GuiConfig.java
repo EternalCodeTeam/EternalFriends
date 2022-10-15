@@ -21,20 +21,59 @@ import java.util.stream.Collectors;
 
 public class GuiConfig implements ReloadableConfig {
 
-    public MainGui mainGui = new MainGui();
-
     @Override
     public Resource resource(File folder) {
         return Source.of(folder, "gui.yml");
     }
 
-    public ConfigItem friendListItem = new ConfigItem();
-    public ConfigItem receivedAndSentInvitesItem = new ConfigItem();
-    public ConfigItem sendInvitesItem = new ConfigItem();
-    public ConfigItem settingItem = new ConfigItem();
-    public ConfigItem backButton = new ConfigItem();
+    public MainGui mainGui = new MainGui();
 
-    public Gui friendListGui = new Gui();
+    public Gui friendListGui = new Gui()
+            .setTitle("&8Lista znajomych");
+
+    public ConfirmGui confirmGui = new ConfirmGui();
+
+    public FriendHead friendHead = new FriendHead();
+    public ConfigItem friendListItem = new ConfigItem()
+            .setSlot(11)
+            .setName("&aTwoja lista znajomych")
+            .setType(Material.BOOK)
+            .setLore(Arrays.asList(
+                    "&7Lista znajomych",
+                    "&7Kliknij aby otworzyć"
+            ));
+    public ConfigItem receivedAndSentInvitesItem = new ConfigItem()
+            .setSlot(13)
+            .setName("&aOtrzymane i wysłane zaproszenia")
+            .setType(Material.WRITABLE_BOOK)
+            .setLore(Arrays.asList(
+                    "&7Otrzymane i wysłane zaproszenia",
+                    "&7Kliknij aby otworzyć"
+            ));
+    public ConfigItem sendInvitesItem = new ConfigItem()
+            .setSlot(15)
+            .setName("&aWysyłanie zaproszeń")
+            .setType(Material.PAPER)
+            .setLore(Arrays.asList(
+                    "&7Wysyłanie zaproszeń",
+                    "&7Kliknij aby otworzyć"
+            ));
+    public ConfigItem settingItem = new ConfigItem()
+            .setSlot(18)
+            .setName("&aUstawienia")
+            .setType(Material.REPEATER)
+            .setLore(Arrays.asList(
+                    "&7Ustawienia",
+                    "&7Kliknij aby otworzyć"
+            ));
+    public ConfigItem backButton = new ConfigItem()
+            .setSlot(26)
+            .setName("&cWróć")
+            .setType(Material.BARRIER)
+            .setLore(Arrays.asList(
+                    "&7Wróć do menu głównego",
+                    "&7Kliknij aby otworzyć"
+            ));
 
     @Contextual
     public static class MainGui {
@@ -49,6 +88,11 @@ public class GuiConfig implements ReloadableConfig {
     public static class Gui {
         @Description("# Title of inventory")
         public String title = "&bGui Title";
+
+        public  Gui setTitle(String title) {
+            this.title = title;
+            return this;
+        }
     }
 
     @Contextual
@@ -77,5 +121,57 @@ public class GuiConfig implements ReloadableConfig {
             }
             return builder.asGuiItem();
         }
+
+        public ConfigItem setSlot(int slot) {
+            this.slot = slot;
+            return this;
+        }
+
+        public ConfigItem setType(Material type) {
+            this.type = type;
+            return this;
+        }
+
+        public ConfigItem setName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public ConfigItem setLore(List<String> lore) {
+            this.lore = lore;
+            return this;
+        }
+
+        public ConfigItem setEnchanted(boolean enchanted) {
+            this.enchanted = enchanted;
+            return this;
+        }
+    }
+
+    @Contextual
+    public static class FriendHead {
+        public String name = "&f%friend_name%";
+        public List<String> lore = Arrays.asList("&cKliknij LPM", "&caby usunąć znajomego");
+    }
+
+    @Contextual
+    public static class ConfirmGui {
+        public String title = "&cJESTES PEWIEN?";
+
+        public ConfigItem confirmItem = new ConfigItem()
+                .setSlot(11)
+                .setName("&aTak")
+                .setType(Material.LIME_STAINED_GLASS_PANE)
+                .setLore(Arrays.asList(
+                        "&7Kliknij aby potwierdzić"
+                ));
+
+        public ConfigItem denyItem = new ConfigItem()
+                .setSlot(15)
+                .setName("&cNie")
+                .setType(Material.RED_STAINED_GLASS_PANE)
+                .setLore(Arrays.asList(
+                        "&7Kliknij aby anulować"
+                ));
     }
 }
