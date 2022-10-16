@@ -25,7 +25,7 @@ public class GuiConfig implements ReloadableConfig {
     public Resource resource(File folder) {
         return Source.of(folder, "gui.yml");
     }
-
+    
     public MainGui mainGui = new MainGui();
 
     public Gui friendListGui = new Gui()
