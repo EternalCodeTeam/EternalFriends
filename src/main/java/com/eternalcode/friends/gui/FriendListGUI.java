@@ -78,7 +78,7 @@ public class FriendListGUI {
             skull.setAction(event -> this.confirmGui.openInventory(player, p -> {
                 profile.removeFriend(uuid);
                 announcer.announceMessage(player.getUniqueId(), messages.friends.youKickedFriend.replace("{player}", server.getOfflinePlayer(uuid).getName()));
-                if(server.getOfflinePlayer(uuid).isOnline()){
+                if (server.getOfflinePlayer(uuid).isOnline()){
                     announcer.announceMessage(uuid, messages.friends.friendKickedYou.replace("{player}", player.getName()));
                 }
                 player.closeInventory();
