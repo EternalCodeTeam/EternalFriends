@@ -156,7 +156,7 @@ public class GuiConfig implements ReloadableConfig {
 
     @Contextual
     public static class ConfirmGui {
-        public String title = "&cJESTES PEWIEN?";
+        public String title = "&cJesteś pewien?";
 
         public ConfigItem confirmItem = new ConfigItem()
                 .setSlot(11)

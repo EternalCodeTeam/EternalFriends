@@ -16,6 +16,8 @@ public class ConfirmGUI {
         this.guiConfig = guiConfig;
     }
 
+
+
     public void openInventory(Player player, Consumer<Player> returnWithConfirm, Consumer<Player> returnWithDeny) {
         GuiItem confirmItem = guiConfig.confirmGui.confirmItem.toGuiItem();
         confirmItem.setAction(event -> returnWithConfirm.accept(player));

@@ -45,6 +45,8 @@ public class FriendListGUI {
         this.server = server;
     }
 
+
+
     public void openInventory(Player player, Consumer<Player> backToMainGUI) {
         GuiConfig.Gui guiCfg = guiConfig.friendListGui;
         this.gui = Gui.gui()

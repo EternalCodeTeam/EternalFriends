@@ -78,7 +78,7 @@ public class FriendCommand {
 
     @Execute(route = "list", aliases = "lista", required = 0)
     public void list(Player sender) {
-        Optional<Profile> profileOptional = profileManager.getProfileByUUID(sender.getUniqueId());
+        Optional<Profile> profileOptional = this.profileManager.getProfileByUUID(sender.getUniqueId());
         if (profileOptional.isEmpty()) {
             announcer.announceMessage(sender.getUniqueId(), messages.friends.yourProfileNotFound);
             return;
@@ -103,7 +103,7 @@ public class FriendCommand {
     @Execute(route = "list", aliases = "lista", required = 1)
     @Permission("eternalfriends.admin")
     public void listAdmin(Player sender, @Arg @Name("player") Player player) {
-        Optional<Profile> profileOptional = profileManager.getProfileByUUID(player.getUniqueId());
+        Optional<Profile> profileOptional = this.profileManager.getProfileByUUID(player.getUniqueId());
         if (profileOptional.isEmpty()) {
             announcer.announceMessage(sender.getUniqueId(), messages.friends.profileNotFound);
             return;
