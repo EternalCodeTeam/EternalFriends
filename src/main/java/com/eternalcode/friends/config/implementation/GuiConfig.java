@@ -8,8 +8,6 @@ import net.dzikoysk.cdn.entity.Contextual;
 import net.dzikoysk.cdn.entity.Description;
 import net.dzikoysk.cdn.source.Resource;
 import net.dzikoysk.cdn.source.Source;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;

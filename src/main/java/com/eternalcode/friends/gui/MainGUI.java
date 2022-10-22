@@ -1,19 +1,11 @@
 package com.eternalcode.friends.gui;
 
 import com.eternalcode.friends.config.implementation.GuiConfig;
-import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.guis.Gui;
 import dev.triumphteam.gui.guis.GuiItem;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -41,9 +33,7 @@ public class MainGUI {
                 .create();
 
         GuiItem guiItem = guiConfig.friendListItem.toGuiItem();
-        guiItem.setAction(event -> {
-            friendListGUI.openInventory((Player) event.getWhoClicked(), player -> openInventory(player));
-            });
+        guiItem.setAction(event -> friendListGUI.openInventory((Player) event.getWhoClicked(), this::openInventory));
         this.gui.setItem(guiConfig.friendListItem.slot, guiItem);
 
         List.of(

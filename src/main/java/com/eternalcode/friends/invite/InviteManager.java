@@ -1,13 +1,6 @@
 package com.eternalcode.friends.invite;
 
-import org.bukkit.Bukkit;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 
 public class InviteManager {
@@ -34,20 +27,14 @@ public class InviteManager {
         if (!sendedInvites.containsKey(from)) {
             return false;
         }
-        if (sendedInvites.get(from).contains(to)) {
-            return true;
-        }
-        return false;
+        return sendedInvites.get(from).contains(to);
     }
 
     public boolean hasReceivedInvite(UUID from, UUID to) {
         if (!receivedInvites.containsKey(to)) {
             return false;
         }
-        if (receivedInvites.get(to).contains(from)) {
-            return true;
-        }
-        return false;
+        return receivedInvites.get(to).contains(from);
     }
 
     public void removeInvite(UUID from, UUID to) {

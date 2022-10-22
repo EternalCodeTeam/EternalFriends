@@ -57,9 +57,7 @@ public class FriendListGUI {
                 .create();
 
         backButton = guiConfig.backButton.toGuiItem();
-        backButton.setAction(event -> {
-            backToMainGUI.accept(player);
-        });
+        backButton.setAction(event -> backToMainGUI.accept(player));
         gui.setItem(53, backButton);
 
         Optional<Profile> profileOptional = profileManager.getProfileByUUID(player.getUniqueId());
@@ -77,16 +75,14 @@ public class FriendListGUI {
                     .name(this.miniMessage.deserialize(guiConfig.friendHead.name.replace("%friend_name%", server.getOfflinePlayer(uuid).getName())))
                     .lore(guiConfig.friendHead.lore.stream().map(Legacy::component).collect(Collectors.toList()))
                     .asGuiItem();
-            skull.setAction(event -> {
-                this.confirmGui.openInventory(player, p -> {
-                    profile.removeFriend(uuid);
-                    announcer.announceMessage(player.getUniqueId(), messages.friends.youKickedFriend.replace("{player}", server.getOfflinePlayer(uuid).getName()));
-                    if(server.getOfflinePlayer(uuid).isOnline()){
-                        announcer.announceMessage(uuid, messages.friends.friendKickedYou.replace("{player}", player.getName()));
-                    }
-                    player.closeInventory();
-                }, p -> openInventory(player, backToMainGUI));
-            });
+            skull.setAction(event -> this.confirmGui.openInventory(player, p -> {
+                profile.removeFriend(uuid);
+                announcer.announceMessage(player.getUniqueId(), messages.friends.youKickedFriend.replace("{player}", server.getOfflinePlayer(uuid).getName()));
+                if(server.getOfflinePlayer(uuid).isOnline()){
+                    announcer.announceMessage(uuid, messages.friends.friendKickedYou.replace("{player}", player.getName()));
+                }
+                player.closeInventory();
+            }, p -> openInventory(player, backToMainGUI)));
             gui.setItem(index,skull);
             index++;
         }
