@@ -9,15 +9,15 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 
-public class MainGUI {
+public class MainGui {
 
     private final MiniMessage miniMessage;
     private final GuiConfig guiConfig;
-    private final FriendListGUI friendListGUI;
+    private final FriendListGui friendListGUI;
     private Gui gui;
 
 
-    public MainGUI(MiniMessage miniMessage, GuiConfig guiConfig, FriendListGUI friendListGUI) {
+    public MainGui(MiniMessage miniMessage, GuiConfig guiConfig, FriendListGui friendListGUI) {
         this.miniMessage = miniMessage;
         this.guiConfig = guiConfig;
         this.friendListGUI = friendListGUI;

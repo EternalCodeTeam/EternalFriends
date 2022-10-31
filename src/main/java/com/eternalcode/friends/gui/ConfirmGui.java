@@ -8,11 +8,11 @@ import org.bukkit.entity.Player;
 
 import java.util.function.Consumer;
 
-public class ConfirmGUI {
+public class ConfirmGui {
 
     private GuiConfig guiConfig;
 
-    public ConfirmGUI(GuiConfig guiConfig) {
+    public ConfirmGui(GuiConfig guiConfig) {
         this.guiConfig = guiConfig;
     }
 

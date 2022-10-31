@@ -1,21 +1,15 @@
 package com.eternalcode.friends.config.implementation;
 
 import com.eternalcode.friends.config.ReloadableConfig;
-import com.eternalcode.friends.util.legacy.Legacy;
-import dev.triumphteam.gui.builder.item.ItemBuilder;
-import dev.triumphteam.gui.guis.GuiItem;
 import net.dzikoysk.cdn.entity.Contextual;
 import net.dzikoysk.cdn.entity.Description;
 import net.dzikoysk.cdn.source.Resource;
 import net.dzikoysk.cdn.source.Source;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemFlag;
 
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class GuiConfig implements ReloadableConfig {
 
@@ -23,7 +17,7 @@ public class GuiConfig implements ReloadableConfig {
     public Resource resource(File folder) {
         return Source.of(folder, "gui.yml");
     }
-    
+
     public MainGui mainGui = new MainGui();
 
     public Gui friendListGui = new Gui()
@@ -94,59 +88,6 @@ public class GuiConfig implements ReloadableConfig {
     }
 
     @Contextual
-    public static class ConfigItem {
-
-        public int slot = 0;
-        @Description("# Material from https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html")
-        public Material type = Material.STONE;
-
-        public String name = "&fItem name";
-
-        @Description("# Description of item")
-        public List<String> lore = Arrays.asList("&fFirst line of lore", "&9Second line of lore");
-
-        @Description("# Item should be enchanted or not")
-        public boolean enchanted = false;
-
-        public GuiItem toGuiItem() {
-            ItemBuilder builder = ItemBuilder.from(this.type)
-                    .name(Legacy.component(this.name))
-                    .lore(this.lore.stream().map(Legacy::component).collect(Collectors.toList()))
-                    .flags(ItemFlag.HIDE_ATTRIBUTES)
-                    .flags(ItemFlag.HIDE_ENCHANTS);
-            if (this.enchanted) {
-                builder.enchant(Enchantment.LOOT_BONUS_BLOCKS);
-            }
-            return builder.asGuiItem();
-        }
-
-        public ConfigItem setSlot(int slot) {
-            this.slot = slot;
-            return this;
-        }
-
-        public ConfigItem setType(Material type) {
-            this.type = type;
-            return this;
-        }
-
-        public ConfigItem setName(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public ConfigItem setLore(List<String> lore) {
-            this.lore = lore;
-            return this;
-        }
-
-        public ConfigItem setEnchanted(boolean enchanted) {
-            this.enchanted = enchanted;
-            return this;
-        }
-    }
-
-    @Contextual
     public static class FriendHead {
         public String name = "&f%friend_name%";
         public List<String> lore = Arrays.asList("&cKliknij LPM", "&caby usunąć znajomego");
@@ -154,7 +95,7 @@ public class GuiConfig implements ReloadableConfig {
 
     @Contextual
     public static class ConfirmGui {
-        public String title = "&cJesteś pewien?";
+        public String title = "&cJestes pewien?";
 
         public ConfigItem confirmItem = new ConfigItem()
                 .setSlot(11)

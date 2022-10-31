@@ -18,7 +18,7 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class FriendListGUI {
+public class FriendListGui {
 
     private final MiniMessage miniMessage;
     private final GuiConfig guiConfig;
@@ -29,35 +29,31 @@ public class FriendListGUI {
 
     private final Server server;
 
-    private ConfirmGUI confirmGui;
+    private final ConfirmGui confirmGUI;
 
 
-
-    public FriendListGUI(MiniMessage miniMessage, GuiConfig guiConfig, ProfileManager profileManager, NotificationAnnouncer announcer, MessagesConfig messages, Server server) {
+    public FriendListGui(MiniMessage miniMessage, GuiConfig guiConfig, ProfileManager profileManager, NotificationAnnouncer announcer, MessagesConfig messages, Server server) {
         this.miniMessage = miniMessage;
         this.guiConfig = guiConfig;
         this.profileManager = profileManager;
         this.announcer = announcer;
         this.messages = messages;
         this.server = server;
+        this.confirmGUI = new ConfirmGui(this.guiConfig);
     }
 
-
-
     public void openInventory(Player player, Consumer<Player> backToMainGUI) {
-        Gui gui;
-        GuiItem backButton;
-        confirmGui = new ConfirmGUI(guiConfig);
-
         GuiConfig.Gui guiCfg = guiConfig.friendListGui;
-        gui = Gui.gui()
+        Gui gui = Gui.gui()
                 .title(this.miniMessage.deserialize(guiCfg.title))
                 .rows(6)
                 .disableItemTake()
                 .create();
 
-        backButton = guiConfig.backButton.toGuiItem();
-        backButton.setAction(event -> backToMainGUI.accept(player));
+        GuiItem backButton = guiConfig.backButton.toGuiItem();
+        backButton.setAction(event -> {
+            backToMainGUI.accept(player);
+        });
         gui.setItem(53, backButton);
 
         Optional<Profile> profileOptional = profileManager.getProfileByUUID(player.getUniqueId());
@@ -75,14 +71,16 @@ public class FriendListGUI {
                     .name(this.miniMessage.deserialize(guiConfig.friendHead.name.replace("%friend_name%", server.getOfflinePlayer(uuid).getName())))
                     .lore(guiConfig.friendHead.lore.stream().map(Legacy::component).collect(Collectors.toList()))
                     .asGuiItem();
-            skull.setAction(event -> this.confirmGui.openInventory(player, p -> {
-                profile.removeFriend(uuid);
-                announcer.announceMessage(player.getUniqueId(), messages.friends.youKickedFriend.replace("{player}", server.getOfflinePlayer(uuid).getName()));
-                if (server.getOfflinePlayer(uuid).isOnline()){
-                    announcer.announceMessage(uuid, messages.friends.friendKickedYou.replace("{player}", player.getName()));
-                }
-                player.closeInventory();
-            }, p -> openInventory(player, backToMainGUI)));
+            skull.setAction(event -> {
+                this.confirmGUI.openInventory(player, p -> {
+                    profile.removeFriend(uuid);
+                    announcer.announceMessage(player.getUniqueId(), messages.friends.youKickedFriend.replace("{player}", server.getOfflinePlayer(uuid).getName()));
+                    if (server.getOfflinePlayer(uuid).isOnline()) {
+                        announcer.announceMessage(uuid, messages.friends.friendKickedYou.replace("{player}", player.getName()));
+                    }
+                    player.closeInventory();
+                }, p -> openInventory(player, backToMainGUI));
+            });
             gui.setItem(index,skull);
             index++;
         }
