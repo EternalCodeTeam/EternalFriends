@@ -1,34 +1,26 @@
 package com.eternalcode.friends.gui;
 
 import com.eternalcode.friends.config.implementation.GuiConfig;
-import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.guis.Gui;
 import dev.triumphteam.gui.guis.GuiItem;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainGUI {
+public class MainGui {
 
     private final MiniMessage miniMessage;
     private final GuiConfig guiConfig;
-
-    private Material type;
-
+    private final FriendListGui friendListGUI;
     private Gui gui;
 
 
-    public MainGUI(MiniMessage miniMessage, GuiConfig guiConfig) {
+    public MainGui(MiniMessage miniMessage, GuiConfig guiConfig, FriendListGui friendListGUI) {
         this.miniMessage = miniMessage;
         this.guiConfig = guiConfig;
+        this.friendListGUI = friendListGUI;
         initializeGui();
     }
 
@@ -40,8 +32,11 @@ public class MainGUI {
                 .disableItemTake()
                 .create();
 
+        GuiItem guiItem = guiConfig.friendListItem.toGuiItem();
+        guiItem.setAction(event -> friendListGUI.openInventory((Player) event.getWhoClicked(), this::openInventory));
+        this.gui.setItem(guiConfig.friendListItem.slot, guiItem);
+
         List.of(
-                guiConfig.friendListItem,
                 guiConfig.receivedAndSentInvitesItem,
                 guiConfig.sendInvitesItem,
                 guiConfig.settingItem

@@ -4,6 +4,7 @@ plugins {
     id("java")
     id("com.github.johnrengelman.shadow") version "7.1.2"
     id("net.minecrell.plugin-yml.bukkit") version "0.5.2"
+    id("dev.s7a.gradle.minecraft.server") version "1.2.0"
 }
 
 group = "com.eternalcode"
@@ -59,6 +60,10 @@ java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(11))
 }
 
+minecraftServerConfig {
+    jarUrl.set(dev.s7a.gradle.minecraft.server.tasks.LaunchMinecraftServerTask.JarUrl.Paper("1.16.4"))
+}
+
 tasks.withType<ShadowJar> {
     archiveFileName.set("EternalFriends v${project.version}.jar")
 
@@ -86,4 +91,20 @@ tasks.withType<ShadowJar> {
     ).forEach { pack ->
         relocate(pack, "$prefix.$pack")
     }
+}
+
+task<dev.s7a.gradle.minecraft.server.tasks.LaunchMinecraftServerTask>("buildAndLaunchServer") {
+    dependsOn("shadowJar") // build task (build, jar, shadowJar, ...)
+    doFirst {
+        copy {
+            from(buildDir.resolve("libs/EternalFriends v${project.version}.jar")) // build/libs/example.jar
+            into(buildDir.resolve("MinecraftPaperServer/plugins")) // build/MinecraftPaperServer/plugins
+        }
+    }
+
+    jarUrl.set(dev.s7a.gradle.minecraft.server.tasks.LaunchMinecraftServerTask.JarUrl.Paper("1.16.4"))
+    jarName.set("server.jar")
+    serverDirectory.set(buildDir.resolve("MinecraftPaperServer")) // build/MinecraftPaperServer
+    nogui.set(true)
+    agreeEula.set(true)
 }

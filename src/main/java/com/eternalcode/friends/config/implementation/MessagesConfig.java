@@ -41,8 +41,8 @@ public class MessagesConfig implements ReloadableConfig {
         public String yourselfCommand = "&cNie mozesz uzyc tej komendy na samym Sobie.";
         public String inviteNotFound = "&cNie masz zaproszenia od tego gracza!";
         public String playerIsNotYourFriend = "&cNie masz tego gracza na liscie znajomych";
-        public String friendKickedYou = "&cGracz &f{player} &czostal wyrzucony z listy twoich znajomych!";
-        public String youKickedFriend = "&cGracz &f{player} &cwyrzucil Cie z znajomych!";
+        public String youKickedFriend = "&cGracz &f{player} &czostal wyrzucony z listy twoich znajomych!";
+        public String friendKickedYou = "&cGracz &f{player} &cwyrzucil Cie z znajomych!";
         public String friendListHeader = "&3Twoi znajomi: ";
         public String friendListHeaderAdmin = "&3Znajomi gracza &f{player}&3: ";
         public String friendListPlayer = "&7{player}, ";

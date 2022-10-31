@@ -16,7 +16,7 @@ public class Legacy {
             .useUnusualXRepeatedCharacterHexFormat()
             .build();
 
-    private static final LegacyComponentSerializer AMPERSAND_SERIALIZER = LegacyComponentSerializer.builder()
+    public static final LegacyComponentSerializer AMPERSAND_SERIALIZER = LegacyComponentSerializer.builder()
             .character('&')
             .hexColors()
             .useUnusualXRepeatedCharacterHexFormat()
