@@ -40,11 +40,13 @@ public class FriendCommand {
     }
 
     @Execute(max = 0, required = 0)
+    @Permission("eternalfriends.main")
     void main(Player player) {
-        this.mainGui.openInventory(player);
+        this.mainGui.openMainGui(player);
     }
 
     @Execute(min = 1, route = "invite", aliases = "zapros", required = 1)
+    @Permission("eternalfriends.invite")
     public void invite(Player sender, @Arg @Name("player") Player target) {
         if (sender.getUniqueId().equals(target.getUniqueId())) {
             announcer.announceMessage(sender.getUniqueId(), friends.yourselfCommand);
@@ -75,6 +77,7 @@ public class FriendCommand {
     }
 
     @Execute(route = "list", aliases = "lista", required = 0)
+    @Permission("eternalfriends.list")
     public void list(Player sender) {
         Optional<Profile> profileOptional = this.profileManager.getProfileByUUID(sender.getUniqueId());
         if (profileOptional.isEmpty()) {
@@ -99,7 +102,7 @@ public class FriendCommand {
     }
 
     @Execute(route = "list", aliases = "lista", required = 1)
-    @Permission("eternalfriends.admin")
+    @Permission("eternalfriends.listAdmin")
     public void listAdmin(Player sender, @Arg @Name("player") Player player) {
         Optional<Profile> profileOptional = this.profileManager.getProfileByUUID(player.getUniqueId());
         if (profileOptional.isEmpty()) {
@@ -123,6 +126,7 @@ public class FriendCommand {
     }
 
     @Execute(route = "accept", aliases = "akceptuj", required = 1)
+    @Permission("eternalfriends.accept")
     public void accept(Player sender, @Arg @Name("player") Player player) {
         if (sender.getUniqueId().equals(player.getUniqueId())) {
             announcer.announceMessage(sender.getUniqueId(), friends.yourselfCommand);
@@ -159,6 +163,7 @@ public class FriendCommand {
     }
 
     @Execute(route = "kick", aliases = "wyrzuc", required = 1)
+    @Permission("eternalfriends.kick")
     public void kick(Player sender, @Arg @Name("player") Player player){
         if (sender.getUniqueId().equals(player.getUniqueId())) {
             announcer.announceMessage(sender.getUniqueId(), friends.yourselfCommand);

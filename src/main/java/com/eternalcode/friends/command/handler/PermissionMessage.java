@@ -24,7 +24,7 @@ public class PermissionMessage implements PermissionHandler<CommandSender> {
 
         Player player = (Player) sender;
 
-        this.announcer.announceMessage(player.getUniqueId(), "{permission}".replace("{permission}", Joiner.on(", ")
+        this.announcer.announceMessage(player.getUniqueId(), this.messages.argument.missingPermission.replace("{permission}", Joiner.on(", ")
                 .join(requiredPermissions.getPermissions())
                 .toString()));
     }

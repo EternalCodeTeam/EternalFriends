@@ -48,6 +48,7 @@ public class MessagesConfig implements ReloadableConfig {
         public String friendListPlayer = "&7{player}, ";
         public String alreadyReceivedInvite = "&cOtrzymales juz zaproszenie od tego gracza!";
         public String alreadySentInvite = "&cWyslales juz zaproszenie od temu graczowi!";
+        public String inviteInstruction = "&aBy wyslac zaproszenie do znajomych uzyj komendy &7/friend zapros {nazwa_gracza}";
 
 
     }

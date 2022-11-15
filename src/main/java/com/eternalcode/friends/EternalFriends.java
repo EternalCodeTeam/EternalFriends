@@ -7,7 +7,6 @@ import com.eternalcode.friends.config.ConfigManager;
 import com.eternalcode.friends.config.implementation.GuiConfig;
 import com.eternalcode.friends.config.implementation.MessagesConfig;
 import com.eternalcode.friends.config.implementation.PluginConfig;
-import com.eternalcode.friends.gui.FriendListGui;
 import com.eternalcode.friends.gui.MainGui;
 import com.eternalcode.friends.invite.InviteManager;
 import com.eternalcode.friends.profile.ProfileJoinListener;
@@ -43,7 +42,6 @@ public class EternalFriends extends JavaPlugin {
 
     private MainGui mainGui;
 
-    private FriendListGui friendListGui;
 
     private InviteManager inviteManager;
     private ProfileManager profileManager;
@@ -77,9 +75,7 @@ public class EternalFriends extends JavaPlugin {
 
         this.profileManager = new ProfileManager(new ProfileRepositoryImpl());
 
-
-        this.friendListGui = new FriendListGui(this.miniMessage, this.guiConfig, this.profileManager, this.announcer, this.messages, this.getServer());
-        this.mainGui = new MainGui(this.miniMessage, this.guiConfig, this.friendListGui);
+        this.mainGui = new MainGui(this.miniMessage, this.guiConfig, this, this.profileManager, this.announcer, this.messages);
 
         Stream.of(
                 new ProfileJoinListener(profileManager)
@@ -103,41 +99,5 @@ public class EternalFriends extends JavaPlugin {
     @Override
     public void onDisable() {
         this.liteCommands.getPlatform().unregisterAll();
-    }
-
-    public static EternalFriends getInstance() {
-        return instance;
-    }
-
-    public NotificationAnnouncer getAnnouncer() {
-        return this.announcer;
-    }
-
-    public ConfigManager getConfigManager() {
-        return configManager;
-    }
-
-    public PluginConfig getPluginConfig() {
-        return config;
-    }
-
-    public MessagesConfig getMessagesConfig() {
-        return messages;
-    }
-
-    public MainGui getMainGui() {
-        return mainGui;
-    }
-
-    public AudienceProvider getAudienceProvider() {
-        return audienceProvider;
-    }
-
-    public MiniMessage getMiniMessage() {
-        return miniMessage;
-    }
-
-    public LiteCommands<CommandSender> getLiteCommands() {
-        return liteCommands;
     }
 }
