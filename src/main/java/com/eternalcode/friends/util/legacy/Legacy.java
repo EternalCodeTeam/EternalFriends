@@ -27,7 +27,7 @@ public class Legacy {
     }
 
     public static Component component(String text) {
-        return AMPERSAND_SERIALIZER.deserialize(text).asComponent();
+        return AMPERSAND_SERIALIZER.deserialize(text);
     }
 
     public static List<Component> component(Iterable<String> texts) {

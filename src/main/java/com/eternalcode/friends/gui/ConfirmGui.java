@@ -6,34 +6,34 @@ import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.guis.Gui;
 import dev.triumphteam.gui.guis.GuiItem;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
-
-import java.util.function.Consumer;
 
 public class ConfirmGui {
 
     private GuiConfig guiConfig;
 
-    private final static int CONFIRM_ITEM_SLOT = 15;
+    private final MiniMessage miniMessage;
+
+    private final static int CONFIRM_ITEM_SLOT = 11;
     private final static int DENY_ITEM_SLOT = 15;
 
-    public ConfirmGui(GuiConfig guiConfig) {
+    public ConfirmGui(GuiConfig guiConfig, MiniMessage miniMessage) {
         this.guiConfig = guiConfig;
+        this.miniMessage = miniMessage;
     }
 
+    public void openInventory(Player player, Runnable onConfirm, Runnable onDeny) {
+        GuiItem confirmItem = this.guiConfig.confirmGui.confirmItem.toGuiItem(this.miniMessage);
+        confirmItem.setAction(event -> onConfirm.run());
 
-
-    public void openInventory(Player player, Consumer<Player> returnWithConfirm, Consumer<Player> returnWithDeny) {
-        GuiItem confirmItem = guiConfig.confirmGui.confirmItem.toGuiItem();
-        confirmItem.setAction(event -> returnWithConfirm.accept(player));
-
-        GuiItem denyItem = guiConfig.confirmGui.denyItem.toGuiItem();
-        denyItem.setAction(event -> returnWithDeny.accept(player));
+        GuiItem denyItem = this.guiConfig.confirmGui.denyItem.toGuiItem(this.miniMessage);
+        denyItem.setAction(event -> onDeny.run());
 
         Gui gui = Gui.gui()
-                .title(Legacy.AMPERSAND_SERIALIZER.deserialize(guiConfig.confirmGui.title))
+                .title(this.miniMessage.deserialize(this.guiConfig.confirmGui.title))
                 .rows(3)
                 .disableItemTake()
                 .create();

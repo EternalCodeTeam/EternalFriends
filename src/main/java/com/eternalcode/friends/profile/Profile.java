@@ -10,10 +10,6 @@ public class Profile {
 
     private final UUID uuid;
     private final List<UUID> friends = new ArrayList<>();
-
-    //Map where key is uuid of player who invite when value is uuid of player who was invited
-    //private final Map<UUID, UUID> invites = new HashMap<>();
-
     private boolean receiveInvites;
     private boolean friendsJoinNotification;
 

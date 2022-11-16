@@ -1,17 +1,13 @@
 package com.eternalcode.friends.config.implementation;
 
-import com.eternalcode.friends.util.legacy.Legacy;
 import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.guis.GuiItem;
 import net.dzikoysk.cdn.entity.Contextual;
 import net.dzikoysk.cdn.entity.Description;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
-
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Contextual
 public class ConfigItem {
@@ -21,12 +17,12 @@ public class ConfigItem {
     public String name = "&fItem name";
 
     @Description("# Description of item")
-    public List<String> lore = Arrays.asList("&fFirst line of lore", "&9Second line of lore");
+    public List<String> lore = List.of("&fFirst line of lore", "&9Second line of lore");
 
-    public GuiItem toGuiItem() {
+    public GuiItem toGuiItem(MiniMessage miniMessage) {
         ItemBuilder builder = ItemBuilder.from(this.type)
-                .name(Legacy.component(this.name))
-                .lore(this.lore.stream().map(Legacy::component).collect(Collectors.toList()))
+                .name(miniMessage.deserialize(this.name))
+                .lore(this.lore.stream().map(string -> miniMessage.deserialize(string)).toList())
                 .flags(ItemFlag.HIDE_ATTRIBUTES)
                 .flags(ItemFlag.HIDE_ENCHANTS);
         return builder.asGuiItem();

@@ -1,18 +1,14 @@
 package com.eternalcode.friends.gui;
 
 import com.eternalcode.friends.NotificationAnnouncer;
-import com.eternalcode.friends.config.implementation.ConfigItem;
 import com.eternalcode.friends.config.implementation.GuiConfig;
 import com.eternalcode.friends.config.implementation.MessagesConfig;
 import com.eternalcode.friends.profile.Profile;
 import com.eternalcode.friends.profile.ProfileManager;
-import com.eternalcode.friends.util.legacy.Legacy;
 import dev.triumphteam.gui.builder.item.ItemBuilder;
-import dev.triumphteam.gui.components.ScrollType;
 import dev.triumphteam.gui.guis.Gui;
 import dev.triumphteam.gui.guis.GuiItem;
 import dev.triumphteam.gui.guis.PaginatedGui;
-import dev.triumphteam.gui.guis.ScrollingGui;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
@@ -20,10 +16,8 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 
 public class MainGui {
@@ -35,9 +29,7 @@ public class MainGui {
     private final MessagesConfig messages;
     private final ConfirmGui confirmGUI;
     private final Plugin plugin;
-
     private final Server server;
-
     private static final int SETTINGS_ITEM_SLOT = 49;
     private static final int NEXT_PAGE_ITEM_SLOT = 53;
     private static final int BACK_PAGE_ITEM_SLOT = 45;
@@ -53,7 +45,7 @@ public class MainGui {
         this.announcer = announcer;
         this.messages = messages;
         this.server = plugin.getServer();
-        this.confirmGUI = new ConfirmGui(this.guiConfig);
+        this.confirmGUI = new ConfirmGui(this.guiConfig, this.miniMessage);
     }
 
     public void openMainGui(Player player) {
@@ -67,30 +59,30 @@ public class MainGui {
 
         GuiItem nextPageButton = ItemBuilder.from(Material.PAPER)
                 .name(this.miniMessage.deserialize(this.guiConfig.mainGui.nextPageItemName))
-                .lore(this.guiConfig.mainGui.nextPageItemLore.stream().map(string -> this.miniMessage.deserialize(string)).collect(Collectors.toList()))
+                .lore(this.guiConfig.mainGui.nextPageItemLore.stream().map(string -> miniMessage.deserialize(string)).toList())
                 .asGuiItem(event -> {
                     gui.next();
                 });
 
         GuiItem backPageButton = ItemBuilder.from(Material.PAPER)
                 .name(this.miniMessage.deserialize(this.guiConfig.mainGui.previousPageItemName))
-                .lore(this.guiConfig.mainGui.previousPageItemLore.stream().map(string -> this.miniMessage.deserialize(string)).collect(Collectors.toList()))
+                .lore(this.guiConfig.mainGui.previousPageItemLore.stream().map(string -> miniMessage.deserialize(string)).toList())
                 .asGuiItem(event -> {
                     gui.previous();
                 });
 
-        GuiItem sendInvitesItem = this.guiConfig.sendInvitesItem.toGuiItem();
+        GuiItem sendInvitesItem = this.guiConfig.sendInvitesItem.toGuiItem(this.miniMessage);
         sendInvitesItem.setAction(event -> {
             player.closeInventory();
             this.announcer.announceMessage(player.getUniqueId(), this.messages.friends.inviteInstruction);
         });
 
-        GuiItem receivedInvitesItem = this.guiConfig.receivedInvitesItem.toGuiItem();
+        GuiItem receivedInvitesItem = this.guiConfig.receivedInvitesItem.toGuiItem(this.miniMessage);
         receivedInvitesItem.setAction(event -> {
             //TODO
         });
 
-        GuiItem settingsItem = this.guiConfig.settingItem.toGuiItem();
+        GuiItem settingsItem = this.guiConfig.settingItem.toGuiItem(this.miniMessage);
         settingsItem.setAction(event -> {
             //TODO
         });
@@ -120,14 +112,15 @@ public class MainGui {
             final GuiItem skull = ItemBuilder.skull()
                     .owner(server.getOfflinePlayer(uuid))
                     .name(this.miniMessage.deserialize(guiConfig.friendHead.name.replace("%friend_name%", server.getOfflinePlayer(uuid).getName())))
-                    .lore(guiConfig.friendHead.lore.stream().map(Legacy::component).collect(Collectors.toList()))
+                    .lore(guiConfig.friendHead.lore.stream().map(string -> miniMessage.deserialize(string)).toList())
                     .asGuiItem();
             skull.setAction(event -> {
-                this.confirmGUI.openInventory(player, p -> {
+                this.confirmGUI.openInventory(player, () -> {
                     Optional<Profile> friendProfileOptional = profileManager.getProfileByUUID(uuid);
                     if (friendProfileOptional.isEmpty()) {
                         player.closeInventory();
                         announcer.announceMessage(player.getUniqueId(), messages.friends.profileNotFound);
+                        return;
                     }
                     Profile friendProfile = friendProfileOptional.get();
 
@@ -141,7 +134,7 @@ public class MainGui {
                     }
 
                     player.closeInventory();
-                }, p -> openMainGui(player));
+                }, () -> openMainGui(player));
             });
             gui.addItem(skull);
         }

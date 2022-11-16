@@ -8,7 +8,6 @@ import net.dzikoysk.cdn.source.Source;
 import org.bukkit.Material;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 
 public class GuiConfig implements ReloadableConfig {
@@ -26,21 +25,21 @@ public class GuiConfig implements ReloadableConfig {
     public ConfigItem receivedInvitesItem = new ConfigItem()
             .setName("&aOtrzymane zaproszenia")
             .setType(Material.WRITABLE_BOOK)
-            .setLore(Arrays.asList(
+            .setLore(List.of(
                     "&7Otrzymane zaproszenia",
                     "&7Kliknij aby otworzyć"
             ));
     public ConfigItem sendInvitesItem = new ConfigItem()
             .setName("&aWysyłanie zaproszeń")
             .setType(Material.WRITABLE_BOOK)
-            .setLore(Arrays.asList(
+            .setLore(List.of(
                     "&7Wysyłanie zaproszeń",
                     "&7Kliknij aby otworzyć"
             ));
     public ConfigItem settingItem = new ConfigItem()
             .setName("&aUstawienia")
             .setType(Material.REPEATER)
-            .setLore(Arrays.asList(
+            .setLore(List.of(
                     "&7Ustawienia",
                     "&7Kliknij aby otworzyć"
             ));
@@ -55,13 +54,13 @@ public class GuiConfig implements ReloadableConfig {
 
         public String nextPageItemName = "&aNastępna strona";
 
-        public List<String> nextPageItemLore = Arrays.asList(
+        public List<String> nextPageItemLore = List.of(
                 "&7Kliknij aby przejść do następnej strony"
         );
 
         public String previousPageItemName = "&cPoprzednia strona";
 
-        public List<String> previousPageItemLore = Arrays.asList(
+        public List<String> previousPageItemLore = List.of(
                 "&7Kliknij aby przejść do poprzedniej strony"
         );
     }
@@ -69,7 +68,7 @@ public class GuiConfig implements ReloadableConfig {
     @Contextual
     public static class FriendHead {
         public String name = "&f%friend_name%";
-        public List<String> lore = Arrays.asList("&cKliknij LPM", "&caby usunąć znajomego");
+        public List<String> lore = List.of("&cKliknij LPM", "&caby usunąć znajomego");
     }
 
     @Contextual
@@ -79,14 +78,14 @@ public class GuiConfig implements ReloadableConfig {
         public ConfigItem confirmItem = new ConfigItem()
                 .setName("&aTak")
                 .setType(Material.LIME_STAINED_GLASS_PANE)
-                .setLore(Arrays.asList(
+                .setLore(List.of(
                         "&7Kliknij aby potwierdzić"
                 ));
 
         public ConfigItem denyItem = new ConfigItem()
                 .setName("&cNie")
                 .setType(Material.RED_STAINED_GLASS_PANE)
-                .setLore(Arrays.asList(
+                .setLore(List.of(
                         "&7Kliknij aby anulować"
                 ));
     }

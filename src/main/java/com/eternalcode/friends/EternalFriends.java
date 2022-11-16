@@ -91,7 +91,7 @@ public class EternalFriends extends JavaPlugin {
 
                 .contextualBind(Player.class, new BukkitOnlyPlayerContextual<>(this.messages.argument.playerOnly))
 
-                .commandInstance(new FriendCommand(this.mainGui, this.profileManager, this.announcer, this.inviteManager, this.messages, this.getServer()))
+                .commandInstance(new FriendCommand(this.mainGui, this.profileManager, this.announcer, this.inviteManager, this.messages, this.getServer(), this.configManager))
 
                 .register();
     }

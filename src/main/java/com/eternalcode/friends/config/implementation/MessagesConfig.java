@@ -50,7 +50,7 @@ public class MessagesConfig implements ReloadableConfig {
         public String alreadySentInvite = "&cWyslales juz zaproszenie od temu graczowi!";
         public String inviteInstruction = "&aBy wyslac zaproszenie do znajomych uzyj komendy &7/friend zapros {nazwa_gracza}";
 
-
+        public String configReloaded = "&aPomyslnie przeładowano konfiguracje!";
     }
 
     @Contextual

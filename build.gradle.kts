@@ -1,4 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import dev.s7a.gradle.minecraft.server.tasks.LaunchMinecraftServerTask
 
 plugins {
     id("java")
@@ -61,7 +62,7 @@ java {
 }
 
 minecraftServerConfig {
-    jarUrl.set(dev.s7a.gradle.minecraft.server.tasks.LaunchMinecraftServerTask.JarUrl.Paper("1.19.2"))
+    jarUrl.set(LaunchMinecraftServerTask.JarUrl.Paper("1.19.2"))
 }
 
 tasks.withType<ShadowJar> {
@@ -93,7 +94,7 @@ tasks.withType<ShadowJar> {
     }
 }
 
-task<dev.s7a.gradle.minecraft.server.tasks.LaunchMinecraftServerTask>("buildAndLaunchServer") {
+task<LaunchMinecraftServerTask>("buildAndLaunchServer") {
     dependsOn("shadowJar") // build task (build, jar, shadowJar, ...)
     doFirst {
         copy {
@@ -102,7 +103,7 @@ task<dev.s7a.gradle.minecraft.server.tasks.LaunchMinecraftServerTask>("buildAndL
         }
     }
 
-    jarUrl.set(dev.s7a.gradle.minecraft.server.tasks.LaunchMinecraftServerTask.JarUrl.Paper("1.19.2"))
+    jarUrl.set(LaunchMinecraftServerTask.JarUrl.Paper("1.19.2"))
     jarName.set("server.jar")
     serverDirectory.set(buildDir.resolve("MinecraftPaperServer")) // build/MinecraftPaperServer
     nogui.set(true)
