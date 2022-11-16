@@ -25,10 +25,10 @@ public class InvalidUsage implements InvalidUsageHandler<CommandSender> {
 
         if (schematic.getSchematics().size() > 1) {
             for (String scheme : schematic.getSchematics()) {
-                this.announcer.announceMessage(player.getUniqueId(), "{scheme}".replace("{scheme}", scheme));
+                this.announcer.announceMessage(player.getUniqueId(), this.messages.argument.correctUsage.replace("{scheme}", scheme));
             }
         } else {
-            this.announcer.announceMessage(player.getUniqueId(), "{scheme}".replace("{scheme}", schematic.getSchematics().get(0)));
+            this.announcer.announceMessage(player.getUniqueId(), this.messages.argument.correctUsage.replace("{scheme}", schematic.getSchematics().get(0)));
         }
     }
 }

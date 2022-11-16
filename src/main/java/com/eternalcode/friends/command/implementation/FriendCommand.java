@@ -1,6 +1,7 @@
 package com.eternalcode.friends.command.implementation;
 
 import com.eternalcode.friends.NotificationAnnouncer;
+import com.eternalcode.friends.config.ConfigManager;
 import com.eternalcode.friends.config.implementation.MessagesConfig;
 import com.eternalcode.friends.gui.MainGui;
 import com.eternalcode.friends.invite.InviteManager;
@@ -26,27 +27,29 @@ public class FriendCommand {
     private final InviteManager inviteManager;
     private final MessagesConfig messages;
     private final Server server;
+    private final ConfigManager configManager;
 
-    private MessagesConfig.Friends friends;
-
-    public FriendCommand(MainGui mainGui, ProfileManager profileManager, NotificationAnnouncer announcer, InviteManager inviteManager, MessagesConfig messages, Server server) {
+    public FriendCommand(MainGui mainGui, ProfileManager profileManager, NotificationAnnouncer announcer, InviteManager inviteManager, MessagesConfig messages, Server server, ConfigManager configManager) {
         this.mainGui = mainGui;
         this.profileManager = profileManager;
         this.announcer = announcer;
         this.inviteManager = inviteManager;
         this.messages = messages;
         this.server = server;
-        this.friends = messages.friends;
+        this.configManager = configManager;
     }
 
-    @Execute(max = 0, required = 0)
+    @Execute(max = 0)
+    @Permission("eternalfriends.access")
     void main(Player player) {
-        this.mainGui.openInventory(player);
+        this.mainGui.openMainGui(player);
     }
 
     @Execute(min = 1, route = "invite", aliases = "zapros", required = 1)
+    @Permission("eternalfriends.access.invite")
     public void invite(Player sender, @Arg @Name("player") Player target) {
-        if (sender.getUniqueId().equals(target.getUniqueId())) {
+        MessagesConfig.Friends friends = messages.friends;
+        if (sender.equals(target)) {
             announcer.announceMessage(sender.getUniqueId(), friends.yourselfCommand);
             return;
         }
@@ -75,7 +78,9 @@ public class FriendCommand {
     }
 
     @Execute(route = "list", aliases = "lista", required = 0)
+    @Permission("eternalfriends.access.list")
     public void list(Player sender) {
+        MessagesConfig.Friends friends = messages.friends;
         Optional<Profile> profileOptional = this.profileManager.getProfileByUUID(sender.getUniqueId());
         if (profileOptional.isEmpty()) {
             announcer.announceMessage(sender.getUniqueId(), friends.yourProfileNotFound);
@@ -99,8 +104,9 @@ public class FriendCommand {
     }
 
     @Execute(route = "list", aliases = "lista", required = 1)
-    @Permission("eternalfriends.admin")
+    @Permission("eternalfriends.admin.list")
     public void listAdmin(Player sender, @Arg @Name("player") Player player) {
+        MessagesConfig.Friends friends = messages.friends;
         Optional<Profile> profileOptional = this.profileManager.getProfileByUUID(player.getUniqueId());
         if (profileOptional.isEmpty()) {
             announcer.announceMessage(sender.getUniqueId(), friends.profileNotFound);
@@ -116,15 +122,17 @@ public class FriendCommand {
         else {
             builder.append(friends.friendListHeaderAdmin.replace("{player}", player.getName()));
             for (UUID uuid : profile.getFriends()) {
-                builder.append(friends.emptyFriendList.replace("{player}", server.getOfflinePlayer(uuid).getName()));
+                builder.append(friends.friendListPlayer.replace("{player}", server.getOfflinePlayer(uuid).getName()));
             }
         }
         this.announcer.announceMessage(sender.getUniqueId(), builder.toString());
     }
 
     @Execute(route = "accept", aliases = "akceptuj", required = 1)
+    @Permission("eternalfriends.access.accept")
     public void accept(Player sender, @Arg @Name("player") Player player) {
-        if (sender.getUniqueId().equals(player.getUniqueId())) {
+        MessagesConfig.Friends friends = messages.friends;
+        if (sender.equals(player)) {
             announcer.announceMessage(sender.getUniqueId(), friends.yourselfCommand);
             return;
         }
@@ -159,8 +167,10 @@ public class FriendCommand {
     }
 
     @Execute(route = "kick", aliases = "wyrzuc", required = 1)
+    @Permission("eternalfriends.access.kick")
     public void kick(Player sender, @Arg @Name("player") Player player){
-        if (sender.getUniqueId().equals(player.getUniqueId())) {
+        MessagesConfig.Friends friends = messages.friends;
+        if (sender.equals(player)) {
             announcer.announceMessage(sender.getUniqueId(), friends.yourselfCommand);
             return;
         }
@@ -187,4 +197,13 @@ public class FriendCommand {
         announcer.announceMessage(sender.getUniqueId(), friends.youKickedFriend.replace("{player}", player.getName()));
         announcer.announceMessage(player.getUniqueId(), friends.friendKickedYou.replace("{player}", sender.getName()));
     }
+
+    @Execute(route = "reload", required = 0)
+    @Permission("eternalfriends.admin.reload")
+    public void reload(Player sender) {
+        MessagesConfig.Friends friends = messages.friends;
+        this.configManager.reload();
+        this.announcer.announceMessage(sender.getUniqueId(), friends.configReloaded);
+    }
+
 }

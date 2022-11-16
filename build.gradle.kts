@@ -1,4 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import dev.s7a.gradle.minecraft.server.tasks.LaunchMinecraftServerTask
 
 plugins {
     id("java")
@@ -51,17 +52,17 @@ bukkit {
     apiVersion = "1.13"
     name = "EternalFriends"
     prefix = "EternalFriends"
-    authors = listOf("igoyek", "Kamicjusz")
+    author = "Kamicjusz"
     version = "${project.version}"
     description = "EternalFriends is a plugin that allows you to manage your friends list."
 }
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(11))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
 
 minecraftServerConfig {
-    jarUrl.set(dev.s7a.gradle.minecraft.server.tasks.LaunchMinecraftServerTask.JarUrl.Paper("1.16.4"))
+    jarUrl.set(LaunchMinecraftServerTask.JarUrl.Paper("1.19.2"))
 }
 
 tasks.withType<ShadowJar> {
@@ -93,7 +94,7 @@ tasks.withType<ShadowJar> {
     }
 }
 
-task<dev.s7a.gradle.minecraft.server.tasks.LaunchMinecraftServerTask>("buildAndLaunchServer") {
+task<LaunchMinecraftServerTask>("buildAndLaunchServer") {
     dependsOn("shadowJar") // build task (build, jar, shadowJar, ...)
     doFirst {
         copy {
@@ -102,7 +103,7 @@ task<dev.s7a.gradle.minecraft.server.tasks.LaunchMinecraftServerTask>("buildAndL
         }
     }
 
-    jarUrl.set(dev.s7a.gradle.minecraft.server.tasks.LaunchMinecraftServerTask.JarUrl.Paper("1.16.4"))
+    jarUrl.set(LaunchMinecraftServerTask.JarUrl.Paper("1.19.2"))
     jarName.set("server.jar")
     serverDirectory.set(buildDir.resolve("MinecraftPaperServer")) // build/MinecraftPaperServer
     nogui.set(true)

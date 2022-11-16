@@ -8,7 +8,6 @@ import net.dzikoysk.cdn.source.Source;
 import org.bukkit.Material;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 
 public class GuiConfig implements ReloadableConfig {
@@ -20,50 +19,28 @@ public class GuiConfig implements ReloadableConfig {
 
     public MainGui mainGui = new MainGui();
 
-    public Gui friendListGui = new Gui()
-            .setTitle("&8Lista znajomych");
-
     public ConfirmGui confirmGui = new ConfirmGui();
 
     public FriendHead friendHead = new FriendHead();
-    public ConfigItem friendListItem = new ConfigItem()
-            .setSlot(11)
-            .setName("&aTwoja lista znajomych")
-            .setType(Material.BOOK)
-            .setLore(Arrays.asList(
-                    "&7Lista znajomych",
-                    "&7Kliknij aby otworzyć"
-            ));
-    public ConfigItem receivedAndSentInvitesItem = new ConfigItem()
-            .setSlot(13)
-            .setName("&aOtrzymane i wysłane zaproszenia")
+    public ConfigItem receivedInvitesItem = new ConfigItem()
+            .setName("&aOtrzymane zaproszenia")
             .setType(Material.WRITABLE_BOOK)
-            .setLore(Arrays.asList(
-                    "&7Otrzymane i wysłane zaproszenia",
+            .setLore(List.of(
+                    "&7Otrzymane zaproszenia",
                     "&7Kliknij aby otworzyć"
             ));
     public ConfigItem sendInvitesItem = new ConfigItem()
-            .setSlot(15)
             .setName("&aWysyłanie zaproszeń")
-            .setType(Material.PAPER)
-            .setLore(Arrays.asList(
+            .setType(Material.WRITABLE_BOOK)
+            .setLore(List.of(
                     "&7Wysyłanie zaproszeń",
                     "&7Kliknij aby otworzyć"
             ));
     public ConfigItem settingItem = new ConfigItem()
-            .setSlot(18)
             .setName("&aUstawienia")
             .setType(Material.REPEATER)
-            .setLore(Arrays.asList(
+            .setLore(List.of(
                     "&7Ustawienia",
-                    "&7Kliknij aby otworzyć"
-            ));
-    public ConfigItem backButton = new ConfigItem()
-            .setSlot(26)
-            .setName("&cWróć")
-            .setType(Material.BARRIER)
-            .setLore(Arrays.asList(
-                    "&7Wróć do menu głównego",
                     "&7Kliknij aby otworzyć"
             ));
 
@@ -74,23 +51,24 @@ public class GuiConfig implements ReloadableConfig {
 
         @Description("# Title of inventory")
         public String title = "&bFriends";
-    }
 
-    @Contextual
-    public static class Gui {
-        @Description("# Title of inventory")
-        public String title = "&bGui Title";
+        public String nextPageItemName = "&aNastępna strona";
 
-        public  Gui setTitle(String title) {
-            this.title = title;
-            return this;
-        }
+        public List<String> nextPageItemLore = List.of(
+                "&7Kliknij aby przejść do następnej strony"
+        );
+
+        public String previousPageItemName = "&cPoprzednia strona";
+
+        public List<String> previousPageItemLore = List.of(
+                "&7Kliknij aby przejść do poprzedniej strony"
+        );
     }
 
     @Contextual
     public static class FriendHead {
         public String name = "&f%friend_name%";
-        public List<String> lore = Arrays.asList("&cKliknij LPM", "&caby usunąć znajomego");
+        public List<String> lore = List.of("&cKliknij LPM", "&caby usunąć znajomego");
     }
 
     @Contextual
@@ -98,18 +76,16 @@ public class GuiConfig implements ReloadableConfig {
         public String title = "&cJestes pewien?";
 
         public ConfigItem confirmItem = new ConfigItem()
-                .setSlot(11)
                 .setName("&aTak")
                 .setType(Material.LIME_STAINED_GLASS_PANE)
-                .setLore(Arrays.asList(
+                .setLore(List.of(
                         "&7Kliknij aby potwierdzić"
                 ));
 
         public ConfigItem denyItem = new ConfigItem()
-                .setSlot(15)
                 .setName("&cNie")
                 .setType(Material.RED_STAINED_GLASS_PANE)
-                .setLore(Arrays.asList(
+                .setLore(List.of(
                         "&7Kliknij aby anulować"
                 ));
     }

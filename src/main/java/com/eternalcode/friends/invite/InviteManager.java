@@ -10,13 +10,13 @@ public class InviteManager {
 
     public void addInvite(UUID from, UUID to) {
         if (!sendedInvites.containsKey(from)) {
-            sendedInvites.put(from, Arrays.asList(to));
+            sendedInvites.put(from, List.of(to));
         }
         else {
             sendedInvites.get(from).add(to);
         }
         if (!receivedInvites.containsKey(to)) {
-            receivedInvites.put(to, Arrays.asList(from));
+            receivedInvites.put(to, List.of(from));
         }
         else {
             receivedInvites.get(to).add(from);
