@@ -1,5 +1,6 @@
 package com.eternalcode.friends;
 
+import com.eternalcode.friends.command.configuration.CommandConfigurator;
 import com.eternalcode.friends.command.handler.InvalidUsage;
 import com.eternalcode.friends.command.handler.PermissionMessage;
 import com.eternalcode.friends.command.implementation.FriendCommand;
@@ -9,6 +10,8 @@ import com.eternalcode.friends.config.implementation.MessagesConfig;
 import com.eternalcode.friends.config.implementation.PluginConfig;
 import com.eternalcode.friends.gui.MainGui;
 import com.eternalcode.friends.invite.InviteManager;
+import com.eternalcode.friends.listener.ChatEventListener;
+import com.eternalcode.friends.listener.DamageEventListener;
 import com.eternalcode.friends.profile.ProfileJoinListener;
 import com.eternalcode.friends.profile.ProfileManager;
 import com.eternalcode.friends.profile.ProfileRepositoryImpl;
@@ -50,7 +53,6 @@ public class EternalFriends extends JavaPlugin {
     private MiniMessage miniMessage;
 
     private LiteCommands<CommandSender> liteCommands;
-
     @Override
     public void onEnable() {
         instance = this;
@@ -71,19 +73,21 @@ public class EternalFriends extends JavaPlugin {
         this.configManager.load(this.messages);
         this.configManager.load(this.guiConfig);
 
-        this.inviteManager = new InviteManager();
+        this.inviteManager = new InviteManager(this);
 
         this.profileManager = new ProfileManager(new ProfileRepositoryImpl());
 
-        this.mainGui = new MainGui(this.miniMessage, this.guiConfig, this, this.profileManager, this.announcer, this.messages);
+        this.mainGui = new MainGui(this.miniMessage, this.guiConfig, this, this.profileManager, this.announcer, this.messages, this.inviteManager);
 
         Stream.of(
-                new ProfileJoinListener(profileManager)
+                new ProfileJoinListener(profileManager),
+                new DamageEventListener(this.profileManager),
+                new ChatEventListener(this.profileManager, this.announcer, this.messages)
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
 
         Metrics metrics = new Metrics(this, 16297);
 
-        this.liteCommands = LiteBukkitFactory.builder(server, "friends")
+        this.liteCommands = LiteBukkitFactory.builder(server, "EternalFriends")
                 .argument(Player.class, new BukkitPlayerArgument<>(server, this.messages.argument.playerNotFound))
 
                 .invalidUsageHandler(new InvalidUsage(this.messages, this.announcer))
@@ -93,7 +97,10 @@ public class EternalFriends extends JavaPlugin {
 
                 .commandInstance(new FriendCommand(this.mainGui, this.profileManager, this.announcer, this.inviteManager, this.messages, this.getServer(), this.configManager))
 
+                .commandEditor("friends", new CommandConfigurator(this.config))
+
                 .register();
+
     }
 
     @Override

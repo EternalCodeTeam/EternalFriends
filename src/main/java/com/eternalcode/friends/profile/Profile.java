@@ -10,13 +10,10 @@ public class Profile {
 
     private final UUID uuid;
     private final List<UUID> friends = new ArrayList<>();
-    private boolean receiveInvites;
-    private boolean friendsJoinNotification;
+    private final List<UUID> ignoredPlayers = new ArrayList<>();
 
     public Profile(UUID uuid) {
         this.uuid = uuid;
-        this.receiveInvites = true;
-        this.friendsJoinNotification = true;
     }
 
     public UUID getUuid() {
@@ -35,20 +32,16 @@ public class Profile {
         this.friends.remove(uuid);
     }
 
-    public boolean isReceiveInvites() {
-        return receiveInvites;
+    public void addIgnoredPlayer(UUID uuid) {
+        this.ignoredPlayers.add(uuid);
     }
 
-    public void setReceiveInvites(boolean receiveInvites) {
-        this.receiveInvites = receiveInvites;
+    public void removeIgnoredPlayer(UUID uuid) {
+        this.ignoredPlayers.remove(uuid);
     }
 
-    public boolean isFriendsJoinNotification() {
-        return friendsJoinNotification;
-    }
-
-    public void setFriendsJoinNotification(boolean friendsJoinNotification) {
-        this.friendsJoinNotification = friendsJoinNotification;
+    public boolean isIgnoredPlayer(UUID uuid) {
+        return this.ignoredPlayers.contains(uuid);
     }
 
     @Override

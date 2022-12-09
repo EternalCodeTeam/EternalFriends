@@ -20,15 +20,10 @@ public class InvalidUsage implements InvalidUsageHandler<CommandSender> {
 
     @Override
     public void handle(CommandSender sender, LiteInvocation invocation, Schematic schematic) {
-
         Player player = (Player) sender;
-
-        if (schematic.getSchematics().size() > 1) {
-            for (String scheme : schematic.getSchematics()) {
-                this.announcer.announceMessage(player.getUniqueId(), this.messages.argument.correctUsage.replace("{scheme}", scheme));
-            }
-        } else {
-            this.announcer.announceMessage(player.getUniqueId(), this.messages.argument.correctUsage.replace("{scheme}", schematic.getSchematics().get(0)));
-        }
+        schematic.getSchematics().stream().forEach(str -> {
+            this.announcer.announceMessage(sender, str);
+        });
+        this.announcer.announceMessage(sender, messages.argument.invalidUsage);
     }
 }

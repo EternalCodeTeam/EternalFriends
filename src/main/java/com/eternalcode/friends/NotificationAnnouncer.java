@@ -4,6 +4,8 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.title.Title;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.time.Duration;
 import java.util.UUID;
@@ -33,5 +35,13 @@ public class NotificationAnnouncer {
 
     public void announceMessage(UUID uniqueId, String message) {
         this.audienceProvider.player(uniqueId).sendMessage(this.miniMessage.deserialize(message));
+    }
+
+    public void announceMessage(CommandSender commandSender, String message) {
+        if (commandSender instanceof Player) {
+            this.audienceProvider.player(((Player) commandSender).getUniqueId()).sendMessage(this.miniMessage.deserialize(message));
+        } else {
+            this.audienceProvider.console().sendMessage(this.miniMessage.deserialize(message));
+        }
     }
 }

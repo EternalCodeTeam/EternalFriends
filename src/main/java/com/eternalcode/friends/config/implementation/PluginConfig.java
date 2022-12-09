@@ -1,6 +1,7 @@
 package com.eternalcode.friends.config.implementation;
 
 import com.eternalcode.friends.config.ReloadableConfig;
+import net.dzikoysk.cdn.entity.Description;
 import net.dzikoysk.cdn.source.Resource;
 import net.dzikoysk.cdn.source.Source;
 
@@ -12,4 +13,12 @@ public class PluginConfig implements ReloadableConfig {
     public Resource resource(File folder) {
         return Source.of(folder, "configuration.yml");
     }
+
+    @Description({
+            "# Language used to translate commands",
+            "# Available languages:",
+            "# English: en",
+            "# Polish: pl"
+    })
+    public String commandLang = "en";
 }

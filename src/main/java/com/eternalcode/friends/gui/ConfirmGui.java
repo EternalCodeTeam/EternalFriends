@@ -1,7 +1,6 @@
 package com.eternalcode.friends.gui;
 
 import com.eternalcode.friends.config.implementation.GuiConfig;
-import com.eternalcode.friends.util.legacy.Legacy;
 import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.guis.Gui;
 import dev.triumphteam.gui.guis.GuiItem;
@@ -26,14 +25,14 @@ public class ConfirmGui {
     }
 
     public void openInventory(Player player, Runnable onConfirm, Runnable onDeny) {
-        GuiItem confirmItem = this.guiConfig.confirmGui.confirmItem.toGuiItem(this.miniMessage);
+        GuiItem confirmItem = this.guiConfig.menuItems.confirmItem.toGuiItem(this.miniMessage);
         confirmItem.setAction(event -> onConfirm.run());
 
-        GuiItem denyItem = this.guiConfig.confirmGui.denyItem.toGuiItem(this.miniMessage);
+        GuiItem denyItem = this.guiConfig.menuItems.denyItem.toGuiItem(this.miniMessage);
         denyItem.setAction(event -> onDeny.run());
 
         Gui gui = Gui.gui()
-                .title(this.miniMessage.deserialize(this.guiConfig.confirmGui.title))
+                .title(this.miniMessage.deserialize(this.guiConfig.guis.confirmGuiTitle))
                 .rows(3)
                 .disableItemTake()
                 .create();

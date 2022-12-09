@@ -3,6 +3,7 @@ package com.eternalcode.friends.gui;
 import com.eternalcode.friends.NotificationAnnouncer;
 import com.eternalcode.friends.config.implementation.GuiConfig;
 import com.eternalcode.friends.config.implementation.MessagesConfig;
+import com.eternalcode.friends.invite.InviteManager;
 import com.eternalcode.friends.profile.Profile;
 import com.eternalcode.friends.profile.ProfileManager;
 import dev.triumphteam.gui.builder.item.ItemBuilder;
@@ -28,6 +29,8 @@ public class MainGui {
     private final NotificationAnnouncer announcer;
     private final MessagesConfig messages;
     private final ConfirmGui confirmGUI;
+    private final ReceivedInvitesGui receivedInvitesGui;
+    private final InviteManager inviteManager;
     private final Plugin plugin;
     private final Server server;
     private static final int SETTINGS_ITEM_SLOT = 49;
@@ -37,52 +40,57 @@ public class MainGui {
     private static final int SEND_ITEM_SLOT = 50;
 
 
-    public MainGui(MiniMessage miniMessage, GuiConfig guiConfig, Plugin plugin, ProfileManager profileManager, NotificationAnnouncer announcer, MessagesConfig messages) {
+    public MainGui(MiniMessage miniMessage, GuiConfig guiConfig, Plugin plugin, ProfileManager profileManager, NotificationAnnouncer announcer, MessagesConfig messages, InviteManager inviteManager) {
         this.miniMessage = miniMessage;
         this.guiConfig = guiConfig;
         this.plugin = plugin;
         this.profileManager = profileManager;
         this.announcer = announcer;
         this.messages = messages;
+        this.inviteManager = inviteManager;
         this.server = plugin.getServer();
         this.confirmGUI = new ConfirmGui(this.guiConfig, this.miniMessage);
+        this.receivedInvitesGui = new ReceivedInvitesGui(this.profileManager, this.announcer, this.messages, this.guiConfig, this.miniMessage, this.inviteManager, this.server);
     }
 
     public void openMainGui(Player player) {
-        GuiConfig.MainGui mainGui = guiConfig.mainGui;
+        final GuiConfig.MenuItems menuItems = this.guiConfig.menuItems;
+
         PaginatedGui gui = Gui.paginated()
-                .title(this.miniMessage.deserialize(mainGui.title))
+                .title(this.miniMessage.deserialize(this.guiConfig.guis.mainGuiTitle))
                 .rows(6)
                 .pageSize(45)
                 .disableItemTake()
                 .create();
 
         GuiItem nextPageButton = ItemBuilder.from(Material.PAPER)
-                .name(this.miniMessage.deserialize(this.guiConfig.mainGui.nextPageItemName))
-                .lore(this.guiConfig.mainGui.nextPageItemLore.stream().map(string -> miniMessage.deserialize(string)).toList())
+                .name(this.miniMessage.deserialize(menuItems.nextPageItem.name))
+                .lore(menuItems.nextPageItem.lore.stream().map(string -> miniMessage.deserialize(string)).toList())
                 .asGuiItem(event -> {
                     gui.next();
                 });
 
         GuiItem backPageButton = ItemBuilder.from(Material.PAPER)
-                .name(this.miniMessage.deserialize(this.guiConfig.mainGui.previousPageItemName))
-                .lore(this.guiConfig.mainGui.previousPageItemLore.stream().map(string -> miniMessage.deserialize(string)).toList())
+                .name(this.miniMessage.deserialize(menuItems.previousPageItem.name))
+                .lore(menuItems.previousPageItem.lore.stream().map(string -> miniMessage.deserialize(string)).toList())
                 .asGuiItem(event -> {
                     gui.previous();
                 });
 
-        GuiItem sendInvitesItem = this.guiConfig.sendInvitesItem.toGuiItem(this.miniMessage);
+        GuiItem sendInvitesItem = menuItems.sendInvitesItem.toGuiItem(this.miniMessage);
         sendInvitesItem.setAction(event -> {
             player.closeInventory();
             this.announcer.announceMessage(player.getUniqueId(), this.messages.friends.inviteInstruction);
         });
 
-        GuiItem receivedInvitesItem = this.guiConfig.receivedInvitesItem.toGuiItem(this.miniMessage);
+        GuiItem receivedInvitesItem = menuItems.receivedInvitesItem.toGuiItem(this.miniMessage);
         receivedInvitesItem.setAction(event -> {
-            //TODO
+            receivedInvitesGui.openInventory(player, () -> {
+                this.openMainGui(player);
+            });
         });
 
-        GuiItem settingsItem = this.guiConfig.settingItem.toGuiItem(this.miniMessage);
+        GuiItem settingsItem = menuItems.settingItem.toGuiItem(this.miniMessage);
         settingsItem.setAction(event -> {
             //TODO
         });
@@ -111,10 +119,13 @@ public class MainGui {
         for (UUID uuid : profile.getFriends()) {
             final GuiItem skull = ItemBuilder.skull()
                     .owner(server.getOfflinePlayer(uuid))
-                    .name(this.miniMessage.deserialize(guiConfig.friendHead.name.replace("%friend_name%", server.getOfflinePlayer(uuid).getName())))
-                    .lore(guiConfig.friendHead.lore.stream().map(string -> miniMessage.deserialize(string)).toList())
+                    .name(this.miniMessage.deserialize(guiConfig.menuItems.friendListHead.name.replace("%friend_name%", server.getOfflinePlayer(uuid).getName())))
+                    .lore(guiConfig.menuItems.friendListHead.lore.stream().map(string -> miniMessage.deserialize(string)).toList())
                     .asGuiItem();
             skull.setAction(event -> {
+                if (!event.isLeftClick()) {
+                    return;
+                }
                 this.confirmGUI.openInventory(player, () -> {
                     Optional<Profile> friendProfileOptional = profileManager.getProfileByUUID(uuid);
                     if (friendProfileOptional.isEmpty()) {
@@ -133,7 +144,7 @@ public class MainGui {
                         announcer.announceMessage(uuid, messages.friends.friendKickedYou.replace("{player}", player.getName()));
                     }
 
-                    player.closeInventory();
+                    openMainGui(player);
                 }, () -> openMainGui(player));
             });
             gui.addItem(skull);

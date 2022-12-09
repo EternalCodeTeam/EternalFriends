@@ -26,8 +26,4 @@ public class ProfileManager {
         return Optional.ofNullable(profiles.get(uuid));
     }
 
-    public boolean hasProfile(UUID uuid) {
-        return profiles.containsKey(uuid);
-    }
-
 }
