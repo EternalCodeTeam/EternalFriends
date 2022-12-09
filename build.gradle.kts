@@ -5,7 +5,7 @@ plugins {
     id("java")
     id("com.github.johnrengelman.shadow") version "7.1.2"
     id("net.minecrell.plugin-yml.bukkit") version "0.5.2"
-    id("dev.s7a.gradle.minecraft.server") version "1.2.0"
+    id("dev.s7a.gradle.minecraft.server") version "2.0.0"
 }
 
 group = "com.eternalcode"
@@ -26,14 +26,14 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT")
 
     // kyori adventure
-    implementation("net.kyori:adventure-platform-bukkit:4.1.2")
-    implementation("net.kyori:adventure-text-minimessage:4.11.0")
+    implementation("net.kyori:adventure-platform-bukkit:4.2.0")
+    implementation("net.kyori:adventure-text-minimessage:4.12.0")
 
     // litecommands
     implementation("dev.rollczi.litecommands:bukkit:2.7.0")
 
     // cdn
-    implementation("net.dzikoysk:cdn:1.14.0")
+    implementation("net.dzikoysk:cdn:1.14.1")
 
     // bstats
     implementation("org.bstats:bstats-bukkit:3.0.0")
