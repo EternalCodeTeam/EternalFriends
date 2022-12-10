@@ -1,18 +1,16 @@
 package com.eternalcode.friends.listener;
 
 import com.eternalcode.friends.profile.ProfileManager;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 
-public class DamageEventListener implements Listener {
+public class EntityDamageByEntityListener implements Listener {
 
     private final ProfileManager profileManager;
 
-    public DamageEventListener(ProfileManager profileManager) {
+    public EntityDamageByEntityListener(ProfileManager profileManager) {
         this.profileManager = profileManager;
     }
 
@@ -36,6 +34,4 @@ public class DamageEventListener implements Listener {
             }
         });
     }
-
-
 }

@@ -20,7 +20,7 @@ public class CommandConfigurator implements CommandEditor {
                     .editChild("accept", child -> child.name("akceptuj"))
                     .editChild("deny", child -> child.name("odrzuc"))
                     .editChild("list", child -> child.name("lista"))
-                    .editChild("list", child -> child.name("lista"))
+                    //.editChild("list", child -> child.name("lista"))
                     .editChild("help", child -> child.name("pomoc"))
                     .editChild("invite", child -> child.name("zapros"));
 

@@ -10,8 +10,8 @@ import com.eternalcode.friends.config.implementation.MessagesConfig;
 import com.eternalcode.friends.config.implementation.PluginConfig;
 import com.eternalcode.friends.gui.MainGui;
 import com.eternalcode.friends.invite.InviteManager;
-import com.eternalcode.friends.listener.ChatEventListener;
-import com.eternalcode.friends.listener.DamageEventListener;
+import com.eternalcode.friends.listener.AsyncPlayerChatListener;
+import com.eternalcode.friends.listener.EntityDamageByEntityListener;
 import com.eternalcode.friends.profile.ProfileJoinListener;
 import com.eternalcode.friends.profile.ProfileManager;
 import com.eternalcode.friends.profile.ProfileRepositoryImpl;
@@ -81,13 +81,13 @@ public class EternalFriends extends JavaPlugin {
 
         Stream.of(
                 new ProfileJoinListener(profileManager),
-                new DamageEventListener(this.profileManager),
-                new ChatEventListener(this.profileManager, this.announcer, this.messages)
+                new EntityDamageByEntityListener(this.profileManager),
+                new AsyncPlayerChatListener(this.profileManager, this.announcer, this.messages)
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
 
         Metrics metrics = new Metrics(this, 16297);
 
-        this.liteCommands = LiteBukkitFactory.builder(server, "EternalFriends")
+        this.liteCommands = LiteBukkitFactory.builder(server, "eternalfriends")
                 .argument(Player.class, new BukkitPlayerArgument<>(server, this.messages.argument.playerNotFound))
 
                 .invalidUsageHandler(new InvalidUsage(this.messages, this.announcer))

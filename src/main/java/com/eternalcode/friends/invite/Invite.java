@@ -8,12 +8,12 @@ public class Invite {
     private final UUID from;
     private final UUID to;
 
-    private final Instant expirationDate;
+    private final Duration duration;
 
     public Invite(UUID from, UUID to, Duration duration) {
         this.from = from;
         this.to = to;
-        this.expirationDate = Instant.now().plusSeconds(duration.toSeconds());
+        this.duration = duration;
     }
 
     public UUID getFrom() {
@@ -24,11 +24,9 @@ public class Invite {
         return to;
     }
 
-    public boolean isExpired() {
-        return expirationDate.isBefore(Instant.now());
+    public Duration getDuration() {
+        return duration;
     }
-
-
     public boolean equals(Invite invite) {
         return invite.getFrom().equals(from) && invite.getTo().equals(to);
     }

@@ -191,10 +191,9 @@ public class FriendCommand {
                 if (inviteManager.hasReceivedInvite(playerUuid, senderUuid)) {
                     inviteManager.removeInvite(playerUuid, senderUuid);
                     announcer.announceMessage(senderUuid, friends.inviteDenied.replace("{player}", player.getName()));
+                    return;
                 }
-                else {
-                    announcer.announceMessage(sender.getUniqueId(), friends.inviteNotFound);
-                }
+                announcer.announceMessage(sender.getUniqueId(), friends.inviteNotFound);
             });
         });
     }

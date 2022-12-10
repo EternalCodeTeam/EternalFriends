@@ -33,7 +33,7 @@ public class InviteManager {
         }
         Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> {
             removeInvite(from, to);
-        }, DEFAULT_INVITE_DURATION.toSeconds() * 20);
+        }, invite.getDuration().toSeconds() * 20);
     }
 
     public boolean hasSendedInvite(UUID from, UUID to) {
