@@ -109,6 +109,7 @@ public class MainGui {
 
     private void generateFriendsHeads(Player player, PaginatedGui gui) {
         Optional<Profile> profileOptional = profileManager.getProfileByUUID(player.getUniqueId());
+
         if (profileOptional.isEmpty()) {
             player.closeInventory();
             announcer.announceMessage(player.getUniqueId(), messages.friends.yourProfileNotFound);
@@ -116,23 +117,28 @@ public class MainGui {
         }
 
         Profile profile = profileOptional.get();
+
         for (UUID uuid : profile.getFriends()) {
             final GuiItem skull = ItemBuilder.skull()
                     .owner(server.getOfflinePlayer(uuid))
                     .name(this.miniMessage.deserialize(guiConfig.menuItems.friendListHead.name.replace("%friend_name%", server.getOfflinePlayer(uuid).getName())))
                     .lore(guiConfig.menuItems.friendListHead.lore.stream().map(string -> miniMessage.deserialize(string)).toList())
                     .asGuiItem();
+
             skull.setAction(event -> {
                 if (!event.isLeftClick()) {
                     return;
                 }
+
                 this.confirmGUI.openInventory(player, () -> {
                     Optional<Profile> friendProfileOptional = profileManager.getProfileByUUID(uuid);
+
                     if (friendProfileOptional.isEmpty()) {
                         player.closeInventory();
                         announcer.announceMessage(player.getUniqueId(), messages.friends.profileNotFound);
                         return;
                     }
+
                     Profile friendProfile = friendProfileOptional.get();
 
                     profile.removeFriend(uuid);

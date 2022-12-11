@@ -49,10 +49,13 @@ public class Profile {
         if (this == o) {
             return true;
         }
+
         if (!(o instanceof Profile)) {
             return false;
         }
+
         Profile profile = (Profile) o;
+
         return uuid.equals(profile.uuid);
     }
 

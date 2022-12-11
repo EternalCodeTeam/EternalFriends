@@ -50,12 +50,15 @@ public class FriendCommand {
     @Permission("eternalfriends.access.invite")
     public void invite(Player sender, @Arg @Name("player") Player target) {
         MessagesConfig.Friends friends = messages.friends;
+
         if (sender.equals(target)) {
             announcer.announceMessage(sender.getUniqueId(), friends.yourselfCommand);
             return;
         }
+
         Optional<Profile> senderOptional = profileManager.getProfileByUUID(sender.getUniqueId());
         Optional<Profile> targetOptional = profileManager.getProfileByUUID(target.getUniqueId());
+
         if (targetOptional.isEmpty()) {
             announcer.announceMessage(sender.getUniqueId(), friends.profileNotFound);
             return;
@@ -64,15 +67,19 @@ public class FriendCommand {
             announcer.announceMessage(sender.getUniqueId(), friends.yourProfileNotFound);
             return;
         }
+
         Profile senderProfile = senderOptional.get();
         Profile targetProfile = targetOptional.get();
+
         if (targetProfile.isIgnoredPlayer(sender.getUniqueId())) {
             return;
         }
+
         if (senderProfile.getFriends().contains(target.getUniqueId())) {
             announcer.announceMessage(sender.getUniqueId(), friends.alreadyFriend);
             return;
         }
+
         if (inviteManager.hasReceivedInvite(target.getUniqueId(), sender.getUniqueId()) || inviteManager.hasSendedInvite(target.getUniqueId(), sender.getUniqueId())) {
             announcer.announceMessage(sender.getUniqueId(), friends.alreadyReceivedInvite);
             return;
@@ -83,6 +90,7 @@ public class FriendCommand {
         }
 
         inviteManager.addInvite(sender.getUniqueId(), target.getUniqueId());
+
         announcer.announceMessage(sender.getUniqueId(), friends.inviteSent.replace("{invited}", target.getName()));
         announcer.announceMessage(target.getUniqueId(), friends.inviteReceived.replace("{player}", sender.getName()));
     }
@@ -91,64 +99,48 @@ public class FriendCommand {
     @Permission("eternalfriends.access.list")
     public void list(Player sender) {
         MessagesConfig.Friends friends = messages.friends;
-        Optional<Profile> profileOptional = this.profileManager.getProfileByUUID(sender.getUniqueId());
-        if (profileOptional.isEmpty()) {
+        Optional<Profile> senderOptional = this.profileManager.getProfileByUUID(sender.getUniqueId());
+
+        if (senderOptional.isEmpty()) {
             announcer.announceMessage(sender.getUniqueId(), friends.yourProfileNotFound);
             return;
         }
 
-        Profile profile = profileOptional.get();
-        StringBuilder builder = new StringBuilder();
+        Profile senderProfile = senderOptional.get();
 
-        if (profile.getFriends().size() == 0) {
-            builder.append(friends.emptyFriendList);
-        }
-        else {
-            builder.append(friends.friendListHeader);
-            for (UUID uuid : profile.getFriends()) {
-                builder.append(friends.friendListPlayer.replace("{player}", server.getOfflinePlayer(uuid).getName()));
-            }
-        }
-
-        announcer.announceMessage(sender.getUniqueId(), builder.toString());
+        announcer.announceMessage(sender.getUniqueId(), listOfFriends(friends, senderProfile));
     }
 
-    @Execute(route = "list", required = 1)
+    @Execute(route = "adminlist", required = 1)
     @Permission("eternalfriends.admin.list")
-    public void listAdmin(CommandSender sender, @Arg @Name("player") Player player) {
+    public void listAdmin(CommandSender sender, @Arg @Name("player") Player target) {
         MessagesConfig.Friends friends = messages.friends;
-        Optional<Profile> profileOptional = this.profileManager.getProfileByUUID(player.getUniqueId());
-        if (profileOptional.isEmpty()) {
+        Optional<Profile> targetOptional = this.profileManager.getProfileByUUID(target.getUniqueId());
+
+        if (targetOptional.isEmpty()) {
             announcer.announceMessage(sender, friends.profileNotFound);
             return;
         }
 
-        Profile profile = profileOptional.get();
-        StringBuilder builder = new StringBuilder();
+        Profile profile = targetOptional.get();
 
-        if (profile.getFriends().size() == 0) {
-            builder.append(friends.emptyFriendListAdmin);
-        }
-        else {
-            builder.append(friends.friendListHeaderAdmin.replace("{player}", player.getName()));
-            for (UUID uuid : profile.getFriends()) {
-                builder.append(friends.friendListPlayer.replace("{player}", server.getOfflinePlayer(uuid).getName()));
-            }
-        }
-        this.announcer.announceMessage(sender, builder.toString());
+        this.announcer.announceMessage(sender, listOfFriends(friends, profile));
     }
 
     @Execute(route = "accept", required = 1)
     @Permission("eternalfriends.access.accept")
-    public void accept(Player sender, @Arg @Name("player") Player player) {
+    public void accept(Player sender, @Arg @Name("player") Player target) {
         MessagesConfig.Friends friends = messages.friends;
-        if (sender.equals(player)) {
+
+        if (sender.equals(target)) {
             announcer.announceMessage(sender.getUniqueId(), friends.yourselfCommand);
             return;
         }
-        Optional<Profile> playerOptional = profileManager.getProfileByUUID(player.getUniqueId());
+
+        Optional<Profile> targetOptional = profileManager.getProfileByUUID(target.getUniqueId());
         Optional<Profile> senderOptional = profileManager.getProfileByUUID(sender.getUniqueId());
-        if (playerOptional.isEmpty()) {
+
+        if (targetOptional.isEmpty()) {
             announcer.announceMessage(sender.getUniqueId(), friends.profileNotFound);
             return;
         }
@@ -156,20 +148,21 @@ public class FriendCommand {
             announcer.announceMessage(sender.getUniqueId(), friends.yourProfileNotFound);
             return;
         }
+
         Profile senderProfile = senderOptional.get();
-        Profile playerProfile = playerOptional.get();
+        Profile targetProfile = targetOptional.get();
 
         UUID senderUuid = sender.getUniqueId();
-        UUID playerUuid = player.getUniqueId();
+        UUID targetUuid = target.getUniqueId();
 
-        if (inviteManager.hasReceivedInvite(playerUuid, senderUuid)) {
-            senderProfile.addFriend(playerUuid);
-            playerProfile.addFriend(senderUuid);
+        if (inviteManager.hasReceivedInvite(targetUuid, senderUuid)) {
+            senderProfile.addFriend(targetUuid);
+            targetProfile.addFriend(senderUuid);
 
-            inviteManager.removeInvite(playerUuid, senderUuid);
+            inviteManager.removeInvite(targetUuid, senderUuid);
 
-            announcer.announceMessage(senderUuid, friends.acceptedInvite.replace("{player}", player.getName()));
-            announcer.announceMessage(playerUuid, friends.yourInvitationHasBeenAccepted.replace("{player}", sender.getName()));
+            announcer.announceMessage(senderUuid, friends.acceptedInvite.replace("{player}", target.getName()));
+            announcer.announceMessage(targetUuid, friends.yourInvitationHasBeenAccepted.replace("{player}", sender.getName()));
         }
         else {
             announcer.announceMessage(sender.getUniqueId(), friends.inviteNotFound);
@@ -178,21 +171,25 @@ public class FriendCommand {
 
     @Execute(route = "deny", required = 1)
     @Permission("eternalfriends.access.deny")
-    public void deny(Player sender, @Arg @Name("player") Player player) {
+    public void deny(Player sender, @Arg @Name("player") Player target) {
         MessagesConfig.Friends friends = messages.friends;
-        if (sender.equals(player)) {
+
+        if (sender.equals(target)) {
             announcer.announceMessage(sender.getUniqueId(), friends.yourselfCommand);
             return;
         }
-        profileManager.getProfileByUUID(player.getUniqueId()).ifPresent(playerProfile -> {
+
+        profileManager.getProfileByUUID(target.getUniqueId()).ifPresent(playerProfile -> {
             profileManager.getProfileByUUID(sender.getUniqueId()).ifPresent(senderProfile -> {
                 UUID senderUuid = sender.getUniqueId();
-                UUID playerUuid = player.getUniqueId();
-                if (inviteManager.hasReceivedInvite(playerUuid, senderUuid)) {
-                    inviteManager.removeInvite(playerUuid, senderUuid);
-                    announcer.announceMessage(senderUuid, friends.inviteDenied.replace("{player}", player.getName()));
+                UUID targetUuid = target.getUniqueId();
+
+                if (inviteManager.hasReceivedInvite(targetUuid, senderUuid)) {
+                    inviteManager.removeInvite(targetUuid, senderUuid);
+                    announcer.announceMessage(senderUuid, friends.inviteDenied.replace("{player}", target.getName()));
                     return;
                 }
+
                 announcer.announceMessage(sender.getUniqueId(), friends.inviteNotFound);
             });
         });
@@ -200,15 +197,18 @@ public class FriendCommand {
 
     @Execute(route = "kick", required = 1)
     @Permission("eternalfriends.access.kick")
-    public void kick(Player sender, @Arg @Name("player") Player player){
+    public void kick(Player sender, @Arg @Name("player") Player target){
         MessagesConfig.Friends friends = messages.friends;
-        if (sender.equals(player)) {
+
+        if (sender.equals(target)) {
             announcer.announceMessage(sender.getUniqueId(), friends.yourselfCommand);
             return;
         }
-        Optional<Profile> playerOptional = profileManager.getProfileByUUID(player.getUniqueId());
+
+        Optional<Profile> targetOptional = profileManager.getProfileByUUID(target.getUniqueId());
         Optional<Profile> senderOptional = profileManager.getProfileByUUID(sender.getUniqueId());
-        if (playerOptional.isEmpty()) {
+
+        if (targetOptional.isEmpty()) {
             announcer.announceMessage(sender.getUniqueId(), friends.profileNotFound);
             return;
         }
@@ -216,43 +216,50 @@ public class FriendCommand {
             announcer.announceMessage(sender.getUniqueId(), friends.yourProfileNotFound);
             return;
         }
-        Profile senderProfile = senderOptional.get();
-        Profile playerProfile = playerOptional.get();
 
-        if (!senderProfile.getFriends().contains(player.getUniqueId())) {
+        Profile senderProfile = senderOptional.get();
+        Profile targetProfile = targetOptional.get();
+
+        if (!senderProfile.getFriends().contains(target.getUniqueId())) {
             announcer.announceMessage(sender.getUniqueId(), friends.playerIsNotYourFriend);
             return;
         }
 
-        senderProfile.removeFriend(player.getUniqueId());
-        playerProfile.removeFriend(sender.getUniqueId());
-        announcer.announceMessage(sender.getUniqueId(), friends.youKickedFriend.replace("{player}", player.getName()));
-        announcer.announceMessage(player.getUniqueId(), friends.friendKickedYou.replace("{player}", sender.getName()));
+        senderProfile.removeFriend(target.getUniqueId());
+        targetProfile.removeFriend(sender.getUniqueId());
+
+        announcer.announceMessage(sender.getUniqueId(), friends.youKickedFriend.replace("{player}", target.getName()));
+        announcer.announceMessage(target.getUniqueId(), friends.friendKickedYou.replace("{player}", sender.getName()));
     }
 
     @Execute(route = "ignore", required = 1)
     @Permission("eternalfriends.access.ignore")
-    public void ignore(Player sender, @Arg @Name("player") Player player) {
+    public void ignore(Player sender, @Arg @Name("player") Player target) {
         MessagesConfig.Friends friends = messages.friends;
-        if (sender.equals(player)) {
+
+        if (sender.equals(target)) {
             announcer.announceMessage(sender.getUniqueId(), friends.yourselfCommand);
             return;
         }
+
         Optional<Profile> senderOptional = profileManager.getProfileByUUID(sender.getUniqueId());
+
         if (senderOptional.isEmpty()) {
             announcer.announceMessage(sender.getUniqueId(), friends.yourProfileNotFound);
             return;
         }
+
         Profile senderProfile = senderOptional.get();
 
-        if (senderProfile.isIgnoredPlayer(player.getUniqueId())) {
-            senderProfile.removeIgnoredPlayer(player.getUniqueId());
-            announcer.announceMessage(sender.getUniqueId(), friends.youUnignoredPlayer.replace("{player}", player.getName()));
+        if (senderProfile.isIgnoredPlayer(target.getUniqueId())) {
+            senderProfile.removeIgnoredPlayer(target.getUniqueId());
+            announcer.announceMessage(sender.getUniqueId(), friends.youUnignoredPlayer.replace("{player}", target.getName()));
             return;
         }
 
-        senderProfile.addIgnoredPlayer(player.getUniqueId());
-        announcer.announceMessage(sender.getUniqueId(), friends.youIgnoredPlayer.replace("{player}", player.getName()));
+        senderProfile.addIgnoredPlayer(target.getUniqueId());
+
+        announcer.announceMessage(sender.getUniqueId(), friends.youIgnoredPlayer.replace("{player}", target.getName()));
     }
 
     @Execute(route = "help")
@@ -267,8 +274,25 @@ public class FriendCommand {
     @Permission("eternalfriends.admin.reload")
     public void reload(CommandSender sender) {
         MessagesConfig.Friends friends = messages.friends;
+
         this.configManager.reload();
+
         this.announcer.announceMessage(sender, friends.configReloaded);
     }
 
+    private String listOfFriends(MessagesConfig.Friends friends, Profile profile) {
+        StringBuilder builder = new StringBuilder();
+
+        if (profile.getFriends().size() == 0) {
+            builder.append(friends.emptyFriendList);
+        }
+        else {
+            builder.append(friends.friendListHeader);
+            for (UUID uuid : profile.getFriends()) {
+                builder.append(friends.friendListPlayer.replace("{player}", server.getOfflinePlayer(uuid).getName()));
+            }
+        }
+
+        return builder.toString();
+    }
 }

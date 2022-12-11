@@ -40,7 +40,8 @@ public class NotificationAnnouncer {
     public void announceMessage(CommandSender commandSender, String message) {
         if (commandSender instanceof Player) {
             this.audienceProvider.player(((Player) commandSender).getUniqueId()).sendMessage(this.miniMessage.deserialize(message));
-        } else {
+        }
+        else {
             this.audienceProvider.console().sendMessage(this.miniMessage.deserialize(message));
         }
     }

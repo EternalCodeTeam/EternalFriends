@@ -88,8 +88,10 @@ public class ReceivedInvitesGui {
     }
 
     private void generateHeads(Player player, PaginatedGui gui) {
-        final MessagesConfig.Friends friends = messages.friends;
+        MessagesConfig.Friends friends = messages.friends;
+
         Optional<Profile> profileOptional = profileManager.getProfileByUUID(player.getUniqueId());
+
         if (profileOptional.isEmpty()) {
             player.closeInventory();
             announcer.announceMessage(player.getUniqueId(), friends.yourProfileNotFound);
@@ -97,10 +99,12 @@ public class ReceivedInvitesGui {
         }
 
         Profile profile = profileOptional.get();
+
         List<Invite> receivedInvites = this.inviteManager.getReceivedInvites(profile.getUuid());
         if (receivedInvites == null || receivedInvites.isEmpty()) {
             return;
         }
+
         for (Invite invite : receivedInvites) {
             OfflinePlayer offlinePlayer = server.getOfflinePlayer(invite.getFrom());
             UUID uuid = invite.getFrom();
@@ -112,12 +116,15 @@ public class ReceivedInvitesGui {
 
             skull.setAction(event -> {
                 Optional<Profile> friendProfileOptional = profileManager.getProfileByUUID(uuid);
+
                 if (friendProfileOptional.isEmpty()) {
                     player.closeInventory();
                     announcer.announceMessage(player.getUniqueId(), friends.profileNotFound);
                     return;
                 }
+
                 Profile friendProfile = friendProfileOptional.get();
+
                 if (event.isLeftClick()) {
                     profile.addFriend(uuid);
                     friendProfile.addFriend(profile.getUuid());
@@ -135,7 +142,6 @@ public class ReceivedInvitesGui {
                 gui.clearPageItems(true);
                 generateHeads(player, gui);
             });
-
             gui.addItem(skull);
             gui.update();
         }

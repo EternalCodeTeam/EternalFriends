@@ -19,18 +19,21 @@ public class InviteManager {
 
     public void addInvite(UUID from, UUID to) {
         Invite invite = new Invite(from, to, DEFAULT_INVITE_DURATION);
+
         if (sendedInvites.containsKey(from)) {
             sendedInvites.get(from).add(invite);
         }
         else {
             sendedInvites.put(from, new ArrayList<>(List.of(invite)));
         }
+
         if (receivedInvites.containsKey(to)) {
             receivedInvites.get(to).add(invite);
         }
         else {
             receivedInvites.put(to, new ArrayList<>(List.of(invite)));
         }
+
         Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> {
             removeInvite(from, to);
         }, invite.getDuration().toSeconds() * 20);

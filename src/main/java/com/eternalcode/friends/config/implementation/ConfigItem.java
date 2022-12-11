@@ -25,6 +25,7 @@ public class ConfigItem {
                 .lore(this.lore.stream().map(string -> miniMessage.deserialize(string)).toList())
                 .flags(ItemFlag.HIDE_ATTRIBUTES)
                 .flags(ItemFlag.HIDE_ENCHANTS);
+
         return builder.asGuiItem();
     }
 
