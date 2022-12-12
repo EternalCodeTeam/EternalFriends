@@ -60,10 +60,6 @@ java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
 
-minecraftServerConfig {
-    jarUrl.set(LaunchMinecraftServerTask.JarUrl.Paper("1.19.2"))
-}
-
 tasks.withType<ShadowJar> {
     archiveFileName.set("EternalFriends v${project.version}.jar")
 

@@ -7,13 +7,17 @@ import java.util.UUID;
 public class Invite {
     private final UUID from;
     private final UUID to;
-
     private final Duration duration;
-
+    private final Instant expiretionDate;
     public Invite(UUID from, UUID to, Duration duration) {
         this.from = from;
         this.to = to;
         this.duration = duration;
+        this.expiretionDate = Instant.now().plus(duration);
+    }
+
+    public boolean isExpired() {
+        return Instant.now().isAfter(expiretionDate);
     }
 
     public UUID getFrom() {

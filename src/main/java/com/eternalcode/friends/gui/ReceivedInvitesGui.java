@@ -106,6 +106,20 @@ public class ReceivedInvitesGui {
         }
 
         for (Invite invite : receivedInvites) {
+
+            if (inviteManager.isInviteExpired(invite.getFrom(), invite.getTo())) {
+
+                if (receivedInvites.size() <= 1) {
+                    player.closeInventory();
+                    inviteManager.removeInvite(invite.getFrom(), invite.getTo());
+                    return;
+                }
+
+                inviteManager.removeInvite(invite.getFrom(), invite.getTo());
+
+                continue;
+            }
+
             OfflinePlayer offlinePlayer = server.getOfflinePlayer(invite.getFrom());
             UUID uuid = invite.getFrom();
             GuiItem skull = ItemBuilder.skull()

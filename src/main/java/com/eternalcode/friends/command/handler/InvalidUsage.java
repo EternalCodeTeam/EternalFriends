@@ -20,6 +20,7 @@ public class InvalidUsage implements InvalidUsageHandler<CommandSender> {
 
     @Override
     public void handle(CommandSender sender, LiteInvocation invocation, Schematic schematic) {
+
         Player player = (Player) sender;
 
         schematic.getSchematics().stream().forEach(str -> {

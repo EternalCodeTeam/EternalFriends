@@ -13,6 +13,7 @@ public class CommandConfigurator implements CommandEditor {
 
     @Override
     public State edit(State state) {
+
         if (this.config.commandLang.equalsIgnoreCase("pl")) {
             return state
                     .name("znajomi")
@@ -21,9 +22,11 @@ public class CommandConfigurator implements CommandEditor {
                     .editChild("deny", child -> child.name("odrzuc"))
                     .editChild("list", child -> child.name("lista"))
                     .editChild("help", child -> child.name("pomoc"))
+                    .editChild("ignore", child -> child.name("ignoruj"))
                     .editChild("invite", child -> child.name("zapros"));
 
         }
+
         return state;
 
     }

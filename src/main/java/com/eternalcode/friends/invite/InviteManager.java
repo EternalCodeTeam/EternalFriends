@@ -9,7 +9,7 @@ import java.util.*;
 
 public class InviteManager {
     private final Plugin plugin;
-    private final static Duration DEFAULT_INVITE_DURATION = Duration.ofSeconds(300);
+    private final static Duration DEFAULT_INVITE_DURATION = Duration.ofSeconds(10);
     private Map<UUID, List<Invite>> receivedInvites = new HashMap<>();
     private Map<UUID, List<Invite>> sendedInvites = new HashMap<>();
 
@@ -33,33 +33,53 @@ public class InviteManager {
         else {
             receivedInvites.put(to, new ArrayList<>(List.of(invite)));
         }
-
-        Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> {
-            removeInvite(from, to);
-        }, invite.getDuration().toSeconds() * 20);
     }
 
     public boolean hasSendedInvite(UUID from, UUID to) {
+
         if (!sendedInvites.containsKey(from)) {
             return false;
         }
+
         return sendedInvites.get(from).stream().filter(invite -> invite.getTo().equals(to)).count() > 0;
     }
 
     public boolean hasReceivedInvite(UUID from, UUID to) {
+
         if (!receivedInvites.containsKey(to)) {
             return false;
         }
+
         return receivedInvites.get(to).stream().filter(invite -> invite.getFrom().equals(from)).count() > 0;
     }
 
+    public boolean isInviteExpired(UUID from, UUID to) {
+
+        if (!sendedInvites.containsKey(from)) {
+            return true;
+        }
+        if (!receivedInvites.containsKey(to)) {
+            return true;
+        }
+
+        Optional<Invite> inviteOptional = sendedInvites.get(from).stream().filter(i -> i.getTo().equals(to)).findFirst();
+        if (inviteOptional.isEmpty()) {
+            return true;
+        }
+
+        Invite invite = inviteOptional.get();
+        return invite.isExpired();
+    }
+
     public void removeInvite(UUID from, UUID to) {
+
         if (hasReceivedInvite(from, to)) {
             receivedInvites.get(to).removeIf(invite -> invite.getFrom().equals(from));
         }
         if (hasSendedInvite(from, to)) {
             sendedInvites.get(from).removeIf(invite -> invite.getTo().equals(to));
         }
+
     }
 
     public List<Invite> getReceivedInvites(UUID uuid) {

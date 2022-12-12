@@ -126,6 +126,7 @@ public class MainGui {
                     .asGuiItem();
 
             skull.setAction(event -> {
+
                 if (!event.isLeftClick()) {
                     return;
                 }

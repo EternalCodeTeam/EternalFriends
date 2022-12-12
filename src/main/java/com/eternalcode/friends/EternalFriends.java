@@ -3,7 +3,15 @@ package com.eternalcode.friends;
 import com.eternalcode.friends.command.configuration.CommandConfigurator;
 import com.eternalcode.friends.command.handler.InvalidUsage;
 import com.eternalcode.friends.command.handler.PermissionMessage;
+import com.eternalcode.friends.command.implementation.FriendAcceptCommand;
 import com.eternalcode.friends.command.implementation.FriendCommand;
+import com.eternalcode.friends.command.implementation.FriendDenyCommand;
+import com.eternalcode.friends.command.implementation.FriendHelpCommand;
+import com.eternalcode.friends.command.implementation.FriendIgnoreCommand;
+import com.eternalcode.friends.command.implementation.FriendInviteCommand;
+import com.eternalcode.friends.command.implementation.FriendKickCommand;
+import com.eternalcode.friends.command.implementation.FriendListCommand;
+import com.eternalcode.friends.command.implementation.FriendReloadCommand;
 import com.eternalcode.friends.config.ConfigManager;
 import com.eternalcode.friends.config.implementation.GuiConfig;
 import com.eternalcode.friends.config.implementation.MessagesConfig;
@@ -95,7 +103,15 @@ public class EternalFriends extends JavaPlugin {
 
                 .contextualBind(Player.class, new BukkitOnlyPlayerContextual<>(this.messages.argument.playerOnly))
 
-                .commandInstance(new FriendCommand(this.mainGui, this.profileManager, this.announcer, this.inviteManager, this.messages, this.getServer(), this.configManager))
+                .commandInstance(new FriendCommand(this.mainGui))
+                .commandInstance(new FriendAcceptCommand(this.profileManager, this.announcer, this.inviteManager, this.messages))
+                .commandInstance(new FriendDenyCommand(this.profileManager, this.announcer, this.inviteManager, this.messages))
+                .commandInstance(new FriendInviteCommand(this.profileManager, this.announcer, this.inviteManager, this.messages))
+                .commandInstance(new FriendListCommand(this.profileManager, this.announcer, this.messages, this.getServer()))
+                .commandInstance(new FriendKickCommand(this.profileManager, this.announcer, this.messages))
+                .commandInstance(new FriendIgnoreCommand(this.profileManager, this.announcer, this.messages))
+                .commandInstance(new FriendHelpCommand(this.announcer, this.messages))
+                .commandInstance(new FriendReloadCommand(this.announcer, this.messages, this.configManager))
 
                 .commandEditor("friends", new CommandConfigurator(this.config))
 

@@ -16,6 +16,7 @@ public class EntityDamageByEntityListener implements Listener {
 
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent event) {
+
         if (!(event.getDamager() instanceof Player)) {
             return;
         }
@@ -25,8 +26,6 @@ public class EntityDamageByEntityListener implements Listener {
 
         Player damager = (Player) event.getDamager();
         Player damaged = (Player) event.getEntity();
-
-        event.getCause();
 
         this.profileManager.getProfileByUUID(damager.getUniqueId()).ifPresent(profile -> {
             if (profile.getFriends().contains(damaged.getUniqueId())) {
