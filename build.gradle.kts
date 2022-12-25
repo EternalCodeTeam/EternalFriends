@@ -40,7 +40,7 @@ dependencies {
     implementation("org.bstats:bstats-bukkit:3.0.0")
 
     // triumph gui
-    implementation("dev.triumphteam:triumph-gui:3.1.3")
+    implementation("dev.triumphteam:triumph-gui:3.1.4")
 }
 
 tasks.withType<JavaCompile> {
