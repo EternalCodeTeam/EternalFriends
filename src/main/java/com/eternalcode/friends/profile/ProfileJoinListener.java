@@ -17,11 +17,10 @@ public class ProfileJoinListener implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        if (profileManager.hasProfile(player.getUniqueId())) {
+        if (this.profileManager.getProfileByUUID(player.getUniqueId()).isPresent()) {
             return;
         }
 
-        profileManager.createProfile(player.getUniqueId());
-
+        this.profileManager.createProfile(player.getUniqueId());
     }
 }

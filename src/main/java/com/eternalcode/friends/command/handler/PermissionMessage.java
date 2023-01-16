@@ -21,7 +21,6 @@ public class PermissionMessage implements PermissionHandler<CommandSender> {
 
     @Override
     public void handle(CommandSender sender, LiteInvocation invocation, RequiredPermissions requiredPermissions) {
-
         Player player = (Player) sender;
 
         this.announcer.announceMessage(player.getUniqueId(), this.messages.argument.missingPermission.replace("{permission}", Joiner.on(", ")
