@@ -6,7 +6,6 @@ import dev.rollczi.litecommands.command.LiteInvocation;
 import dev.rollczi.litecommands.handle.InvalidUsageHandler;
 import dev.rollczi.litecommands.schematic.Schematic;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public class InvalidUsage implements InvalidUsageHandler<CommandSender> {
 
@@ -20,15 +19,10 @@ public class InvalidUsage implements InvalidUsageHandler<CommandSender> {
 
     @Override
     public void handle(CommandSender sender, LiteInvocation invocation, Schematic schematic) {
+        schematic.getSchematics().stream().forEach(str -> {
+            this.announcer.announceMessage(sender, str);
+        });
 
-        Player player = (Player) sender;
-
-        if (schematic.getSchematics().size() > 1) {
-            for (String scheme : schematic.getSchematics()) {
-                this.announcer.announceMessage(player.getUniqueId(), this.messages.argument.correctUsage.replace("{scheme}", scheme));
-            }
-        } else {
-            this.announcer.announceMessage(player.getUniqueId(), this.messages.argument.correctUsage.replace("{scheme}", schematic.getSchematics().get(0)));
-        }
+        this.announcer.announceMessage(sender, messages.argument.invalidUsage);
     }
 }

@@ -31,7 +31,6 @@ dependencies {
 
     // litecommands
     implementation("dev.rollczi.litecommands:bukkit:2.7.0")
-    implementation("dev.rollczi.litecommands:core:2.5.0")
 
     // cdn
     implementation("net.dzikoysk:cdn:1.14.1")
@@ -59,10 +58,6 @@ bukkit {
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
-}
-
-minecraftServerConfig {
-    jarUrl.set(LaunchMinecraftServerTask.JarUrl.Paper("1.19.2"))
 }
 
 tasks.withType<ShadowJar> {
@@ -103,7 +98,7 @@ task<LaunchMinecraftServerTask>("buildAndLaunchServer") {
         }
     }
 
-    jarUrl.set(LaunchMinecraftServerTask.JarUrl.Paper("1.19.2"))
+    jarUrl.set(LaunchMinecraftServerTask.JarUrl.Paper("1.19.3"))
     jarName.set("server.jar")
     serverDirectory.set(buildDir.resolve("MinecraftPaperServer")) // build/MinecraftPaperServer
     nogui.set(true)

@@ -20,12 +20,12 @@ public class ConfigItem {
     public List<String> lore = List.of("&fFirst line of lore", "&9Second line of lore");
 
     public GuiItem toGuiItem(MiniMessage miniMessage) {
-        ItemBuilder builder = ItemBuilder.from(this.type)
+        return ItemBuilder.from(this.type)
                 .name(miniMessage.deserialize(this.name))
                 .lore(this.lore.stream().map(string -> miniMessage.deserialize(string)).toList())
                 .flags(ItemFlag.HIDE_ATTRIBUTES)
-                .flags(ItemFlag.HIDE_ENCHANTS);
-        return builder.asGuiItem();
+                .flags(ItemFlag.HIDE_ENCHANTS)
+                .asGuiItem();
     }
 
     public ConfigItem setType(Material type) {
