@@ -41,8 +41,6 @@ import java.util.stream.Stream;
 
 public class EternalFriends extends JavaPlugin {
 
-    private static EternalFriends instance;
-
     private NotificationAnnouncer announcer;
 
     private ConfigManager configManager;
@@ -63,7 +61,6 @@ public class EternalFriends extends JavaPlugin {
     private LiteCommands<CommandSender> liteCommands;
     @Override
     public void onEnable() {
-        instance = this;
         Server server = this.getServer();
 
         this.audienceProvider = BukkitAudiences.create(this);
@@ -81,14 +78,14 @@ public class EternalFriends extends JavaPlugin {
         this.configManager.load(this.messages);
         this.configManager.load(this.guiConfig);
 
-        this.inviteManager = new InviteManager(this);
+        this.inviteManager = new InviteManager();
 
         this.profileManager = new ProfileManager(new ProfileRepositoryImpl());
 
         this.mainGui = new MainGui(this.miniMessage, this.guiConfig, this, this.profileManager, this.announcer, this.messages, this.inviteManager);
 
         Stream.of(
-                new ProfileJoinListener(profileManager),
+                new ProfileJoinListener(this.profileManager),
                 new EntityDamageByEntityListener(this.profileManager),
                 new AsyncPlayerChatListener(this.profileManager, this.announcer, this.messages)
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));

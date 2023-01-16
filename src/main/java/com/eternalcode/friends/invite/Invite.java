@@ -5,10 +5,12 @@ import java.time.Instant;
 import java.util.UUID;
 
 public class Invite {
+
     private final UUID from;
     private final UUID to;
     private final Duration duration;
     private final Instant expiretionDate;
+
     public Invite(UUID from, UUID to, Duration duration) {
         this.from = from;
         this.to = to;
@@ -21,15 +23,15 @@ public class Invite {
     }
 
     public UUID getFrom() {
-        return from;
+        return this.from;
     }
 
     public UUID getTo() {
-        return to;
+        return this.to;
     }
 
     public Duration getDuration() {
-        return duration;
+        return this.duration;
     }
     public boolean equals(Invite invite) {
         return invite.getFrom().equals(from) && invite.getTo().equals(to);

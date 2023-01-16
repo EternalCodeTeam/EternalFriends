@@ -8,61 +8,55 @@ import java.util.*;
 
 
 public class InviteManager {
-    private final Plugin plugin;
-    private final static Duration DEFAULT_INVITE_DURATION = Duration.ofSeconds(10);
-    private Map<UUID, List<Invite>> receivedInvites = new HashMap<>();
-    private Map<UUID, List<Invite>> sendedInvites = new HashMap<>();
 
-    public InviteManager(Plugin plugin) {
-        this.plugin = plugin;
-    }
+    private final static Duration DEFAULT_INVITE_DURATION = Duration.ofSeconds(10);
+
+    private final Map<UUID, List<Invite>> receivedInvites = new HashMap<>();
+    private final Map<UUID, List<Invite>> sendedInvites = new HashMap<>();
 
     public void addInvite(UUID from, UUID to) {
         Invite invite = new Invite(from, to, DEFAULT_INVITE_DURATION);
 
-        if (sendedInvites.containsKey(from)) {
-            sendedInvites.get(from).add(invite);
+        if (this.sendedInvites.containsKey(from)) {
+            this.sendedInvites.get(from).add(invite);
         }
         else {
-            sendedInvites.put(from, new ArrayList<>(List.of(invite)));
+            this.sendedInvites.put(from, new ArrayList<>(List.of(invite)));
         }
 
-        if (receivedInvites.containsKey(to)) {
-            receivedInvites.get(to).add(invite);
+        if (this.receivedInvites.containsKey(to)) {
+            this.receivedInvites.get(to).add(invite);
         }
         else {
-            receivedInvites.put(to, new ArrayList<>(List.of(invite)));
+            this.receivedInvites.put(to, new ArrayList<>(List.of(invite)));
         }
     }
 
     public boolean hasSendedInvite(UUID from, UUID to) {
-
-        if (!sendedInvites.containsKey(from)) {
+        if (!this.sendedInvites.containsKey(from)) {
             return false;
         }
 
-        return sendedInvites.get(from).stream().filter(invite -> invite.getTo().equals(to)).count() > 0;
+        return this.sendedInvites.get(from).stream().filter(invite -> invite.getTo().equals(to)).count() > 0;
     }
 
     public boolean hasReceivedInvite(UUID from, UUID to) {
-
-        if (!receivedInvites.containsKey(to)) {
+        if (!this.receivedInvites.containsKey(to)) {
             return false;
         }
 
-        return receivedInvites.get(to).stream().filter(invite -> invite.getFrom().equals(from)).count() > 0;
+        return this.receivedInvites.get(to).stream().filter(invite -> invite.getFrom().equals(from)).count() > 0;
     }
 
     public boolean isInviteExpired(UUID from, UUID to) {
-
-        if (!sendedInvites.containsKey(from)) {
+        if (!this.sendedInvites.containsKey(from)) {
             return true;
         }
-        if (!receivedInvites.containsKey(to)) {
+        if (!this.receivedInvites.containsKey(to)) {
             return true;
         }
 
-        Optional<Invite> inviteOptional = sendedInvites.get(from).stream().filter(i -> i.getTo().equals(to)).findFirst();
+        Optional<Invite> inviteOptional = this.sendedInvites.get(from).stream().filter(i -> i.getTo().equals(to)).findFirst();
         if (inviteOptional.isEmpty()) {
             return true;
         }
@@ -72,17 +66,15 @@ public class InviteManager {
     }
 
     public void removeInvite(UUID from, UUID to) {
-
         if (hasReceivedInvite(from, to)) {
-            receivedInvites.get(to).removeIf(invite -> invite.getFrom().equals(from));
+            this.receivedInvites.get(to).removeIf(invite -> invite.getFrom().equals(from));
         }
         if (hasSendedInvite(from, to)) {
-            sendedInvites.get(from).removeIf(invite -> invite.getTo().equals(to));
+            this.sendedInvites.get(from).removeIf(invite -> invite.getTo().equals(to));
         }
-
     }
 
     public List<Invite> getReceivedInvites(UUID uuid) {
-        return receivedInvites.get(uuid);
+        return this.receivedInvites.get(uuid);
     }
 }

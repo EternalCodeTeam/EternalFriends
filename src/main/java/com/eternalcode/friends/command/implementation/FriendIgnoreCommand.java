@@ -2,7 +2,6 @@ package com.eternalcode.friends.command.implementation;
 
 import com.eternalcode.friends.NotificationAnnouncer;
 import com.eternalcode.friends.config.implementation.MessagesConfig;
-import com.eternalcode.friends.invite.InviteManager;
 import com.eternalcode.friends.profile.Profile;
 import com.eternalcode.friends.profile.ProfileManager;
 import dev.rollczi.litecommands.argument.Arg;
@@ -16,6 +15,7 @@ import java.util.Optional;
 
 @Route(name = "friends")
 public class FriendIgnoreCommand {
+
     private final ProfileManager profileManager;
     private final NotificationAnnouncer announcer;
     private final MessagesConfig messages;
@@ -29,17 +29,19 @@ public class FriendIgnoreCommand {
     @Execute(route = "ignore", required = 1)
     @Permission("eternalfriends.access.ignore")
     public void ignore(Player sender, @Arg @Name("player") Player target) {
-        MessagesConfig.Friends friends = messages.friends;
+        MessagesConfig.Friends friends = this.messages.friends;
 
         if (sender.equals(target)) {
-            announcer.announceMessage(sender.getUniqueId(), friends.yourselfCommand);
+            this.announcer.announceMessage(sender.getUniqueId(), friends.yourselfCommand);
+
             return;
         }
 
-        Optional<Profile> senderOptional = profileManager.getProfileByUUID(sender.getUniqueId());
+        Optional<Profile> senderOptional = this.profileManager.getProfileByUUID(sender.getUniqueId());
 
         if (senderOptional.isEmpty()) {
-            announcer.announceMessage(sender.getUniqueId(), friends.yourProfileNotFound);
+            this.announcer.announceMessage(sender.getUniqueId(), friends.yourProfileNotFound);
+
             return;
         }
 
@@ -47,12 +49,13 @@ public class FriendIgnoreCommand {
 
         if (senderProfile.isIgnoredPlayer(target.getUniqueId())) {
             senderProfile.removeIgnoredPlayer(target.getUniqueId());
-            announcer.announceMessage(sender.getUniqueId(), friends.youUnignoredPlayer.replace("{player}", target.getName()));
+            this.announcer.announceMessage(sender.getUniqueId(), friends.youUnignoredPlayer.replace("{player}", target.getName()));
+
             return;
         }
 
         senderProfile.addIgnoredPlayer(target.getUniqueId());
 
-        announcer.announceMessage(sender.getUniqueId(), friends.youIgnoredPlayer.replace("{player}", target.getName()));
+        this.announcer.announceMessage(sender.getUniqueId(), friends.youIgnoredPlayer.replace("{player}", target.getName()));
     }
 }

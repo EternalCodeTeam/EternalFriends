@@ -13,21 +13,16 @@ public class CommandConfigurator implements CommandEditor {
 
     @Override
     public State edit(State state) {
+        PluginConfig.SubCommand subCommandsCfg = config.friendCommand.subCommands;
 
-        if (this.config.commandLang.equalsIgnoreCase("pl")) {
-            return state
-                    .name("znajomi")
-                    .editChild("kick", child -> child.name("wyrzuc"))
-                    .editChild("accept", child -> child.name("akceptuj"))
-                    .editChild("deny", child -> child.name("odrzuc"))
-                    .editChild("list", child -> child.name("lista"))
-                    .editChild("help", child -> child.name("pomoc"))
-                    .editChild("ignore", child -> child.name("ignoruj"))
-                    .editChild("invite", child -> child.name("zapros"));
-
-        }
-
-        return state;
-
+        return state
+                .name(config.friendCommand.main)
+                .editChild("kick", child -> child.name(subCommandsCfg.kick))
+                .editChild("accept", child -> child.name(subCommandsCfg.accept))
+                .editChild("deny", child -> child.name(subCommandsCfg.deny))
+                .editChild("list", child -> child.name(subCommandsCfg.list))
+                .editChild("help", child -> child.name(subCommandsCfg.help))
+                .editChild("ignore", child -> child.name(subCommandsCfg.ignore))
+                .editChild("invite", child -> child.name(subCommandsCfg.invite));
     }
 }

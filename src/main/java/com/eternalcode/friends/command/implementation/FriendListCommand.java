@@ -1,10 +1,7 @@
 package com.eternalcode.friends.command.implementation;
 
 import com.eternalcode.friends.NotificationAnnouncer;
-import com.eternalcode.friends.config.ConfigManager;
 import com.eternalcode.friends.config.implementation.MessagesConfig;
-import com.eternalcode.friends.gui.MainGui;
-import com.eternalcode.friends.invite.InviteManager;
 import com.eternalcode.friends.profile.Profile;
 import com.eternalcode.friends.profile.ProfileManager;
 import dev.rollczi.litecommands.argument.Arg;
@@ -21,6 +18,7 @@ import java.util.UUID;
 
 @Route(name = "friends")
 public class FriendListCommand {
+
     private final ProfileManager profileManager;
     private final NotificationAnnouncer announcer;
     private final MessagesConfig messages;
@@ -36,27 +34,29 @@ public class FriendListCommand {
     @Execute(route = "list")
     @Permission("eternalfriends.access.list")
     public void list(Player sender) {
-        MessagesConfig.Friends friends = messages.friends;
+        MessagesConfig.Friends friends = this.messages.friends;
         Optional<Profile> senderOptional = this.profileManager.getProfileByUUID(sender.getUniqueId());
 
         if (senderOptional.isEmpty()) {
-            announcer.announceMessage(sender.getUniqueId(), friends.yourProfileNotFound);
+            this.announcer.announceMessage(sender.getUniqueId(), friends.yourProfileNotFound);
+
             return;
         }
 
         Profile senderProfile = senderOptional.get();
 
-        announcer.announceMessage(sender.getUniqueId(), listOfFriends(friends, senderProfile));
+        this.announcer.announceMessage(sender.getUniqueId(), listOfFriends(friends, senderProfile));
     }
 
     @Execute(route = "adminlist", required = 1)
     @Permission("eternalfriends.admin.list")
     public void listAdmin(CommandSender sender, @Arg @Name("player") Player target) {
-        MessagesConfig.Friends friends = messages.friends;
+        MessagesConfig.Friends friends = this.messages.friends;
         Optional<Profile> targetOptional = this.profileManager.getProfileByUUID(target.getUniqueId());
 
         if (targetOptional.isEmpty()) {
-            announcer.announceMessage(sender, friends.profileNotFound);
+            this.announcer.announceMessage(sender, friends.profileNotFound);
+
             return;
         }
 

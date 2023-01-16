@@ -17,13 +17,16 @@ public class ProfileManager {
     public Profile createProfile(UUID uuid) {
         Profile profile = new Profile(uuid);
 
-        profiles.put(uuid, profile);
+        this.profiles.put(uuid, profile);
 
         return profile;
     }
 
     public Optional<Profile> getProfileByUUID(UUID uuid) {
-        return Optional.ofNullable(profiles.get(uuid));
+        return Optional.ofNullable(this.profiles.get(uuid));
     }
 
+    public boolean hasProfile(UUID uuid) {
+        return profiles.containsKey(uuid);
+    }
 }

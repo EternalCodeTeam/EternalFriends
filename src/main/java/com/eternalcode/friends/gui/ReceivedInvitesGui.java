@@ -13,7 +13,6 @@ import dev.triumphteam.gui.guis.Gui;
 import dev.triumphteam.gui.guis.GuiItem;
 import dev.triumphteam.gui.guis.PaginatedGui;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -58,7 +57,7 @@ public class ReceivedInvitesGui {
         ConfigItem nextPageItem = menuItems.nextPageItem;
         GuiItem nextPageButton = ItemBuilder.from(nextPageItem.type)
                 .name(this.miniMessage.deserialize(nextPageItem.name))
-                .lore(nextPageItem.lore.stream().map(string -> miniMessage.deserialize(string)).toList())
+                .lore(nextPageItem.lore.stream().map(string -> this.miniMessage.deserialize(string)).toList())
                 .asGuiItem(event -> {
                     gui.next();
                 });
@@ -66,7 +65,7 @@ public class ReceivedInvitesGui {
         ConfigItem previousPageItemCfg = menuItems.previousPageItem;
         GuiItem backPageButton = ItemBuilder.from(previousPageItemCfg.type)
                 .name(this.miniMessage.deserialize(previousPageItemCfg.name))
-                .lore(previousPageItemCfg.lore.stream().map(string -> miniMessage.deserialize(string)).toList())
+                .lore(previousPageItemCfg.lore.stream().map(string -> this.miniMessage.deserialize(string)).toList())
                 .asGuiItem(event -> {
                     gui.previous();
                 });
@@ -74,7 +73,7 @@ public class ReceivedInvitesGui {
         ConfigItem backToMainMenuItemCfg = menuItems.backToMainMenuItem;
         GuiItem backToMainMenuButton = ItemBuilder.from(backToMainMenuItemCfg.type)
                 .name(this.miniMessage.deserialize(backToMainMenuItemCfg.name))
-                .lore(backToMainMenuItemCfg.lore.stream().map(string -> miniMessage.deserialize(string)).toList())
+                .lore(backToMainMenuItemCfg.lore.stream().map(string -> this.miniMessage.deserialize(string)).toList())
                 .asGuiItem(event -> {
                     onBack.run();
                 });
@@ -88,13 +87,13 @@ public class ReceivedInvitesGui {
     }
 
     private void generateHeads(Player player, PaginatedGui gui) {
-        MessagesConfig.Friends friends = messages.friends;
+        MessagesConfig.Friends friends = this.messages.friends;
 
-        Optional<Profile> profileOptional = profileManager.getProfileByUUID(player.getUniqueId());
+        Optional<Profile> profileOptional = this.profileManager.getProfileByUUID(player.getUniqueId());
 
         if (profileOptional.isEmpty()) {
             player.closeInventory();
-            announcer.announceMessage(player.getUniqueId(), friends.yourProfileNotFound);
+            this.announcer.announceMessage(player.getUniqueId(), friends.yourProfileNotFound);
             return;
         }
 
@@ -106,34 +105,33 @@ public class ReceivedInvitesGui {
         }
 
         for (Invite invite : receivedInvites) {
+            if (this.inviteManager.isInviteExpired(invite.getFrom(), invite.getTo())) {
 
-            if (inviteManager.isInviteExpired(invite.getFrom(), invite.getTo())) {
-
-                if (receivedInvites.size() <= 1) {
+                if (receivedInvites.size() == 1) {
                     player.closeInventory();
-                    inviteManager.removeInvite(invite.getFrom(), invite.getTo());
+                    this.inviteManager.removeInvite(invite.getFrom(), invite.getTo());
                     return;
                 }
 
-                inviteManager.removeInvite(invite.getFrom(), invite.getTo());
+                this.inviteManager.removeInvite(invite.getFrom(), invite.getTo());
 
                 continue;
             }
 
-            OfflinePlayer offlinePlayer = server.getOfflinePlayer(invite.getFrom());
+            OfflinePlayer offlinePlayer = this.server.getOfflinePlayer(invite.getFrom());
             UUID uuid = invite.getFrom();
             GuiItem skull = ItemBuilder.skull()
                     .owner(offlinePlayer)
-                    .name(this.miniMessage.deserialize(guiConfig.menuItems.inviteListfriendHead.name.replace("%friend_name%", offlinePlayer.getName())))
-                    .lore(guiConfig.menuItems.inviteListfriendHead.lore.stream().map(string -> miniMessage.deserialize(string)).toList())
+                    .name(this.miniMessage.deserialize(this.guiConfig.menuItems.inviteListfriendHead.name.replace("%friend_name%", offlinePlayer.getName())))
+                    .lore(this.guiConfig.menuItems.inviteListfriendHead.lore.stream().map(string -> this.miniMessage.deserialize(string)).toList())
                     .asGuiItem();
 
             skull.setAction(event -> {
-                Optional<Profile> friendProfileOptional = profileManager.getProfileByUUID(uuid);
+                Optional<Profile> friendProfileOptional = this.profileManager.getProfileByUUID(uuid);
 
                 if (friendProfileOptional.isEmpty()) {
                     player.closeInventory();
-                    announcer.announceMessage(player.getUniqueId(), friends.profileNotFound);
+                    this.announcer.announceMessage(player.getUniqueId(), friends.profileNotFound);
                     return;
                 }
 
@@ -143,8 +141,8 @@ public class ReceivedInvitesGui {
                     profile.addFriend(uuid);
                     friendProfile.addFriend(profile.getUuid());
                     this.inviteManager.removeInvite(uuid, profile.getUuid());
-                    announcer.announceMessage(profile.getUuid(), friends.acceptedInvite.replace("{player}", this.server.getOfflinePlayer(uuid).getName()));
-                    announcer.announceMessage(uuid, friends.yourInvitationHasBeenAccepted.replace("{player}", player.getName()));
+                    this.announcer.announceMessage(profile.getUuid(), friends.acceptedInvite.replace("{player}", this.server.getOfflinePlayer(uuid).getName()));
+                    this.announcer.announceMessage(uuid, friends.yourInvitationHasBeenAccepted.replace("{player}", player.getName()));
                 }
                 else if (event.isRightClick()) {
                     this.inviteManager.removeInvite(uuid, profile.getUuid());
@@ -154,10 +152,11 @@ public class ReceivedInvitesGui {
                 }
 
                 gui.clearPageItems(true);
+
                 generateHeads(player, gui);
             });
             gui.addItem(skull);
-            gui.update();
         }
+        gui.update();
     }
 }

@@ -17,14 +17,14 @@ public class MessagesConfig implements ReloadableConfig {
 
     public Argument argument = new Argument();
     public Friends friends = new Friends();
-    public Warnings warnings = new Warnings();
+    //public Warnings warnings = new Warnings();
 
     @Contextual
     public static class Argument {
-        public String missingPermission = "&cYou don't have permission to use this command! &7({permission})";
+        public String missingPermission = "&cNie masz permisji do tej komendy! &7({permission})";
         public String invalidUsage = "&cBlad! Sprawdz poprawne uzycie komendy pod &f/znajomi pomoc&c.";
-        public String playerOnly = "&cThis command can only be used by players!";
-        public String playerNotFound = "&cPlayer not found: &7{player}&c.";
+        public String playerOnly = "&cTa komenda moze byc uzyta jedynie przez gracza!";
+        public String playerNotFound = "&cNie znaleziono gracza: &7{player}&c.";
     }
 
     @Contextual
@@ -69,10 +69,9 @@ public class MessagesConfig implements ReloadableConfig {
         );
     }
 
-    @Contextual
+    /*@Contextual
     public static class Warnings {
-        public String targetHasDisabledFriendRequests = "&cPlayer &7{player} &chas disabled invitations.";
-        public String targetFriendsLimitIsReached = "&cPlayer &7{player} &chas reached the maximum amount of friends.";
-    }
-
+        public String targetHasDisabledFriendRequests = "&cGracz &7{player} &cma wylaczona mozliwosc otrzymywania zaproszen do znajomych.";
+        public String targetFriendsLimitIsReached = "&cGracz &7{player} &cMa maksymalna ilosc znajomych.";
+    }*/
 }

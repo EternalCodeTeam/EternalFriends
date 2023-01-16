@@ -38,8 +38,10 @@ public class ConfirmGui {
                 .create();
 
         gui.getFiller().fill(ItemBuilder.from(Material.GRAY_STAINED_GLASS_PANE).name(Component.text(" ")).flags(ItemFlag.HIDE_ATTRIBUTES).asGuiItem());
+
         gui.setItem(CONFIRM_ITEM_SLOT, confirmItem);
         gui.setItem(DENY_ITEM_SLOT, denyItem);
+
         gui.open(player);
     }
 

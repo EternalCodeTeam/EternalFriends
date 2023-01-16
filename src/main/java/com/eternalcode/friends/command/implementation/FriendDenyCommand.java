@@ -15,6 +15,7 @@ import java.util.UUID;
 
 @Route(name = "friends")
 public class FriendDenyCommand {
+
     private final ProfileManager profileManager;
     private final NotificationAnnouncer announcer;
     private final InviteManager inviteManager;
@@ -30,26 +31,29 @@ public class FriendDenyCommand {
     @Execute(route = "deny", required = 1)
     @Permission("eternalfriends.access.deny")
     public void deny(Player sender, @Arg @Name("player") Player target) {
-        MessagesConfig.Friends friends = messages.friends;
+        MessagesConfig.Friends friends = this.messages.friends;
 
         if (sender.equals(target)) {
-            announcer.announceMessage(sender.getUniqueId(), friends.yourselfCommand);
+            this.announcer.announceMessage(sender.getUniqueId(), friends.yourselfCommand);
+
             return;
         }
 
-        profileManager.getProfileByUUID(target.getUniqueId()).ifPresent(playerProfile -> {
-            profileManager.getProfileByUUID(sender.getUniqueId()).ifPresent(senderProfile -> {
-                UUID senderUuid = sender.getUniqueId();
-                UUID targetUuid = target.getUniqueId();
+        UUID senderUuid = sender.getUniqueId();
+        UUID targetUuid = target.getUniqueId();
 
-                if (inviteManager.hasReceivedInvite(targetUuid, senderUuid)) {
-                    inviteManager.removeInvite(targetUuid, senderUuid);
-                    announcer.announceMessage(senderUuid, friends.inviteDenied.replace("{player}", target.getName()));
-                    return;
-                }
+        if (this.profileManager.hasProfile(targetUuid) || this.profileManager.hasProfile(senderUuid)) {
 
-                announcer.announceMessage(sender.getUniqueId(), friends.inviteNotFound);
-            });
-        });
+            return;
+        }
+
+        if (inviteManager.hasReceivedInvite(targetUuid, senderUuid)) {
+            this.inviteManager.removeInvite(targetUuid, senderUuid);
+            this.announcer.announceMessage(senderUuid, friends.inviteDenied.replace("{player}", target.getName()));
+
+            return;
+        }
+
+        this.announcer.announceMessage(sender.getUniqueId(), friends.inviteNotFound);
     }
 }

@@ -56,7 +56,7 @@ public class Profile {
 
         Profile profile = (Profile) o;
 
-        return uuid.equals(profile.uuid);
+        return this.uuid.equals(profile.uuid);
     }
 
     @Override

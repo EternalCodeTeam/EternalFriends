@@ -98,7 +98,7 @@ task<LaunchMinecraftServerTask>("buildAndLaunchServer") {
         }
     }
 
-    jarUrl.set(LaunchMinecraftServerTask.JarUrl.Paper("1.19.2"))
+    jarUrl.set(LaunchMinecraftServerTask.JarUrl.Paper("1.19.3"))
     jarName.set("server.jar")
     serverDirectory.set(buildDir.resolve("MinecraftPaperServer")) // build/MinecraftPaperServer
     nogui.set(true)

@@ -17,6 +17,7 @@ import java.util.UUID;
 
 @Route(name = "friends")
 public class FriendAcceptCommand {
+
     private final ProfileManager profileManager;
     private final NotificationAnnouncer announcer;
     private final InviteManager inviteManager;
@@ -32,22 +33,25 @@ public class FriendAcceptCommand {
     @Execute(route = "accept", required = 1)
     @Permission("eternalfriends.access.accept")
     public void accept(Player sender, @Arg @Name("player") Player target) {
-        MessagesConfig.Friends friends = messages.friends;
+        MessagesConfig.Friends friends = this.messages.friends;
 
         if (sender.equals(target)) {
-            announcer.announceMessage(sender.getUniqueId(), friends.yourselfCommand);
+            this.announcer.announceMessage(sender.getUniqueId(), friends.yourselfCommand);
+
             return;
         }
 
-        Optional<Profile> targetOptional = profileManager.getProfileByUUID(target.getUniqueId());
-        Optional<Profile> senderOptional = profileManager.getProfileByUUID(sender.getUniqueId());
+        Optional<Profile> targetOptional = this.profileManager.getProfileByUUID(target.getUniqueId());
+        Optional<Profile> senderOptional = this.profileManager.getProfileByUUID(sender.getUniqueId());
 
         if (targetOptional.isEmpty()) {
-            announcer.announceMessage(sender.getUniqueId(), friends.profileNotFound);
+            this.announcer.announceMessage(sender.getUniqueId(), friends.profileNotFound);
+
             return;
         }
         if (senderOptional.isEmpty()) {
-            announcer.announceMessage(sender.getUniqueId(), friends.yourProfileNotFound);
+            this.announcer.announceMessage(sender.getUniqueId(), friends.yourProfileNotFound);
+
             return;
         }
 
@@ -57,24 +61,24 @@ public class FriendAcceptCommand {
         UUID senderUuid = sender.getUniqueId();
         UUID targetUuid = target.getUniqueId();
 
-        if (inviteManager.hasReceivedInvite(targetUuid, senderUuid)) {
+        if (this.inviteManager.hasReceivedInvite(targetUuid, senderUuid)) {
+            if (this.inviteManager.isInviteExpired(targetUuid, senderUuid)) {
+                this.inviteManager.removeInvite(targetUuid, senderUuid);
+                this.announcer.announceMessage(sender.getUniqueId(), friends.inviteExpired);
 
-            if (inviteManager.isInviteExpired(targetUuid, senderUuid)) {
-                inviteManager.removeInvite(targetUuid, senderUuid);
-                announcer.announceMessage(sender.getUniqueId(), friends.inviteExpired);
                 return;
             }
 
             senderProfile.addFriend(targetUuid);
             targetProfile.addFriend(senderUuid);
 
-            inviteManager.removeInvite(targetUuid, senderUuid);
+            this.inviteManager.removeInvite(targetUuid, senderUuid);
 
-            announcer.announceMessage(senderUuid, friends.acceptedInvite.replace("{player}", target.getName()));
-            announcer.announceMessage(targetUuid, friends.yourInvitationHasBeenAccepted.replace("{player}", sender.getName()));
+            this.announcer.announceMessage(senderUuid, friends.acceptedInvite.replace("{player}", target.getName()));
+            this.announcer.announceMessage(targetUuid, friends.yourInvitationHasBeenAccepted.replace("{player}", sender.getName()));
+
+            return;
         }
-        else {
-            announcer.announceMessage(sender.getUniqueId(), friends.inviteNotFound);
-        }
+        this.announcer.announceMessage(sender.getUniqueId(), friends.inviteNotFound);
     }
 }

@@ -7,6 +7,7 @@ import com.eternalcode.friends.invite.InviteManager;
 import com.eternalcode.friends.profile.Profile;
 import com.eternalcode.friends.profile.ProfileManager;
 import dev.triumphteam.gui.builder.item.ItemBuilder;
+import dev.triumphteam.gui.components.GuiAction;
 import dev.triumphteam.gui.guis.Gui;
 import dev.triumphteam.gui.guis.GuiItem;
 import dev.triumphteam.gui.guis.PaginatedGui;
@@ -15,6 +16,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.plugin.Plugin;
 
 import java.util.Optional;
@@ -65,14 +67,14 @@ public class MainGui {
 
         GuiItem nextPageButton = ItemBuilder.from(Material.PAPER)
                 .name(this.miniMessage.deserialize(menuItems.nextPageItem.name))
-                .lore(menuItems.nextPageItem.lore.stream().map(string -> miniMessage.deserialize(string)).toList())
+                .lore(menuItems.nextPageItem.lore.stream().map(string -> this.miniMessage.deserialize(string)).toList())
                 .asGuiItem(event -> {
                     gui.next();
                 });
 
         GuiItem backPageButton = ItemBuilder.from(Material.PAPER)
                 .name(this.miniMessage.deserialize(menuItems.previousPageItem.name))
-                .lore(menuItems.previousPageItem.lore.stream().map(string -> miniMessage.deserialize(string)).toList())
+                .lore(menuItems.previousPageItem.lore.stream().map(string -> this.miniMessage.deserialize(string)).toList())
                 .asGuiItem(event -> {
                     gui.previous();
                 });
@@ -108,53 +110,60 @@ public class MainGui {
     }
 
     private void generateFriendsHeads(Player player, PaginatedGui gui) {
-        Optional<Profile> profileOptional = profileManager.getProfileByUUID(player.getUniqueId());
+        Optional<Profile> profileOptional = this.profileManager.getProfileByUUID(player.getUniqueId());
 
         if (profileOptional.isEmpty()) {
             player.closeInventory();
-            announcer.announceMessage(player.getUniqueId(), messages.friends.yourProfileNotFound);
+            this.announcer.announceMessage(player.getUniqueId(), messages.friends.yourProfileNotFound);
             return;
         }
 
         Profile profile = profileOptional.get();
 
         for (UUID uuid : profile.getFriends()) {
-            final GuiItem skull = ItemBuilder.skull()
-                    .owner(server.getOfflinePlayer(uuid))
-                    .name(this.miniMessage.deserialize(guiConfig.menuItems.friendListHead.name.replace("%friend_name%", server.getOfflinePlayer(uuid).getName())))
-                    .lore(guiConfig.menuItems.friendListHead.lore.stream().map(string -> miniMessage.deserialize(string)).toList())
-                    .asGuiItem();
+            gui.addItem(generateSkull(player, profile, uuid));
+        }
+    }
 
-            skull.setAction(event -> {
+    private GuiItem generateSkull(Player player, Profile profile, UUID friendUuid) {
+        final GuiItem skull = ItemBuilder.skull()
+                .owner(this.server.getOfflinePlayer(friendUuid))
+                .name(this.miniMessage.deserialize(this.guiConfig.menuItems.friendListHead.name
+                        .replace("%friend_name%", this.server.getOfflinePlayer(friendUuid).getName())))
+                .lore(this.guiConfig.menuItems.friendListHead.lore.stream()
+                        .map(string -> miniMessage.deserialize(string)).toList())
+                .asGuiItem();
 
-                if (!event.isLeftClick()) {
+        skull.setAction(event -> {
+            if (!event.isLeftClick()) {
+                return;
+            }
+
+            this.confirmGUI.openInventory(player, () -> {
+                Optional<Profile> friendProfileOptional = this.profileManager.getProfileByUUID(friendUuid);
+
+                if (friendProfileOptional.isEmpty()) {
+                    player.closeInventory();
+                    this.announcer.announceMessage(player.getUniqueId(), this.messages.friends.profileNotFound);
                     return;
                 }
 
-                this.confirmGUI.openInventory(player, () -> {
-                    Optional<Profile> friendProfileOptional = profileManager.getProfileByUUID(uuid);
+                Profile friendProfile = friendProfileOptional.get();
 
-                    if (friendProfileOptional.isEmpty()) {
-                        player.closeInventory();
-                        announcer.announceMessage(player.getUniqueId(), messages.friends.profileNotFound);
-                        return;
-                    }
+                profile.removeFriend(friendUuid);
+                friendProfile.removeFriend(profile.getUuid());
 
-                    Profile friendProfile = friendProfileOptional.get();
+                this.announcer.announceMessage(player.getUniqueId(), this.messages.friends.youKickedFriend
+                        .replace("{player}", server.getOfflinePlayer(friendUuid).getName()));
 
-                    profile.removeFriend(uuid);
-                    friendProfile.removeFriend(profile.getUuid());
+                if (server.getOfflinePlayer(friendUuid).isOnline()) {
+                    this.announcer.announceMessage(friendUuid, this.messages.friends.friendKickedYou
+                            .replace("{player}", player.getName()));
+                }
 
-                    announcer.announceMessage(player.getUniqueId(), messages.friends.youKickedFriend.replace("{player}", server.getOfflinePlayer(uuid).getName()));
-
-                    if (server.getOfflinePlayer(uuid).isOnline()) {
-                        announcer.announceMessage(uuid, messages.friends.friendKickedYou.replace("{player}", player.getName()));
-                    }
-
-                    openMainGui(player);
-                }, () -> openMainGui(player));
-            });
-            gui.addItem(skull);
-        }
+                openMainGui(player);
+            }, () -> openMainGui(player));
+        });
+        return skull;
     }
 }
