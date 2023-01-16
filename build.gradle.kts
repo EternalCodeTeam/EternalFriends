@@ -31,7 +31,7 @@ dependencies {
 
     // litecommands
     implementation("dev.rollczi.litecommands:bukkit:2.7.1")
-    implementation("dev.rollczi.litecommands:core:2.5.0")
+    implementation("dev.rollczi.litecommands:core:2.7.2")
 
     // cdn
     implementation("net.dzikoysk:cdn:1.14.2")
