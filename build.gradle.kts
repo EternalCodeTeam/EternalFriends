@@ -34,7 +34,7 @@ dependencies {
     implementation("dev.rollczi.litecommands:core:2.5.0")
 
     // cdn
-    implementation("net.dzikoysk:cdn:1.14.2")
+    implementation("net.dzikoysk:cdn:1.14.3")
 
     // bstats
     implementation("org.bstats:bstats-bukkit:3.0.0")
