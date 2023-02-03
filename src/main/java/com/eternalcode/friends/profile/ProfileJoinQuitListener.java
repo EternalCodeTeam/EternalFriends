@@ -18,7 +18,7 @@ public class ProfileJoinQuitListener implements Listener {
     private final ProfileManager profileManager;
     private final ProtocolManager protocolManager;
 
-    public ProfileJoinQuitListener(ProfileManager manager, ProtocolManager protocolManager){
+    public ProfileJoinQuitListener(ProfileManager manager, ProtocolManager protocolManager) {
         this.profileManager = manager;
         this.protocolManager = protocolManager;
     }
