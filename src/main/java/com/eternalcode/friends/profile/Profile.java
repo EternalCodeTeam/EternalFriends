@@ -44,6 +44,10 @@ public class Profile {
         return this.ignoredPlayers.contains(uuid);
     }
 
+    public boolean isFriendWith(UUID uuid) {
+        return this.friends.contains(uuid);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

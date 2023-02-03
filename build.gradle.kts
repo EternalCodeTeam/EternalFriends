@@ -1,11 +1,11 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import dev.s7a.gradle.minecraft.server.tasks.LaunchMinecraftServerTask
+//import dev.s7a.gradle.minecraft.server.tasks.LaunchMinecraftServerTask
 
 plugins {
     id("java")
     id("com.github.johnrengelman.shadow") version "7.1.2"
     id("net.minecrell.plugin-yml.bukkit") version "0.5.2"
-    id("dev.s7a.gradle.minecraft.server") version "2.1.0"
+    id("xyz.jpenilla.run-paper") version "2.0.1"
 }
 
 group = "com.eternalcode"
@@ -19,11 +19,12 @@ repositories {
     maven { url = uri("https://papermc.io/repo/repository/maven-public/") }
     maven { url = uri("https://repo.panda-lang.org/releases") }
     maven { url = uri("https://repo.eternalcode.pl/releases") }
+    maven { url = uri("https://repo.dmulloy2.net/repository/public/") }
 }
 
 dependencies {
     // spigot api
-    compileOnly("org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.19.3-R0.1-SNAPSHOT")
 
     // kyori adventure
     implementation("net.kyori:adventure-platform-bukkit:4.2.0")
@@ -41,6 +42,9 @@ dependencies {
 
     // triumph gui
     implementation("dev.triumphteam:triumph-gui:3.1.4")
+
+    // protocollib
+    compileOnly("com.comphenix.protocol:ProtocolLib:5.0.0-SNAPSHOT")
 }
 
 tasks.withType<JavaCompile> {
@@ -54,6 +58,7 @@ bukkit {
     prefix = "EternalFriends"
     author = "Kamicjusz"
     version = "${project.version}"
+    depend = listOf("ProtocolLib")
     description = "EternalFriends is a plugin that allows you to manage your friends list."
 }
 
@@ -90,6 +95,12 @@ tasks.withType<ShadowJar> {
     }
 }
 
+tasks {
+    runServer {
+        minecraftVersion("1.19.3")
+    }
+}
+/*
 task<LaunchMinecraftServerTask>("buildAndLaunchServer") {
     dependsOn("shadowJar") // build task (build, jar, shadowJar, ...)
     doFirst {
@@ -104,4 +115,4 @@ task<LaunchMinecraftServerTask>("buildAndLaunchServer") {
     serverDirectory.set(buildDir.resolve("MinecraftPaperServer")) // build/MinecraftPaperServer
     nogui.set(true)
     agreeEula.set(true)
-}
+}/*

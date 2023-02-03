@@ -1,5 +1,7 @@
 package com.eternalcode.friends;
 
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
 import com.eternalcode.friends.command.configuration.CommandConfigurator;
 import com.eternalcode.friends.command.handler.InvalidUsage;
 import com.eternalcode.friends.command.handler.PermissionMessage;
@@ -20,7 +22,7 @@ import com.eternalcode.friends.gui.MainGui;
 import com.eternalcode.friends.invite.InviteManager;
 import com.eternalcode.friends.listener.AsyncPlayerChatListener;
 import com.eternalcode.friends.listener.EntityDamageByEntityListener;
-import com.eternalcode.friends.profile.ProfileJoinListener;
+import com.eternalcode.friends.profile.ProfileJoinQuitListener;
 import com.eternalcode.friends.profile.ProfileManager;
 import com.eternalcode.friends.profile.ProfileRepositoryImpl;
 import com.eternalcode.friends.util.legacy.LegacyColorProcessor;
@@ -42,23 +44,23 @@ import java.util.stream.Stream;
 public class EternalFriends extends JavaPlugin {
 
     private NotificationAnnouncer announcer;
-
     private ConfigManager configManager;
     private PluginConfig config;
     private MessagesConfig messages;
-
     private GuiConfig guiConfig;
-
     private MainGui mainGui;
-
-
     private InviteManager inviteManager;
     private ProfileManager profileManager;
-
     private AudienceProvider audienceProvider;
     private MiniMessage miniMessage;
-
+    private ProtocolManager protocolManager;
     private LiteCommands<CommandSender> liteCommands;
+
+    @Override
+    public void onLoad() {
+        this.protocolManager = ProtocolLibrary.getProtocolManager();
+    }
+
     @Override
     public void onEnable() {
         Server server = this.getServer();
@@ -85,7 +87,7 @@ public class EternalFriends extends JavaPlugin {
         this.mainGui = new MainGui(this.miniMessage, this.guiConfig, this, this.profileManager, this.announcer, this.messages, this.inviteManager);
 
         Stream.of(
-                new ProfileJoinListener(this.profileManager),
+                new ProfileJoinQuitListener(this.profileManager, this.protocolManager),
                 new EntityDamageByEntityListener(this.profileManager),
                 new AsyncPlayerChatListener(this.profileManager, this.announcer, this.messages)
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
@@ -101,11 +103,11 @@ public class EternalFriends extends JavaPlugin {
                 .contextualBind(Player.class, new BukkitOnlyPlayerContextual<>(this.messages.argument.playerOnly))
 
                 .commandInstance(new FriendCommand(this.mainGui))
-                .commandInstance(new FriendAcceptCommand(this.profileManager, this.announcer, this.inviteManager, this.messages))
+                .commandInstance(new FriendAcceptCommand(this.profileManager, this.announcer, this.inviteManager, this.messages, this.protocolManager))
                 .commandInstance(new FriendDenyCommand(this.profileManager, this.announcer, this.inviteManager, this.messages))
                 .commandInstance(new FriendInviteCommand(this.profileManager, this.announcer, this.inviteManager, this.messages))
                 .commandInstance(new FriendListCommand(this.profileManager, this.announcer, this.messages, this.getServer()))
-                .commandInstance(new FriendKickCommand(this.profileManager, this.announcer, this.messages))
+                .commandInstance(new FriendKickCommand(this.profileManager, this.announcer, this.messages, this.protocolManager))
                 .commandInstance(new FriendIgnoreCommand(this.profileManager, this.announcer, this.messages))
                 .commandInstance(new FriendHelpCommand(this.announcer, this.messages))
                 .commandInstance(new FriendReloadCommand(this.announcer, this.messages, this.configManager))
@@ -113,6 +115,8 @@ public class EternalFriends extends JavaPlugin {
                 .commandEditor("friends", new CommandConfigurator(this.config))
 
                 .register();
+
+        //new PlayerInfoListener(this, this.protocolManager, this.profileManager);
 
     }
 
