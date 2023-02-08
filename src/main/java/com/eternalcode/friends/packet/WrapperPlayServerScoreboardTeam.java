@@ -99,10 +99,6 @@ public class WrapperPlayServerScoreboardTeam extends AbstractPacket {
         return this;
     }
 
-    public WrapperPlayServerScoreboardTeam setFriendColor() {
-        return setColor(FRIEND_COLOR);
-    }
-
     public Optional<String> getCollisionRule() {
         return handle.getOptionalStructures().read(0).map((structure) -> structure.getStrings().read(1));
     }

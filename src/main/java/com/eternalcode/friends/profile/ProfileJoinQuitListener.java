@@ -1,89 +1,68 @@
 package com.eternalcode.friends.profile;
 
 import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.PacketContainer;
-import com.eternalcode.friends.packet.WrapperPlayServerScoreboardTeam;
-import org.bukkit.ChatColor;
+import com.eternalcode.friends.packet.NameTagService;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public class ProfileJoinQuitListener implements Listener {
 
     private final ProfileManager profileManager;
     private final ProtocolManager protocolManager;
+    private final NameTagService nameTagService;
 
-    public ProfileJoinQuitListener(ProfileManager manager, ProtocolManager protocolManager){
+    public ProfileJoinQuitListener(ProfileManager manager, ProtocolManager protocolManager, NameTagService nameTagService){
         this.profileManager = manager;
         this.protocolManager = protocolManager;
+        this.nameTagService = nameTagService;
     }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        if (this.profileManager.getProfileByUUID(player.getUniqueId()).isEmpty()) {
-            this.profileManager.createProfile(player.getUniqueId());
+        UUID playerUUID = player.getUniqueId();
+
+        //creating player's profile if not exists
+        if (this.profileManager.getProfileByUUID(playerUUID).isEmpty()) {
+            this.profileManager.createProfile(playerUUID);
         }
 
         //sending ScoreboardTeam packet to update color of overhead player name
         for (Player onlinePlayer : player.getServer().getOnlinePlayers()) {
-            if (player.getUniqueId().equals(onlinePlayer.getUniqueId())) {
+            UUID onlinePlayerUUID = onlinePlayer.getUniqueId();
+
+            if (playerUUID.equals(onlinePlayerUUID)) {
                continue;
             }
 
-            Optional<Profile> onlinePlayerProfileOptional = this.profileManager.getProfileByUUID(onlinePlayer.getUniqueId());
+            Optional<Profile> onlinePlayerProfileOptional = this.profileManager.getProfileByUUID(onlinePlayerUUID);
             if (onlinePlayerProfileOptional.isEmpty()) {
                 continue;
             }
 
             Profile onlinePlayerProfile = onlinePlayerProfileOptional.get();
 
-            if (!onlinePlayerProfile.isFriendWith(player.getUniqueId())) {
-                this.protocolManager.sendServerPacket(onlinePlayer, nonFriendTeamScoreboardPacket(player));
-                this.protocolManager.sendServerPacket(player, nonFriendTeamScoreboardPacket(onlinePlayer));
+            if (!onlinePlayerProfile.isFriendWith(playerUUID)) {
+                this.nameTagService.createTeamPacketOfTwoNoFriends(player, onlinePlayer);
 
                 continue;
             }
 
-            this.protocolManager.sendServerPacket(onlinePlayer, friendTeamScoreboardPacket(player));
-            this.protocolManager.sendServerPacket(player, friendTeamScoreboardPacket(onlinePlayer));
+            this.nameTagService.createTeamPacketOfTwoFriends(player, onlinePlayer);
         }
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        //removing player's scoreboard team
-        PacketContainer packet = new WrapperPlayServerScoreboardTeam()
-                .setName(event.getPlayer().getName())
-                .setMode(1)
-                .getHandle();
-
-        this.protocolManager.broadcastServerPacket(packet);
+        this.nameTagService.removePlayersTeam(event.getPlayer());
     }
 
-    private PacketContainer friendTeamScoreboardPacket(Player player) {
-        return new WrapperPlayServerScoreboardTeam()
-                .setName(player.getName())
-                .setMode(0)
-                .setPlayers(List.of(player.getName()))
-                .setNameTagVisibility("always")
-                .setFriendColor()
-                .getHandle();
-    }
 
-    private PacketContainer nonFriendTeamScoreboardPacket(Player player) {
-        return new WrapperPlayServerScoreboardTeam()
-                .setName(player.getName())
-                .setMode(0)
-                .setPlayers(List.of(player.getName()))
-                .setNameTagVisibility("always")
-                .setColor(ChatColor.WHITE)
-                .getHandle();
-    }
 }

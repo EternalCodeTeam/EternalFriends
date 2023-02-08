@@ -1,5 +1,4 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-//import dev.s7a.gradle.minecraft.server.tasks.LaunchMinecraftServerTask
 
 plugins {
     id("java")
@@ -72,7 +71,6 @@ tasks.withType<ShadowJar> {
     exclude(
         "org/intellij/lang/annotations/**",
         "org/jetbrains/annotations/**",
-        "org/checkerframework/**",
         "META-INF/**",
         "javax/**",
     )
@@ -100,19 +98,3 @@ tasks {
         minecraftVersion("1.19.3")
     }
 }
-/*
-task<LaunchMinecraftServerTask>("buildAndLaunchServer") {
-    dependsOn("shadowJar") // build task (build, jar, shadowJar, ...)
-    doFirst {
-        copy {
-            from(buildDir.resolve("libs/EternalFriends v${project.version}.jar")) // build/libs/example.jar
-            into(buildDir.resolve("MinecraftPaperServer/plugins")) // build/MinecraftPaperServer/plugins
-        }
-    }
-
-    jarUrl.set(LaunchMinecraftServerTask.JarUrl.Paper("1.19.3"))
-    jarName.set("server.jar")
-    serverDirectory.set(buildDir.resolve("MinecraftPaperServer")) // build/MinecraftPaperServer
-    nogui.set(true)
-    agreeEula.set(true)
-}/*

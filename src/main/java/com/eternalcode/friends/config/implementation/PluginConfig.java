@@ -5,9 +5,9 @@ import net.dzikoysk.cdn.entity.Contextual;
 import net.dzikoysk.cdn.entity.Description;
 import net.dzikoysk.cdn.source.Resource;
 import net.dzikoysk.cdn.source.Source;
+import org.bukkit.ChatColor;
 
 import java.io.File;
-import java.util.Collections;
 
 public class PluginConfig implements ReloadableConfig {
 
@@ -15,6 +15,9 @@ public class PluginConfig implements ReloadableConfig {
     public Resource resource(File folder) {
         return Source.of(folder, "configuration.yml");
     }
+
+    @Description("# Color of player's nametag displayed to his friends")
+    public ChatColor friendColor = ChatColor.BLUE;
 
     @Description("# Configuration of command and subcommands names")
     public Command friendCommand = new Command();

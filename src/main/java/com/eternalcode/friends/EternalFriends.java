@@ -22,6 +22,7 @@ import com.eternalcode.friends.gui.MainGui;
 import com.eternalcode.friends.invite.InviteManager;
 import com.eternalcode.friends.listener.AsyncPlayerChatListener;
 import com.eternalcode.friends.listener.EntityDamageByEntityListener;
+import com.eternalcode.friends.packet.NameTagService;
 import com.eternalcode.friends.profile.ProfileJoinQuitListener;
 import com.eternalcode.friends.profile.ProfileManager;
 import com.eternalcode.friends.profile.ProfileRepositoryImpl;
@@ -51,6 +52,7 @@ public class EternalFriends extends JavaPlugin {
     private MainGui mainGui;
     private InviteManager inviteManager;
     private ProfileManager profileManager;
+    private NameTagService nameTagService;
     private AudienceProvider audienceProvider;
     private MiniMessage miniMessage;
     private ProtocolManager protocolManager;
@@ -86,8 +88,10 @@ public class EternalFriends extends JavaPlugin {
 
         this.mainGui = new MainGui(this.miniMessage, this.guiConfig, this, this.profileManager, this.announcer, this.messages, this.inviteManager);
 
+        this.nameTagService = new NameTagService(this.protocolManager, this.config);
+
         Stream.of(
-                new ProfileJoinQuitListener(this.profileManager, this.protocolManager),
+                new ProfileJoinQuitListener(this.profileManager, this.protocolManager, this.nameTagService),
                 new EntityDamageByEntityListener(this.profileManager),
                 new AsyncPlayerChatListener(this.profileManager, this.announcer, this.messages)
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
@@ -103,7 +107,7 @@ public class EternalFriends extends JavaPlugin {
                 .contextualBind(Player.class, new BukkitOnlyPlayerContextual<>(this.messages.argument.playerOnly))
 
                 .commandInstance(new FriendCommand(this.mainGui))
-                .commandInstance(new FriendAcceptCommand(this.profileManager, this.announcer, this.inviteManager, this.messages, this.protocolManager))
+                .commandInstance(new FriendAcceptCommand(this.profileManager, this.announcer, this.inviteManager, this.messages, this.nameTagService))
                 .commandInstance(new FriendDenyCommand(this.profileManager, this.announcer, this.inviteManager, this.messages))
                 .commandInstance(new FriendInviteCommand(this.profileManager, this.announcer, this.inviteManager, this.messages))
                 .commandInstance(new FriendListCommand(this.profileManager, this.announcer, this.messages, this.getServer()))
@@ -115,9 +119,6 @@ public class EternalFriends extends JavaPlugin {
                 .commandEditor("friends", new CommandConfigurator(this.config))
 
                 .register();
-
-        //new PlayerInfoListener(this, this.protocolManager, this.profileManager);
-
     }
 
     @Override
