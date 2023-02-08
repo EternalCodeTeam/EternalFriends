@@ -1,6 +1,5 @@
 package com.eternalcode.friends.command.implementation;
 
-import com.comphenix.protocol.ProtocolManager;
 import com.eternalcode.friends.NotificationAnnouncer;
 import com.eternalcode.friends.config.implementation.MessagesConfig;
 import com.eternalcode.friends.invite.InviteManager;

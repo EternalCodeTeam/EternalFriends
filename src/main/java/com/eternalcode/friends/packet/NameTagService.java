@@ -75,6 +75,21 @@ public class NameTagService {
         this.protocolManager.sendServerPacket(two, firstPacket.getHandle());
     }
 
+    public void updateNameTagOfTwoNoFriends(Player one, Player two) {
+        WrapperPlayServerScoreboardTeam firstPacket = new WrapperPlayServerScoreboardTeam()
+                .setName(one.getName())
+                .setMode(2)
+                .setColor(DEFAULT_PLAYER_NAME_COLOR);
+
+        WrapperPlayServerScoreboardTeam secondPacket = new WrapperPlayServerScoreboardTeam()
+                .setName(two.getName())
+                .setMode(2)
+                .setColor(DEFAULT_PLAYER_NAME_COLOR);
+
+        this.protocolManager.sendServerPacket(one, secondPacket.getHandle());
+        this.protocolManager.sendServerPacket(two, firstPacket.getHandle());
+    }
+
     public void removePlayersTeam(Player player) {
         this.protocolManager.broadcastServerPacket(
                 new WrapperPlayServerScoreboardTeam()
