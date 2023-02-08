@@ -17,7 +17,11 @@ public class ProfileJoinQuitListener implements Listener {
     private final ProtocolManager protocolManager;
     private final NameTagService nameTagService;
 
+<<<<<<< HEAD
     public ProfileJoinQuitListener(ProfileManager manager, ProtocolManager protocolManager, NameTagService nameTagService){
+=======
+    public ProfileJoinQuitListener(ProfileManager manager, ProtocolManager protocolManager){
+>>>>>>> parent of 34fe860 (Update src/main/java/com/eternalcode/friends/profile/ProfileJoinQuitListener.java)
         this.profileManager = manager;
         this.protocolManager = protocolManager;
         this.nameTagService = nameTagService;
