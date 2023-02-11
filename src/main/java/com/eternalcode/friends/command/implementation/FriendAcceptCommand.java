@@ -3,6 +3,7 @@ package com.eternalcode.friends.command.implementation;
 import com.eternalcode.friends.NotificationAnnouncer;
 import com.eternalcode.friends.config.implementation.MessagesConfig;
 import com.eternalcode.friends.invite.InviteManager;
+import com.eternalcode.friends.packet.NameTagService;
 import com.eternalcode.friends.profile.Profile;
 import com.eternalcode.friends.profile.ProfileManager;
 import dev.rollczi.litecommands.argument.Arg;
@@ -22,12 +23,14 @@ public class FriendAcceptCommand {
     private final NotificationAnnouncer announcer;
     private final InviteManager inviteManager;
     private final MessagesConfig messages;
+    private final NameTagService nameTagService;
 
-    public FriendAcceptCommand(ProfileManager profileManager, NotificationAnnouncer announcer, InviteManager inviteManager, MessagesConfig messages) {
+    public FriendAcceptCommand(ProfileManager profileManager, NotificationAnnouncer announcer, InviteManager inviteManager, MessagesConfig messages, NameTagService nameTagService) {
         this.profileManager = profileManager;
         this.announcer = announcer;
         this.inviteManager = inviteManager;
         this.messages = messages;
+        this.nameTagService = nameTagService;
     }
 
     @Execute(route = "accept", required = 1)
@@ -71,6 +74,8 @@ public class FriendAcceptCommand {
 
             senderProfile.addFriend(targetUuid);
             targetProfile.addFriend(senderUuid);
+
+            this.nameTagService.updateNameTagOfTwoFriends(sender, target);
 
             this.inviteManager.removeInvite(targetUuid, senderUuid);
 

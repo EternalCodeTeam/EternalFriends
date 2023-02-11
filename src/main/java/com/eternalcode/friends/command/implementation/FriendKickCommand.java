@@ -2,6 +2,7 @@ package com.eternalcode.friends.command.implementation;
 
 import com.eternalcode.friends.NotificationAnnouncer;
 import com.eternalcode.friends.config.implementation.MessagesConfig;
+import com.eternalcode.friends.packet.NameTagService;
 import com.eternalcode.friends.profile.Profile;
 import com.eternalcode.friends.profile.ProfileManager;
 import dev.rollczi.litecommands.argument.Arg;
@@ -19,11 +20,13 @@ public class FriendKickCommand {
     private final ProfileManager profileManager;
     private final NotificationAnnouncer announcer;
     private final MessagesConfig messages;
+    private final NameTagService nameTagService;
 
-    public FriendKickCommand(ProfileManager profileManager, NotificationAnnouncer announcer, MessagesConfig messages) {
+    public FriendKickCommand(ProfileManager profileManager, NotificationAnnouncer announcer, MessagesConfig messages, NameTagService nameTagService) {
         this.profileManager = profileManager;
         this.announcer = announcer;
         this.messages = messages;
+        this.nameTagService = nameTagService;
     }
 
     @Execute(route = "kick", required = 1)
@@ -62,6 +65,8 @@ public class FriendKickCommand {
 
         senderProfile.removeFriend(target.getUniqueId());
         targetProfile.removeFriend(sender.getUniqueId());
+
+        this.nameTagService.updateNameTagOfTwoNoFriends(sender, target);
 
         this.announcer.announceMessage(sender.getUniqueId(), friends.youKickedFriend.replace("{player}", target.getName()));
         this.announcer.announceMessage(target.getUniqueId(), friends.friendKickedYou.replace("{player}", sender.getName()));
