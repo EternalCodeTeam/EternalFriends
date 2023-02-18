@@ -1,6 +1,6 @@
 package com.eternalcode.friends.listener;
 
-import com.eternalcode.friends.profile.ProfileManager;
+import com.eternalcode.friends.friend.FriendManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -8,15 +8,14 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 public class EntityDamageByEntityListener implements Listener {
 
-    private final ProfileManager profileManager;
+    private final FriendManager friendManager;
 
-    public EntityDamageByEntityListener(ProfileManager profileManager) {
-        this.profileManager = profileManager;
+    public EntityDamageByEntityListener(FriendManager friendManager) {
+        this.friendManager = friendManager;
     }
 
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent event) {
-
         if (!(event.getDamager() instanceof Player)) {
             return;
         }
@@ -27,10 +26,8 @@ public class EntityDamageByEntityListener implements Listener {
         Player damager = (Player) event.getDamager();
         Player damaged = (Player) event.getEntity();
 
-        this.profileManager.getProfileByUUID(damager.getUniqueId()).ifPresent(profile -> {
-            if (profile.getFriends().contains(damaged.getUniqueId())) {
-                event.setDamage(0D);
-            }
-        });
+        if (this.friendManager.areFriends(damager.getUniqueId(), damaged.getUniqueId())) {
+            event.setDamage(0D);
+        }
     }
 }

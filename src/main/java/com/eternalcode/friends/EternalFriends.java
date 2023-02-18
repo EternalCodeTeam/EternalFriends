@@ -18,14 +18,13 @@ import com.eternalcode.friends.config.ConfigManager;
 import com.eternalcode.friends.config.implementation.GuiConfig;
 import com.eternalcode.friends.config.implementation.MessagesConfig;
 import com.eternalcode.friends.config.implementation.PluginConfig;
+import com.eternalcode.friends.friend.FriendManager;
 import com.eternalcode.friends.gui.MainGui;
 import com.eternalcode.friends.invite.InviteManager;
 import com.eternalcode.friends.listener.AsyncPlayerChatListener;
 import com.eternalcode.friends.listener.EntityDamageByEntityListener;
 import com.eternalcode.friends.packet.NameTagService;
-import com.eternalcode.friends.profile.ProfileJoinQuitListener;
-import com.eternalcode.friends.profile.ProfileManager;
-import com.eternalcode.friends.profile.ProfileRepositoryImpl;
+import com.eternalcode.friends.listener.JoinQuitListener;
 import com.eternalcode.friends.util.legacy.LegacyColorProcessor;
 import dev.rollczi.litecommands.LiteCommands;
 import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
@@ -51,12 +50,12 @@ public class EternalFriends extends JavaPlugin {
     private GuiConfig guiConfig;
     private MainGui mainGui;
     private InviteManager inviteManager;
-    private ProfileManager profileManager;
     private NameTagService nameTagService;
     private AudienceProvider audienceProvider;
     private MiniMessage miniMessage;
     private ProtocolManager protocolManager;
     private LiteCommands<CommandSender> liteCommands;
+    private FriendManager friendManager;
 
     @Override
     public void onLoad() {
@@ -82,18 +81,18 @@ public class EternalFriends extends JavaPlugin {
         this.configManager.load(this.messages);
         this.configManager.load(this.guiConfig);
 
-        this.inviteManager = new InviteManager();
-
-        this.profileManager = new ProfileManager(new ProfileRepositoryImpl());
-
-        this.mainGui = new MainGui(this.miniMessage, this.guiConfig, this, this.profileManager, this.announcer, this.messages, this.inviteManager);
-
         this.nameTagService = new NameTagService(this.protocolManager, this.config);
 
+        this.inviteManager = new InviteManager();
+
+        this.friendManager = new FriendManager();
+
+        this.mainGui = new MainGui(this.miniMessage, this.guiConfig, this, this.announcer, this.messages, this.inviteManager, this.friendManager, this.nameTagService);
+
         Stream.of(
-                new ProfileJoinQuitListener(this.profileManager, this.protocolManager, this.nameTagService),
-                new EntityDamageByEntityListener(this.profileManager),
-                new AsyncPlayerChatListener(this.profileManager, this.announcer, this.messages)
+                new JoinQuitListener(this.protocolManager, this.nameTagService, this.friendManager),
+                new EntityDamageByEntityListener(this.friendManager),
+                new AsyncPlayerChatListener(this.announcer, this.messages, this.friendManager)
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
 
         Metrics metrics = new Metrics(this, 16297);
@@ -107,12 +106,12 @@ public class EternalFriends extends JavaPlugin {
                 .contextualBind(Player.class, new BukkitOnlyPlayerContextual<>(this.messages.argument.playerOnly))
 
                 .commandInstance(new FriendCommand(this.mainGui))
-                .commandInstance(new FriendAcceptCommand(this.profileManager, this.announcer, this.inviteManager, this.messages, this.nameTagService))
-                .commandInstance(new FriendDenyCommand(this.profileManager, this.announcer, this.inviteManager, this.messages))
-                .commandInstance(new FriendInviteCommand(this.profileManager, this.announcer, this.inviteManager, this.messages))
-                .commandInstance(new FriendListCommand(this.profileManager, this.announcer, this.messages, this.getServer()))
-                .commandInstance(new FriendKickCommand(this.profileManager, this.announcer, this.messages, this.protocolManager))
-                .commandInstance(new FriendIgnoreCommand(this.profileManager, this.announcer, this.messages))
+                .commandInstance(new FriendAcceptCommand(this.announcer, this.inviteManager, this.messages, this.nameTagService, this.friendManager))
+                .commandInstance(new FriendDenyCommand(this.announcer, this.inviteManager, this.messages))
+                .commandInstance(new FriendInviteCommand(this.announcer, this.inviteManager, this.messages, this.friendManager))
+                .commandInstance(new FriendListCommand(this.announcer, this.messages, this.getServer(), this.friendManager))
+                .commandInstance(new FriendKickCommand(this.announcer, this.messages, this.nameTagService, this.friendManager))
+                .commandInstance(new FriendIgnoreCommand(this.announcer, this.messages, this.friendManager))
                 .commandInstance(new FriendHelpCommand(this.announcer, this.messages))
                 .commandInstance(new FriendReloadCommand(this.announcer, this.messages, this.configManager))
 

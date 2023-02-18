@@ -2,8 +2,7 @@ package com.eternalcode.friends.command.implementation;
 
 import com.eternalcode.friends.NotificationAnnouncer;
 import com.eternalcode.friends.config.implementation.MessagesConfig;
-import com.eternalcode.friends.profile.Profile;
-import com.eternalcode.friends.profile.ProfileManager;
+import com.eternalcode.friends.friend.FriendManager;
 import dev.rollczi.litecommands.argument.Arg;
 import dev.rollczi.litecommands.argument.Name;
 import dev.rollczi.litecommands.command.execute.Execute;
@@ -13,69 +12,56 @@ import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Optional;
+import java.util.List;
 import java.util.UUID;
 
 @Route(name = "friends")
 public class FriendListCommand {
 
-    private final ProfileManager profileManager;
     private final NotificationAnnouncer announcer;
     private final MessagesConfig messages;
     private final Server server;
+    private final FriendManager friendManager;
+    private final MessagesConfig.Friends friends;
 
-    public FriendListCommand(ProfileManager profileManager, NotificationAnnouncer announcer, MessagesConfig messages, Server server) {
-        this.profileManager = profileManager;
+    public FriendListCommand(NotificationAnnouncer announcer, MessagesConfig messages, Server server, FriendManager friendManager) {
         this.announcer = announcer;
         this.messages = messages;
         this.server = server;
+        this.friendManager = friendManager;
+        this.friends = this.messages.friends;
     }
 
     @Execute(route = "list")
     @Permission("eternalfriends.access.list")
     public void list(Player sender) {
-        MessagesConfig.Friends friends = this.messages.friends;
-        Optional<Profile> senderOptional = this.profileManager.getProfileByUUID(sender.getUniqueId());
 
-        if (senderOptional.isEmpty()) {
-            this.announcer.announceMessage(sender.getUniqueId(), friends.yourProfileNotFound);
+        this.announcer.announceMessage(sender.getUniqueId(), listOfFriends(sender.getUniqueId()));
 
-            return;
-        }
-
-        Profile senderProfile = senderOptional.get();
-
-        this.announcer.announceMessage(sender.getUniqueId(), listOfFriends(friends, senderProfile));
     }
 
     @Execute(route = "adminlist", required = 1)
     @Permission("eternalfriends.admin.list")
     public void listAdmin(CommandSender sender, @Arg @Name("player") Player target) {
-        MessagesConfig.Friends friends = this.messages.friends;
-        Optional<Profile> targetOptional = this.profileManager.getProfileByUUID(target.getUniqueId());
 
-        if (targetOptional.isEmpty()) {
-            this.announcer.announceMessage(sender, friends.profileNotFound);
+        this.announcer.announceMessage(sender, listOfFriends(target.getUniqueId()));
 
-            return;
-        }
-
-        Profile profile = targetOptional.get();
-
-        this.announcer.announceMessage(sender, listOfFriends(friends, profile));
     }
 
-    private String listOfFriends(MessagesConfig.Friends friends, Profile profile) {
+    private String listOfFriends(UUID uuid) {
         StringBuilder builder = new StringBuilder();
 
-        if (profile.getFriends().size() == 0) {
+        List<UUID> friendsList = this.friendManager.getFriends(uuid);
+
+        if (friendsList.size() == 0) {
             builder.append(friends.emptyFriendList);
+            return builder.toString();
         }
-        else {
-            builder.append(friends.friendListHeader);
-            for (UUID uuid : profile.getFriends()) {
-                builder.append(friends.friendListPlayer.replace("{player}", server.getOfflinePlayer(uuid).getName()));
-            }
+
+        builder.append(friends.friendListHeader);
+
+        for (UUID friendUuid : friendsList) {
+            builder.append(friends.friendListPlayer.replace("{player}", server.getOfflinePlayer(friendUuid).getName()));
         }
 
         return builder.toString();

@@ -1,15 +1,12 @@
 package com.eternalcode.friends.invite;
 
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
-
 import java.time.Duration;
 import java.util.*;
 
 
 public class InviteManager {
 
-    private final static Duration DEFAULT_INVITE_DURATION = Duration.ofSeconds(10);
+    private final static Duration DEFAULT_INVITE_DURATION = Duration.ofSeconds(60);
 
     private final Map<UUID, List<Invite>> receivedInvites = new HashMap<>();
     private final Map<UUID, List<Invite>> sendedInvites = new HashMap<>();

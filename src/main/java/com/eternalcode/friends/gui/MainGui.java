@@ -3,11 +3,10 @@ package com.eternalcode.friends.gui;
 import com.eternalcode.friends.NotificationAnnouncer;
 import com.eternalcode.friends.config.implementation.GuiConfig;
 import com.eternalcode.friends.config.implementation.MessagesConfig;
+import com.eternalcode.friends.friend.FriendManager;
 import com.eternalcode.friends.invite.InviteManager;
-import com.eternalcode.friends.profile.Profile;
-import com.eternalcode.friends.profile.ProfileManager;
+import com.eternalcode.friends.packet.NameTagService;
 import dev.triumphteam.gui.builder.item.ItemBuilder;
-import dev.triumphteam.gui.components.GuiAction;
 import dev.triumphteam.gui.guis.Gui;
 import dev.triumphteam.gui.guis.GuiItem;
 import dev.triumphteam.gui.guis.PaginatedGui;
@@ -16,10 +15,8 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.plugin.Plugin;
 
-import java.util.Optional;
 import java.util.UUID;
 
 
@@ -27,7 +24,6 @@ public class MainGui {
 
     private final MiniMessage miniMessage;
     private final GuiConfig guiConfig;
-    private final ProfileManager profileManager;
     private final NotificationAnnouncer announcer;
     private final MessagesConfig messages;
     private final ConfirmGui confirmGUI;
@@ -35,6 +31,8 @@ public class MainGui {
     private final InviteManager inviteManager;
     private final Plugin plugin;
     private final Server server;
+    private final FriendManager friendManager;
+    private final NameTagService nameTagService;
     private static final int SETTINGS_ITEM_SLOT = 49;
     private static final int NEXT_PAGE_ITEM_SLOT = 53;
     private static final int BACK_PAGE_ITEM_SLOT = 45;
@@ -42,17 +40,25 @@ public class MainGui {
     private static final int SEND_ITEM_SLOT = 50;
 
 
-    public MainGui(MiniMessage miniMessage, GuiConfig guiConfig, Plugin plugin, ProfileManager profileManager, NotificationAnnouncer announcer, MessagesConfig messages, InviteManager inviteManager) {
+    public MainGui(MiniMessage miniMessage,
+                   GuiConfig guiConfig,
+                   Plugin plugin,
+                   NotificationAnnouncer announcer,
+                   MessagesConfig messages,
+                   InviteManager inviteManager,
+                   FriendManager friendManager,
+                   NameTagService nameTagService) {
         this.miniMessage = miniMessage;
         this.guiConfig = guiConfig;
         this.plugin = plugin;
-        this.profileManager = profileManager;
+        this.friendManager = friendManager;
         this.announcer = announcer;
         this.messages = messages;
         this.inviteManager = inviteManager;
         this.server = plugin.getServer();
+        this.nameTagService = nameTagService;
         this.confirmGUI = new ConfirmGui(this.guiConfig, this.miniMessage);
-        this.receivedInvitesGui = new ReceivedInvitesGui(this.profileManager, this.announcer, this.messages, this.guiConfig, this.miniMessage, this.inviteManager, this.server);
+        this.receivedInvitesGui = new ReceivedInvitesGui(this.announcer, this.messages, this.guiConfig, this.miniMessage, this.inviteManager, this.server, this.friendManager, this.nameTagService);
     }
 
     public void openMainGui(Player player) {
@@ -92,11 +98,6 @@ public class MainGui {
             });
         });
 
-        GuiItem settingsItem = menuItems.settingItem.toGuiItem(this.miniMessage);
-        settingsItem.setAction(event -> {
-            //TODO
-        });
-
         generateFriendsHeads(player, gui);
 
         gui.getFiller().fillBottom(ItemBuilder.from(Material.BLACK_STAINED_GLASS_PANE).name(Component.text(" ")).asGuiItem());
@@ -104,28 +105,17 @@ public class MainGui {
         gui.setItem(SEND_ITEM_SLOT, sendInvitesItem);
         gui.setItem(NEXT_PAGE_ITEM_SLOT, nextPageButton);
         gui.setItem(BACK_PAGE_ITEM_SLOT, backPageButton);
-        gui.setItem(SETTINGS_ITEM_SLOT, settingsItem);
 
         gui.open(player);
     }
 
     private void generateFriendsHeads(Player player, PaginatedGui gui) {
-        Optional<Profile> profileOptional = this.profileManager.getProfileByUUID(player.getUniqueId());
-
-        if (profileOptional.isEmpty()) {
-            player.closeInventory();
-            this.announcer.announceMessage(player.getUniqueId(), messages.friends.yourProfileNotFound);
-            return;
-        }
-
-        Profile profile = profileOptional.get();
-
-        for (UUID uuid : profile.getFriends()) {
-            gui.addItem(generateSkull(player, profile, uuid));
+        for (UUID friendUuid : this.friendManager.getFriends(player.getUniqueId())) {
+            gui.addItem(generateSkull(player, friendUuid));
         }
     }
 
-    private GuiItem generateSkull(Player player, Profile profile, UUID friendUuid) {
+    private GuiItem generateSkull(Player player, UUID friendUuid) {
         final GuiItem skull = ItemBuilder.skull()
                 .owner(this.server.getOfflinePlayer(friendUuid))
                 .name(this.miniMessage.deserialize(this.guiConfig.menuItems.friendListHead.name
@@ -140,18 +130,11 @@ public class MainGui {
             }
 
             this.confirmGUI.openInventory(player, () -> {
-                Optional<Profile> friendProfileOptional = this.profileManager.getProfileByUUID(friendUuid);
+                this.friendManager.removeFriends(player.getUniqueId(), friendUuid);
 
-                if (friendProfileOptional.isEmpty()) {
-                    player.closeInventory();
-                    this.announcer.announceMessage(player.getUniqueId(), this.messages.friends.profileNotFound);
-                    return;
+                if(this.server.getOfflinePlayer(friendUuid).isOnline()) {
+                    this.nameTagService.updateNameTagOfTwoNoFriends(player, this.server.getPlayer(friendUuid));
                 }
-
-                Profile friendProfile = friendProfileOptional.get();
-
-                profile.removeFriend(friendUuid);
-                friendProfile.removeFriend(profile.getUuid());
 
                 this.announcer.announceMessage(player.getUniqueId(), this.messages.friends.youKickedFriend
                         .replace("{player}", server.getOfflinePlayer(friendUuid).getName()));

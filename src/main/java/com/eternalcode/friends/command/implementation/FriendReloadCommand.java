@@ -14,18 +14,18 @@ public class FriendReloadCommand {
     private final NotificationAnnouncer announcer;
     private final MessagesConfig messages;
     private final ConfigManager configManager;
+    private final MessagesConfig.Friends friends;
 
     public FriendReloadCommand(NotificationAnnouncer announcer, MessagesConfig messages, ConfigManager configManager) {
         this.announcer = announcer;
         this.messages = messages;
         this.configManager = configManager;
+        this.friends = this.messages.friends;
     }
 
     @Execute(route = "reload")
     @Permission("eternalfriends.admin.reload")
     public void reload(CommandSender sender) {
-        MessagesConfig.Friends friends = messages.friends;
-
         this.configManager.reload();
 
         this.announcer.announceMessage(sender, friends.configReloaded);
