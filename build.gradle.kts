@@ -37,7 +37,7 @@ dependencies {
     implementation("net.dzikoysk:cdn:1.14.3")
 
     // bstats
-    implementation("org.bstats:bstats-bukkit:3.0.0")
+    implementation("org.bstats:bstats-bukkit:3.0.1")
 
     // triumph gui
     implementation("dev.triumphteam:triumph-gui:3.1.4")
