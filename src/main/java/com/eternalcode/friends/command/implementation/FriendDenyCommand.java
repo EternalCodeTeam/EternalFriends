@@ -18,20 +18,20 @@ public class FriendDenyCommand {
     private final NotificationAnnouncer announcer;
     private final InviteManager inviteManager;
     private final MessagesConfig messages;
-    private final MessagesConfig.Friends friends;
+    private final MessagesConfig.Friends friendsConfig;
 
     public FriendDenyCommand(NotificationAnnouncer announcer, InviteManager inviteManager, MessagesConfig messages) {
         this.announcer = announcer;
         this.inviteManager = inviteManager;
         this.messages = messages;
-        this.friends = this.messages.friends;
+        this.friendsConfig = this.messages.friends;
     }
 
     @Execute(route = "deny", required = 1)
     @Permission("eternalfriends.access.deny")
     public void deny(Player sender, @Arg @Name("player") Player target) {
         if (sender.equals(target)) {
-            this.announcer.announceMessage(sender.getUniqueId(), friends.yourselfCommand);
+            this.announcer.announceMessage(sender.getUniqueId(), friendsConfig.yourselfCommand);
 
             return;
         }
@@ -41,11 +41,11 @@ public class FriendDenyCommand {
 
         if (inviteManager.hasReceivedInvite(targetUuid, senderUuid)) {
             this.inviteManager.removeInvite(targetUuid, senderUuid);
-            this.announcer.announceMessage(senderUuid, friends.inviteDenied.replace("{player}", target.getName()));
+            this.announcer.announceMessage(senderUuid, friendsConfig.inviteDenied.replace("{player}", target.getName()));
 
             return;
         }
 
-        this.announcer.announceMessage(sender.getUniqueId(), friends.inviteNotFound);
+        this.announcer.announceMessage(sender.getUniqueId(), friendsConfig.inviteNotFound);
     }
 }

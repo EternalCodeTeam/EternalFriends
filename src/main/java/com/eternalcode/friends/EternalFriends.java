@@ -83,7 +83,7 @@ public class EternalFriends extends JavaPlugin {
 
         this.nameTagService = new NameTagService(this.protocolManager, this.config);
 
-        this.inviteManager = new InviteManager();
+        this.inviteManager = new InviteManager(this.config);
 
         this.friendManager = new FriendManager();
 
@@ -105,15 +105,17 @@ public class EternalFriends extends JavaPlugin {
 
                 .contextualBind(Player.class, new BukkitOnlyPlayerContextual<>(this.messages.argument.playerOnly))
 
-                .commandInstance(new FriendCommand(this.mainGui))
-                .commandInstance(new FriendAcceptCommand(this.announcer, this.inviteManager, this.messages, this.nameTagService, this.friendManager))
-                .commandInstance(new FriendDenyCommand(this.announcer, this.inviteManager, this.messages))
-                .commandInstance(new FriendInviteCommand(this.announcer, this.inviteManager, this.messages, this.friendManager))
-                .commandInstance(new FriendListCommand(this.announcer, this.messages, this.getServer(), this.friendManager))
-                .commandInstance(new FriendKickCommand(this.announcer, this.messages, this.nameTagService, this.friendManager))
-                .commandInstance(new FriendIgnoreCommand(this.announcer, this.messages, this.friendManager))
-                .commandInstance(new FriendHelpCommand(this.announcer, this.messages))
-                .commandInstance(new FriendReloadCommand(this.announcer, this.messages, this.configManager))
+                .commandInstance(
+                        new FriendCommand(this.mainGui),
+                        new FriendAcceptCommand(this.announcer, this.inviteManager, this.messages, this.nameTagService, this.friendManager),
+                        new FriendDenyCommand(this.announcer, this.inviteManager, this.messages),
+                        new FriendInviteCommand(this.announcer, this.inviteManager, this.messages, this.friendManager),
+                        new FriendListCommand(this.announcer, this.messages, this.getServer(), this.friendManager),
+                        new FriendKickCommand(this.announcer, this.messages, this.nameTagService, this.friendManager),
+                        new FriendIgnoreCommand(this.announcer, this.messages, this.friendManager),
+                        new FriendHelpCommand(this.announcer, this.messages),
+                        new FriendReloadCommand(this.announcer, this.messages, this.configManager)
+                )
 
                 .commandEditor("friends", new CommandConfigurator(this.config))
 

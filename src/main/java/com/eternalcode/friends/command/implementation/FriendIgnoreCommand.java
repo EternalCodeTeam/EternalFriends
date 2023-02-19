@@ -18,13 +18,13 @@ public class FriendIgnoreCommand {
     private final NotificationAnnouncer announcer;
     private final MessagesConfig messages;
     private final FriendManager friendManager;
-    private final MessagesConfig.Friends friends;
+    private final MessagesConfig.Friends friendsConfig;
 
     public FriendIgnoreCommand(NotificationAnnouncer announcer, MessagesConfig messages, FriendManager friendManager) {
         this.announcer = announcer;
         this.messages = messages;
         this.friendManager = friendManager;
-        this.friends = this.messages.friends;
+        this.friendsConfig = this.messages.friends;
     }
 
     @Execute(route = "ignore", required = 1)
@@ -35,7 +35,7 @@ public class FriendIgnoreCommand {
 
 
         if (sender.equals(target)) {
-            this.announcer.announceMessage(senderUuid, friends.yourselfCommand);
+            this.announcer.announceMessage(senderUuid, friendsConfig.yourselfCommand);
 
             return;
         }
@@ -43,13 +43,13 @@ public class FriendIgnoreCommand {
         if (this.friendManager.isIgnoredByPlayer(targetUuid, senderUuid)) {
             this.friendManager.removeIgnoredPlayer(senderUuid, targetUuid);
 
-            this.announcer.announceMessage(senderUuid, friends.youUnignoredPlayer.replace("{player}", target.getName()));
+            this.announcer.announceMessage(senderUuid, friendsConfig.youUnignoredPlayer.replace("{player}", target.getName()));
 
             return;
         }
 
         this.friendManager.addIgnoredPlayer(senderUuid, targetUuid);
 
-        this.announcer.announceMessage(senderUuid, friends.youIgnoredPlayer.replace("{player}", target.getName()));
+        this.announcer.announceMessage(senderUuid, friendsConfig.youIgnoredPlayer.replace("{player}", target.getName()));
     }
 }

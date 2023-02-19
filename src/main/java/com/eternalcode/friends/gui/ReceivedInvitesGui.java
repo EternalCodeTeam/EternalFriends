@@ -32,7 +32,7 @@ public class ReceivedInvitesGui {
     private final Server server;
     private final FriendManager friendManager;
     private final NameTagService nameTagService;
-    private final MessagesConfig.Friends friendsCfg;
+    private final MessagesConfig.Friends friendsConfig;
 
     private static final int NEXT_PAGE_ITEM_SLOT = 53;
     private static final int BACK_PAGE_ITEM_SLOT = 45;
@@ -52,7 +52,7 @@ public class ReceivedInvitesGui {
         this.miniMessage = miniMessage;
         this.inviteManager = inviteManager;
         this.server = server;
-        this.friendsCfg = this.messages.friends;
+        this.friendsConfig = this.messages.friends;
         this.friendManager = friendManager;
         this.nameTagService = nameTagService;
     }
@@ -148,8 +148,8 @@ public class ReceivedInvitesGui {
                     this.nameTagService.updateNameTagOfTwoFriends(player, this.server.getPlayer(friendUuid));
                 }
 
-                this.announcer.announceMessage(playerUuid, this.friendsCfg.acceptedInvite.replace("{player}", this.server.getOfflinePlayer(friendUuid).getName()));
-                this.announcer.announceMessage(friendUuid, this.friendsCfg.yourInvitationHasBeenAccepted.replace("{player}", player.getName()));
+                this.announcer.announceMessage(playerUuid, this.friendsConfig.acceptedInvite.replace("{player}", this.server.getOfflinePlayer(friendUuid).getName()));
+                this.announcer.announceMessage(friendUuid, this.friendsConfig.yourInvitationHasBeenAccepted.replace("{player}", player.getName()));
 
                 return;
             }

@@ -20,14 +20,14 @@ public class FriendInviteCommand {
     private final InviteManager inviteManager;
     private final MessagesConfig messages;
     private final FriendManager friendManager;
-    private final MessagesConfig.Friends friends;
+    private final MessagesConfig.Friends friendsConfig;
 
     public FriendInviteCommand(NotificationAnnouncer announcer, InviteManager inviteManager, MessagesConfig messages, FriendManager friendManager) {
         this.announcer = announcer;
         this.inviteManager = inviteManager;
         this.messages = messages;
         this.friendManager = friendManager;
-        this.friends = this.messages.friends;
+        this.friendsConfig = this.messages.friends;
     }
 
     @Execute(route = "invite", required = 1)
@@ -37,7 +37,7 @@ public class FriendInviteCommand {
         UUID targetUuid = target.getUniqueId();
 
         if (sender.equals(target)) {
-            this.announcer.announceMessage(senderUuid, friends.yourselfCommand);
+            this.announcer.announceMessage(senderUuid, friendsConfig.yourselfCommand);
 
             return;
         }
@@ -47,25 +47,25 @@ public class FriendInviteCommand {
         }
 
         if (this.friendManager.areFriends(senderUuid, targetUuid)) {
-            this.announcer.announceMessage(senderUuid, friends.alreadyFriend);
+            this.announcer.announceMessage(senderUuid, friendsConfig.alreadyFriend);
 
             return;
         }
 
         if (inviteManager.hasReceivedInvite(targetUuid, senderUuid) || this.inviteManager.hasSendedInvite(targetUuid, senderUuid)) {
-            this.announcer.announceMessage(senderUuid, friends.alreadyReceivedInvite);
+            this.announcer.announceMessage(senderUuid, friendsConfig.alreadyReceivedInvite);
 
             return;
         }
         if (inviteManager.hasSendedInvite(senderUuid, targetUuid) || this.inviteManager.hasReceivedInvite(senderUuid, targetUuid)) {
-            this.announcer.announceMessage(senderUuid, friends.alreadySentInvite);
+            this.announcer.announceMessage(senderUuid, friendsConfig.alreadySentInvite);
 
             return;
         }
 
         this.inviteManager.addInvite(senderUuid, targetUuid);
 
-        this.announcer.announceMessage(senderUuid, friends.inviteSent.replace("{invited}", target.getName()));
-        this.announcer.announceMessage(targetUuid, friends.inviteReceived.replace("{player}", sender.getName()));
+        this.announcer.announceMessage(senderUuid, friendsConfig.inviteSent.replace("{invited}", target.getName()));
+        this.announcer.announceMessage(targetUuid, friendsConfig.inviteReceived.replace("{player}", sender.getName()));
     }
 }

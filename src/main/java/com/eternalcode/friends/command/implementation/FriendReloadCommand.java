@@ -14,13 +14,13 @@ public class FriendReloadCommand {
     private final NotificationAnnouncer announcer;
     private final MessagesConfig messages;
     private final ConfigManager configManager;
-    private final MessagesConfig.Friends friends;
+    private final MessagesConfig.Friends friendsConfig;
 
     public FriendReloadCommand(NotificationAnnouncer announcer, MessagesConfig messages, ConfigManager configManager) {
         this.announcer = announcer;
         this.messages = messages;
         this.configManager = configManager;
-        this.friends = this.messages.friends;
+        this.friendsConfig = this.messages.friends;
     }
 
     @Execute(route = "reload")
@@ -28,6 +28,6 @@ public class FriendReloadCommand {
     public void reload(CommandSender sender) {
         this.configManager.reload();
 
-        this.announcer.announceMessage(sender, friends.configReloaded);
+        this.announcer.announceMessage(sender, friendsConfig.configReloaded);
     }
 }

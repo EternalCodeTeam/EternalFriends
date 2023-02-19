@@ -22,7 +22,7 @@ public class FriendAcceptCommand {
     private final MessagesConfig messages;
     private final NameTagService nameTagService;
     private final FriendManager friendManager;
-    private final MessagesConfig.Friends friends;
+    private final MessagesConfig.Friends friendsConfig;
 
     public FriendAcceptCommand(NotificationAnnouncer announcer, InviteManager inviteManager, MessagesConfig messages, NameTagService nameTagService, FriendManager friendManager) {
         this.announcer = announcer;
@@ -30,14 +30,14 @@ public class FriendAcceptCommand {
         this.messages = messages;
         this.nameTagService = nameTagService;
         this.friendManager = friendManager;
-        this.friends = this.messages.friends;
+        this.friendsConfig = this.messages.friends;
     }
 
     @Execute(route = "accept", required = 1)
     @Permission("eternalfriends.access.accept")
     public void accept(Player sender, @Arg @Name("player") Player target) {
         if (sender.equals(target)) {
-            this.announcer.announceMessage(sender.getUniqueId(), friends.yourselfCommand);
+            this.announcer.announceMessage(sender.getUniqueId(), friendsConfig.yourselfCommand);
 
             return;
         }
@@ -46,14 +46,14 @@ public class FriendAcceptCommand {
         UUID targetUuid = target.getUniqueId();
 
         if (!this.inviteManager.hasReceivedInvite(targetUuid, senderUuid)) {
-            this.announcer.announceMessage(sender.getUniqueId(), friends.inviteNotFound);
+            this.announcer.announceMessage(sender.getUniqueId(), friendsConfig.inviteNotFound);
             return;
         }
 
         if (this.inviteManager.isInviteExpired(targetUuid, senderUuid)) {
             this.inviteManager.removeInvite(targetUuid, senderUuid);
 
-            this.announcer.announceMessage(sender.getUniqueId(), friends.inviteExpired);
+            this.announcer.announceMessage(sender.getUniqueId(), friendsConfig.inviteExpired);
 
             return;
         }
@@ -64,7 +64,7 @@ public class FriendAcceptCommand {
 
         this.inviteManager.removeInvite(targetUuid, senderUuid);
 
-        this.announcer.announceMessage(senderUuid, friends.acceptedInvite.replace("{player}", target.getName()));
-        this.announcer.announceMessage(targetUuid, friends.yourInvitationHasBeenAccepted.replace("{player}", sender.getName()));
+        this.announcer.announceMessage(senderUuid, friendsConfig.acceptedInvite.replace("{player}", target.getName()));
+        this.announcer.announceMessage(targetUuid, friendsConfig.yourInvitationHasBeenAccepted.replace("{player}", sender.getName()));
     }
 }

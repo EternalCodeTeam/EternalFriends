@@ -22,14 +22,14 @@ public class FriendListCommand {
     private final MessagesConfig messages;
     private final Server server;
     private final FriendManager friendManager;
-    private final MessagesConfig.Friends friends;
+    private final MessagesConfig.Friends friendsConfig;
 
     public FriendListCommand(NotificationAnnouncer announcer, MessagesConfig messages, Server server, FriendManager friendManager) {
         this.announcer = announcer;
         this.messages = messages;
         this.server = server;
         this.friendManager = friendManager;
-        this.friends = this.messages.friends;
+        this.friendsConfig = this.messages.friends;
     }
 
     @Execute(route = "list")
@@ -54,14 +54,14 @@ public class FriendListCommand {
         List<UUID> friendsList = this.friendManager.getFriends(uuid);
 
         if (friendsList.size() == 0) {
-            builder.append(friends.emptyFriendList);
+            builder.append(friendsConfig.emptyFriendList);
             return builder.toString();
         }
 
-        builder.append(friends.friendListHeader);
+        builder.append(friendsConfig.friendListHeader);
 
         for (UUID friendUuid : friendsList) {
-            builder.append(friends.friendListPlayer.replace("{player}", server.getOfflinePlayer(friendUuid).getName()));
+            builder.append(friendsConfig.friendListPlayer.replace("{player}", server.getOfflinePlayer(friendUuid).getName()));
         }
 
         return builder.toString();
