@@ -144,7 +144,7 @@ public class ReceivedInvitesGui {
                 this.friendManager.addFriends(playerUuid, friendUuid);
                 this.inviteManager.removeInvite(friendUuid, playerUuid);
 
-                if(this.server.getOfflinePlayer(friendUuid).isOnline()) {
+                if (this.server.getOfflinePlayer(friendUuid).isOnline()) {
                     this.nameTagService.updateNameTagOfTwoFriends(player, this.server.getPlayer(friendUuid));
                 }
 
