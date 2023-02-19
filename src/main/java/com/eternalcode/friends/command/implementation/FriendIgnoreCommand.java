@@ -48,7 +48,7 @@ public class FriendIgnoreCommand {
             return;
         }
 
-        friendManager.addIgnoredPlayer(senderUuid, targetUuid);
+        this.friendManager.addIgnoredPlayer(senderUuid, targetUuid);
 
         this.announcer.announceMessage(senderUuid, friends.youIgnoredPlayer.replace("{player}", target.getName()));
     }
