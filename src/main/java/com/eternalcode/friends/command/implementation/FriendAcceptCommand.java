@@ -58,7 +58,7 @@ public class FriendAcceptCommand {
             return;
         }
 
-        friendManager.addFriends(senderUuid, targetUuid);
+        this.friendManager.addFriends(senderUuid, targetUuid);
 
         this.nameTagService.updateNameTagOfTwoFriends(sender, target);
 
