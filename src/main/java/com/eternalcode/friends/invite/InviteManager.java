@@ -1,7 +1,6 @@
 package com.eternalcode.friends.invite;
 
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
+import com.eternalcode.friends.config.implementation.PluginConfig;
 
 import java.time.Duration;
 import java.util.*;
@@ -9,13 +8,17 @@ import java.util.*;
 
 public class InviteManager {
 
-    private final static Duration DEFAULT_INVITE_DURATION = Duration.ofSeconds(10);
+    private final PluginConfig pluginConfig;
 
     private final Map<UUID, List<Invite>> receivedInvites = new HashMap<>();
     private final Map<UUID, List<Invite>> sendedInvites = new HashMap<>();
 
+    public InviteManager(PluginConfig pluginConfig) {
+        this.pluginConfig = pluginConfig;
+    }
+
     public void addInvite(UUID from, UUID to) {
-        Invite invite = new Invite(from, to, DEFAULT_INVITE_DURATION);
+        Invite invite = new Invite(from, to, Duration.ofSeconds(pluginConfig.inviteExpirationTime));
 
         if (this.sendedInvites.containsKey(from)) {
             this.sendedInvites.get(from).add(invite);

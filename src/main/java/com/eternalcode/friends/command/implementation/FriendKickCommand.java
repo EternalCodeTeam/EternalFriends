@@ -2,9 +2,8 @@ package com.eternalcode.friends.command.implementation;
 
 import com.eternalcode.friends.NotificationAnnouncer;
 import com.eternalcode.friends.config.implementation.MessagesConfig;
+import com.eternalcode.friends.friend.FriendManager;
 import com.eternalcode.friends.packet.NameTagService;
-import com.eternalcode.friends.profile.Profile;
-import com.eternalcode.friends.profile.ProfileManager;
 import dev.rollczi.litecommands.argument.Arg;
 import dev.rollczi.litecommands.argument.Name;
 import dev.rollczi.litecommands.command.execute.Execute;
@@ -12,63 +11,50 @@ import dev.rollczi.litecommands.command.permission.Permission;
 import dev.rollczi.litecommands.command.route.Route;
 import org.bukkit.entity.Player;
 
-import java.util.Optional;
+import java.util.UUID;
 
 @Route(name = "friends")
 public class FriendKickCommand {
 
-    private final ProfileManager profileManager;
     private final NotificationAnnouncer announcer;
     private final MessagesConfig messages;
     private final NameTagService nameTagService;
+    private final FriendManager friendManager;
+    private final MessagesConfig.Friends friendsConfig;
 
-    public FriendKickCommand(ProfileManager profileManager, NotificationAnnouncer announcer, MessagesConfig messages, NameTagService nameTagService) {
-        this.profileManager = profileManager;
+    public FriendKickCommand(NotificationAnnouncer announcer, MessagesConfig messages, NameTagService nameTagService, FriendManager friendManager) {
         this.announcer = announcer;
         this.messages = messages;
         this.nameTagService = nameTagService;
+        this.friendManager = friendManager;
+        this.friendsConfig = this.messages.friends;
     }
 
     @Execute(route = "kick", required = 1)
     @Permission("eternalfriends.access.kick")
     public void kick(Player sender, @Arg @Name("player") Player target){
-        MessagesConfig.Friends friends = this.messages.friends;
+        UUID senderUuid = sender.getUniqueId();
+        UUID targetUuid = target.getUniqueId();
 
         if (sender.equals(target)) {
-            this.announcer.announceMessage(sender.getUniqueId(), friends.yourselfCommand);
+            this.announcer.announceMessage(senderUuid, friendsConfig.yourselfCommand);
 
             return;
         }
 
-        Optional<Profile> targetOptional = profileManager.getProfileByUUID(target.getUniqueId());
-        Optional<Profile> senderOptional = profileManager.getProfileByUUID(sender.getUniqueId());
-
-        if (targetOptional.isEmpty()) {
-            this.announcer.announceMessage(sender.getUniqueId(), friends.profileNotFound);
-
-            return;
-        }
-        if (senderOptional.isEmpty()) {
-            this.announcer.announceMessage(sender.getUniqueId(), friends.yourProfileNotFound);
+        if (!this.friendManager.areFriends(senderUuid, targetUuid)) {
+            this.announcer.announceMessage(senderUuid, friendsConfig.playerIsNotYourFriend);
 
             return;
         }
 
-        Profile senderProfile = senderOptional.get();
-        Profile targetProfile = targetOptional.get();
+        this.friendManager.removeFriends(senderUuid, targetUuid);
 
-        if (!senderProfile.getFriends().contains(target.getUniqueId())) {
-            this.announcer.announceMessage(sender.getUniqueId(), friends.playerIsNotYourFriend);
 
-            return;
-        }
-
-        senderProfile.removeFriend(target.getUniqueId());
-        targetProfile.removeFriend(sender.getUniqueId());
-
+        // nie dziala
         this.nameTagService.updateNameTagOfTwoNoFriends(sender, target);
 
-        this.announcer.announceMessage(sender.getUniqueId(), friends.youKickedFriend.replace("{player}", target.getName()));
-        this.announcer.announceMessage(target.getUniqueId(), friends.friendKickedYou.replace("{player}", sender.getName()));
+        this.announcer.announceMessage(senderUuid, friendsConfig.youKickedFriend.replace("{player}", target.getName()));
+        this.announcer.announceMessage(targetUuid, friendsConfig.friendKickedYou.replace("{player}", sender.getName()));
     }
 }

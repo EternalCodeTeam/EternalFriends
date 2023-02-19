@@ -22,6 +22,9 @@ public class PluginConfig implements ReloadableConfig {
     @Description("# Configuration of command and subcommands names")
     public Command friendCommand = new Command();
 
+    @Description("# Time in seconds after which invite will expire")
+    public int inviteExpirationTime = 60;
+
     @Contextual
     public static class Command {
         public String main = "friends";
