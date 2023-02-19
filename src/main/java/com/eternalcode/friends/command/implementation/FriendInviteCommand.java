@@ -37,7 +37,7 @@ public class FriendInviteCommand {
         UUID targetUuid = target.getUniqueId();
 
         if (sender.equals(target)) {
-            announcer.announceMessage(senderUuid, friends.yourselfCommand);
+            this.announcer.announceMessage(senderUuid, friends.yourselfCommand);
 
             return;
         }
