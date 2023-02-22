@@ -1,6 +1,7 @@
 package com.eternalcode.friends.config.implementation;
 
 import com.eternalcode.friends.config.ReloadableConfig;
+import com.eternalcode.friends.database.DatabaseType;
 import net.dzikoysk.cdn.entity.Contextual;
 import net.dzikoysk.cdn.entity.Description;
 import net.dzikoysk.cdn.source.Resource;
@@ -15,6 +16,9 @@ public class PluginConfig implements ReloadableConfig {
     public Resource resource(File folder) {
         return Source.of(folder, "configuration.yml");
     }
+
+    @Description("# Configuration of Database")
+    public Database database = new Database();
 
     @Description("# Color of player's nametag displayed to his friends")
     public ChatColor friendColor = ChatColor.BLUE;
@@ -43,5 +47,14 @@ public class PluginConfig implements ReloadableConfig {
         public String reload = "reload";
     }
 
-
+    @Contextual
+    public static class Database {
+        public DatabaseType databaseType = DatabaseType.MYSQL;
+        public String host = "localhost";
+        public int port = 3306;
+        public String username = "admin";
+        public String password = "password";
+        public String database = "server";
+        public String prefix = "eternalfriends_";
+    }
 }

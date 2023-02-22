@@ -18,6 +18,7 @@ import com.eternalcode.friends.config.ConfigManager;
 import com.eternalcode.friends.config.implementation.GuiConfig;
 import com.eternalcode.friends.config.implementation.MessagesConfig;
 import com.eternalcode.friends.config.implementation.PluginConfig;
+import com.eternalcode.friends.database.DatabaseService;
 import com.eternalcode.friends.friend.FriendManager;
 import com.eternalcode.friends.gui.MainGui;
 import com.eternalcode.friends.invite.InviteManager;
@@ -26,6 +27,8 @@ import com.eternalcode.friends.listener.EntityDamageByEntityListener;
 import com.eternalcode.friends.packet.NameTagService;
 import com.eternalcode.friends.listener.JoinQuitListener;
 import com.eternalcode.friends.util.legacy.LegacyColorProcessor;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import dev.rollczi.litecommands.LiteCommands;
 import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
 import dev.rollczi.litecommands.bukkit.tools.BukkitOnlyPlayerContextual;
@@ -39,6 +42,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.stream.Stream;
 
 public class EternalFriends extends JavaPlugin {
@@ -56,6 +61,7 @@ public class EternalFriends extends JavaPlugin {
     private ProtocolManager protocolManager;
     private LiteCommands<CommandSender> liteCommands;
     private FriendManager friendManager;
+    private DatabaseService databaseService;
 
     @Override
     public void onLoad() {
@@ -81,11 +87,13 @@ public class EternalFriends extends JavaPlugin {
         this.configManager.load(this.messages);
         this.configManager.load(this.guiConfig);
 
+        this.databaseService = new DatabaseService(this.config);
+
         this.nameTagService = new NameTagService(this.protocolManager, this.config);
 
-        this.inviteManager = new InviteManager(this.config);
+        this.inviteManager = new InviteManager(this.config, new DatabaseService(this.config));
 
-        this.friendManager = new FriendManager();
+        this.friendManager = new FriendManager(this.databaseService);
 
         this.mainGui = new MainGui(this.miniMessage, this.guiConfig, this, this.announcer, this.messages, this.inviteManager, this.friendManager, this.nameTagService);
 

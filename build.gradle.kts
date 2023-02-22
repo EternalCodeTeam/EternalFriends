@@ -42,6 +42,9 @@ dependencies {
     // triumph gui
     implementation("dev.triumphteam:triumph-gui:3.1.4")
 
+    //HikariCP
+    implementation("com.zaxxer:HikariCP:5.0.1")
+
     // protocollib
     compileOnly("com.comphenix.protocol:ProtocolLib:5.0.0-SNAPSHOT")
 }
