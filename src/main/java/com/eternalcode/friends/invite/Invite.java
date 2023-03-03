@@ -16,10 +16,10 @@ public class Invite {
         this.expirationDate = Instant.now().plus(duration);
     }
 
-    public Invite(UUID from, UUID to, Instant expiretionDate) {
+    public Invite(UUID from, UUID to, Instant expirationDate) {
         this.from = from;
         this.to = to;
-        this.expirationDate = expiretionDate;
+        this.expirationDate = expirationDate;
     }
 
     public boolean isExpired() {

@@ -18,6 +18,7 @@ repositories {
     maven { url = uri("https://papermc.io/repo/repository/maven-public/") }
     maven { url = uri("https://repo.panda-lang.org/releases") }
     maven { url = uri("https://repo.eternalcode.pl/releases") }
+    maven { url = uri("https://repo.eternalcode.pl/snapshots")}
     maven { url = uri("https://repo.dmulloy2.net/repository/public/") }
 }
 
@@ -30,8 +31,7 @@ dependencies {
     implementation("net.kyori:adventure-text-minimessage:4.12.0")
 
     // litecommands
-    implementation("dev.rollczi.litecommands:bukkit:2.8.3")
-    implementation("dev.rollczi.litecommands:core:2.8.3")
+    implementation("dev.rollczi.litecommands:bukkit-adventure:2.8.4-SNAPSHOT")
 
     // cdn
     implementation("net.dzikoysk:cdn:1.14.3")
@@ -42,8 +42,11 @@ dependencies {
     // triumph gui
     implementation("dev.triumphteam:triumph-gui:3.1.4")
 
-    //HikariCP
+    // HikariCP
     implementation("com.zaxxer:HikariCP:5.0.1")
+
+    // MySQL
+    implementation("com.mysql:mysql-connector-j:8.0.32")
 
     // protocollib
     compileOnly("com.comphenix.protocol:ProtocolLib:5.0.0-SNAPSHOT")

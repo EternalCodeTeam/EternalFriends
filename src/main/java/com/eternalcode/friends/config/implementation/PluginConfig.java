@@ -55,6 +55,5 @@ public class PluginConfig implements ReloadableConfig {
         public String username = "admin";
         public String password = "password";
         public String database = "server";
-        public String prefix = "eternalfriends_";
     }
 }
