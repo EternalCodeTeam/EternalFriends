@@ -2,8 +2,8 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
     id("java")
-    id("com.github.johnrengelman.shadow") version "7.1.2"
-    id("net.minecrell.plugin-yml.bukkit") version "0.5.2"
+    id("com.github.johnrengelman.shadow") version "8.1.0"
+    id("net.minecrell.plugin-yml.bukkit") version "0.5.3"
     id("xyz.jpenilla.run-paper") version "2.0.1"
 }
 
@@ -34,7 +34,7 @@ dependencies {
     implementation("dev.rollczi.litecommands:bukkit-adventure:2.8.4-SNAPSHOT")
 
     // cdn
-    implementation("net.dzikoysk:cdn:1.14.3")
+    implementation("net.dzikoysk:cdn:1.14.4")
 
     // bstats
     implementation("org.bstats:bstats-bukkit:3.0.1")
