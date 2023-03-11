@@ -18,6 +18,10 @@ import com.eternalcode.friends.config.ConfigManager;
 import com.eternalcode.friends.config.implementation.GuiConfig;
 import com.eternalcode.friends.config.implementation.MessagesConfig;
 import com.eternalcode.friends.config.implementation.PluginConfig;
+import com.eternalcode.friends.database.DataSourceBuilder;
+import com.eternalcode.friends.database.FriendDatabaseService;
+import com.eternalcode.friends.database.IgnoredPlayerDatabaseService;
+import com.eternalcode.friends.database.InviteDatabaseService;
 import com.eternalcode.friends.friend.FriendManager;
 import com.eternalcode.friends.gui.MainGui;
 import com.eternalcode.friends.invite.InviteManager;
@@ -26,8 +30,9 @@ import com.eternalcode.friends.listener.EntityDamageByEntityListener;
 import com.eternalcode.friends.packet.NameTagService;
 import com.eternalcode.friends.listener.JoinQuitListener;
 import com.eternalcode.friends.util.legacy.LegacyColorProcessor;
+import com.zaxxer.hikari.HikariDataSource;
 import dev.rollczi.litecommands.LiteCommands;
-import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
+import dev.rollczi.litecommands.bukkit.adventure.paper.LitePaperAdventureFactory;
 import dev.rollczi.litecommands.bukkit.tools.BukkitOnlyPlayerContextual;
 import dev.rollczi.litecommands.bukkit.tools.BukkitPlayerArgument;
 import net.kyori.adventure.platform.AudienceProvider;
@@ -56,12 +61,19 @@ public class EternalFriends extends JavaPlugin {
     private ProtocolManager protocolManager;
     private LiteCommands<CommandSender> liteCommands;
     private FriendManager friendManager;
+    private FriendDatabaseService friendDatabaseService;
+    private IgnoredPlayerDatabaseService ignoredPlayerDatabaseService;
+    private InviteDatabaseService inviteDatabaseService;
+
+    private HikariDataSource databaseDataSource;
 
     @Override
     public void onLoad() {
         this.protocolManager = ProtocolLibrary.getProtocolManager();
     }
 
+    //TODO sprawdzac czy gracze juz sa znajomymi
+    //akceptowanie zaproszenia z gui nie usuwa glowki
     @Override
     public void onEnable() {
         Server server = this.getServer();
@@ -81,11 +93,17 @@ public class EternalFriends extends JavaPlugin {
         this.configManager.load(this.messages);
         this.configManager.load(this.guiConfig);
 
+        this.databaseDataSource = new DataSourceBuilder().buildHikariDataSource(this.config.database, this.getDataFolder());
+
+        this.friendDatabaseService = new FriendDatabaseService(this.databaseDataSource);
+        this.ignoredPlayerDatabaseService = new IgnoredPlayerDatabaseService(this.databaseDataSource);
+        this.inviteDatabaseService = new InviteDatabaseService(this.databaseDataSource);
+
         this.nameTagService = new NameTagService(this.protocolManager, this.config);
 
-        this.inviteManager = new InviteManager(this.config);
+        this.inviteManager = new InviteManager(this.config, this.inviteDatabaseService);
 
-        this.friendManager = new FriendManager();
+        this.friendManager = new FriendManager(this.friendDatabaseService, this.ignoredPlayerDatabaseService, this.inviteManager);
 
         this.mainGui = new MainGui(this.miniMessage, this.guiConfig, this, this.announcer, this.messages, this.inviteManager, this.friendManager, this.nameTagService);
 
@@ -97,7 +115,7 @@ public class EternalFriends extends JavaPlugin {
 
         Metrics metrics = new Metrics(this, 16297);
 
-        this.liteCommands = LiteBukkitFactory.builder(server, "eternalfriends")
+        this.liteCommands = LitePaperAdventureFactory.builder(server, "eternalfriends")
                 .argument(Player.class, new BukkitPlayerArgument<>(server, this.messages.argument.playerNotFound))
 
                 .invalidUsageHandler(new InvalidUsage(this.messages, this.announcer))

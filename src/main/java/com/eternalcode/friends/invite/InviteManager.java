@@ -1,30 +1,41 @@
 package com.eternalcode.friends.invite;
 
 import com.eternalcode.friends.config.implementation.PluginConfig;
+import com.eternalcode.friends.database.InviteDatabaseService;
 
 import java.time.Duration;
-import java.util.*;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 
 public class InviteManager {
 
     private final PluginConfig pluginConfig;
+    private final InviteDatabaseService inviteDatabaseService;
 
     private final Map<UUID, List<Invite>> receivedInvites = new HashMap<>();
-    private final Map<UUID, List<Invite>> sendedInvites = new HashMap<>();
+    private final Map<UUID, List<Invite>> sentInvites = new HashMap<>();
 
-    public InviteManager(PluginConfig pluginConfig) {
+    public InviteManager(PluginConfig pluginConfig, InviteDatabaseService inviteDatabaseService) {
         this.pluginConfig = pluginConfig;
+        this.inviteDatabaseService = inviteDatabaseService;
+
+        this.inviteDatabaseService.load(this.receivedInvites, this.sentInvites);
     }
 
     public void addInvite(UUID from, UUID to) {
         Invite invite = new Invite(from, to, Duration.ofSeconds(pluginConfig.inviteExpirationTime));
 
-        if (this.sendedInvites.containsKey(from)) {
-            this.sendedInvites.get(from).add(invite);
+        if (this.sentInvites.containsKey(from)) {
+            this.sentInvites.get(from).add(invite);
         }
         else {
-            this.sendedInvites.put(from, new ArrayList<>(List.of(invite)));
+            this.sentInvites.put(from, new ArrayList<>(List.of(invite)));
         }
 
         if (this.receivedInvites.containsKey(to)) {
@@ -33,14 +44,47 @@ public class InviteManager {
         else {
             this.receivedInvites.put(to, new ArrayList<>(List.of(invite)));
         }
+
+        this.inviteDatabaseService.addInvite(invite);
+    }
+
+    public void addInvite(UUID from, UUID to, Instant expirationDate) {
+        Invite invite = new Invite(from, to, expirationDate);
+
+        if (this.sentInvites.containsKey(from)) {
+            this.sentInvites.get(from).add(invite);
+        }
+        else {
+            this.sentInvites.put(from, new ArrayList<>(List.of(invite)));
+        }
+
+        if (this.receivedInvites.containsKey(to)) {
+            this.receivedInvites.get(to).add(invite);
+        }
+        else {
+            this.receivedInvites.put(to, new ArrayList<>(List.of(invite)));
+        }
+
+        this.inviteDatabaseService.addInvite(invite);
+    }
+
+    public void removeInvite(UUID from, UUID to) {
+        if (hasReceivedInvite(from, to)) {
+            this.receivedInvites.get(to).removeIf(invite -> invite.getFrom().equals(from));
+        }
+        if (hasSendedInvite(from, to)) {
+            this.sentInvites.get(from).removeIf(invite -> invite.getTo().equals(to));
+        }
+
+        this.inviteDatabaseService.removeInvite(from, to);
     }
 
     public boolean hasSendedInvite(UUID from, UUID to) {
-        if (!this.sendedInvites.containsKey(from)) {
+        if (!this.sentInvites.containsKey(from)) {
             return false;
         }
 
-        return this.sendedInvites.get(from).stream().filter(invite -> invite.getTo().equals(to)).count() > 0;
+        return this.sentInvites.get(from).stream().filter(invite -> invite.getTo().equals(to)).count() > 0;
     }
 
     public boolean hasReceivedInvite(UUID from, UUID to) {
@@ -52,29 +96,20 @@ public class InviteManager {
     }
 
     public boolean isInviteExpired(UUID from, UUID to) {
-        if (!this.sendedInvites.containsKey(from)) {
+        if (!this.sentInvites.containsKey(from)) {
             return true;
         }
         if (!this.receivedInvites.containsKey(to)) {
             return true;
         }
 
-        Optional<Invite> inviteOptional = this.sendedInvites.get(from).stream().filter(i -> i.getTo().equals(to)).findFirst();
+        Optional<Invite> inviteOptional = this.sentInvites.get(from).stream().filter(invite -> invite.getTo().equals(to)).findFirst();
         if (inviteOptional.isEmpty()) {
             return true;
         }
 
         Invite invite = inviteOptional.get();
         return invite.isExpired();
-    }
-
-    public void removeInvite(UUID from, UUID to) {
-        if (hasReceivedInvite(from, to)) {
-            this.receivedInvites.get(to).removeIf(invite -> invite.getFrom().equals(from));
-        }
-        if (hasSendedInvite(from, to)) {
-            this.sendedInvites.get(from).removeIf(invite -> invite.getTo().equals(to));
-        }
     }
 
     public List<Invite> getReceivedInvites(UUID uuid) {
