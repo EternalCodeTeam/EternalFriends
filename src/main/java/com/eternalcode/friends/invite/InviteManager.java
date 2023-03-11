@@ -103,7 +103,7 @@ public class InviteManager {
             return true;
         }
 
-        Optional<Invite> inviteOptional = this.sentInvites.get(from).stream().filter(i -> i.getTo().equals(to)).findFirst();
+        Optional<Invite> inviteOptional = this.sentInvites.get(from).stream().filter(invite -> invite.getTo().equals(to)).findFirst();
         if (inviteOptional.isEmpty()) {
             return true;
         }

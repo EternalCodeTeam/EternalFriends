@@ -1,8 +1,6 @@
 package com.eternalcode.friends.database;
 
 import com.eternalcode.friends.invite.Invite;
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -16,78 +14,76 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class InviteDatabaseService {
 
     private final DataSource dataSource;
-    private final Plugin plugin;
 
-    public InviteDatabaseService(Plugin plugin, DataSource dataSource) {
-        this.plugin = plugin;
+    public InviteDatabaseService(DataSource dataSource) {
         this.dataSource = dataSource;
 
         initTable();
     }
 
     public void initTable() {
-        Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> {
-            try (
-                    Connection conn = dataSource.getConnection();
+        try (
+                Connection connection = dataSource.getConnection();
 
-                    PreparedStatement stmt = conn.prepareStatement(
-                            "CREATE TABLE IF NOT EXISTS eternalfriends_invites(" +
-                                    "id INT NOT NULL AUTO_INCREMENT, " +
-                                    "uuid_from CHAR(36) NOT NULL, " +
-                                    "uuid_to CHAR(36) NOT NULL, " +
-                                    "expiration_date DATETIME NOT NULL, " +
-                                    "PRIMARY KEY (id)" +
-                                    ");"
-                    )
-            ) {
+                PreparedStatement statement = connection.prepareStatement(
+                        "CREATE TABLE IF NOT EXISTS eternalfriends_invites(" +
+                                "uuid_from CHAR(36) NOT NULL, " +
+                                "uuid_to CHAR(36) NOT NULL, " +
+                                "expiration_date DATETIME NOT NULL " +
+                                ");"
+                )
+        ) {
 
-                stmt.execute();
+            statement.execute();
 
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void addInvite(Invite invite) {
-        Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> {
+        CompletableFuture.runAsync(() -> {
             try (
-                    Connection conn = dataSource.getConnection();
+                    Connection connection = dataSource.getConnection();
 
-                    PreparedStatement stmt = conn.prepareStatement(
-                            "INSERT INTO eternalfriends_invites(uuid_from, uuid_to, expiration_date) VALUES (?, ?, ?);"
+                    PreparedStatement statement = connection.prepareStatement(
+                            "INSERT INTO eternalfriends_invites VALUES (?, ?, ?);"
                     )
             ) {
 
-                stmt.setString(1, invite.getFrom().toString());
-                stmt.setString(2, invite.getTo().toString());
-                stmt.setTimestamp(3, Timestamp.from(invite.getExpirationDate()));
+                statement.setString(1, invite.getFrom().toString());
+                statement.setString(2, invite.getTo().toString());
+                statement.setTimestamp(3, Timestamp.from(invite.getExpirationDate()));
 
-                stmt.execute();
+                statement.execute();
 
-            } catch (SQLException e) {
+            }
+            catch (SQLException e) {
                 throw new RuntimeException(e);
             }
         });
     }
 
     public void removeInvite(Invite invite) {
-        Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> {});
+        CompletableFuture.runAsync(() -> {});
         try (
-                Connection conn = dataSource.getConnection();
+                Connection connection = dataSource.getConnection();
 
-                PreparedStatement stmt = conn.prepareStatement(
+                PreparedStatement statement = connection.prepareStatement(
                         "DELETE FROM eternalfriends_invites WHERE uuid_from = '" + invite.getFrom() + "' AND uuid_to = '" + invite.getTo()+"';"
                 )
         ) {
 
-            stmt.execute();
+            statement.execute();
 
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
@@ -97,21 +93,21 @@ public class InviteDatabaseService {
     }
 
     public void load(Map<UUID, List<Invite>> receivedInvites, Map<UUID, List<Invite>> sentInvites) {
-        Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> {
+        CompletableFuture.runAsync(() -> {
             try (
-                    Connection conn = dataSource.getConnection();
+                    Connection connection = dataSource.getConnection();
 
-                    PreparedStatement stmt = conn.prepareStatement(
+                    PreparedStatement statement = connection.prepareStatement(
                             "SELECT uuid_from, uuid_to, expiration_date FROM eternalfriends_invites;"
                     )
             ) {
 
-                ResultSet resultSet = stmt.executeQuery();
+                ResultSet resultSet = statement.executeQuery();
 
                 while (resultSet.next()) {
-                    UUID from = UUID.fromString(resultSet.getString(1));
-                    UUID to = UUID.fromString(resultSet.getString(2));
-                    Instant expirationDate = resultSet.getTimestamp(3).toInstant();
+                    UUID from = UUID.fromString(resultSet.getString(0));
+                    UUID to = UUID.fromString(resultSet.getString(1));
+                    Instant expirationDate = resultSet.getTimestamp(2).toInstant();
 
                     Invite invite = new Invite(from, to, expirationDate);
 
@@ -129,7 +125,8 @@ public class InviteDatabaseService {
                     receivedInvites.put(to, new ArrayList<>(List.of(invite)));
                 }
 
-            } catch (SQLException e) {
+            }
+            catch (SQLException e) {
                 throw new RuntimeException(e);
             }
         });

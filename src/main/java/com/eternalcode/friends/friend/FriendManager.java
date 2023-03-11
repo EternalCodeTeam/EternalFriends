@@ -17,8 +17,8 @@ public class FriendManager {
     private final IgnoredPlayerDatabaseService ignoredPlayerDatabaseService;
     private final InviteManager inviteManager;
 
-    private Map<UUID, List<UUID>> friends = new HashMap<>();
-    private Map<UUID, List<UUID>> ignoredPlayers = new HashMap<>();
+    private final Map<UUID, List<UUID>> friends = new HashMap<>();
+    private final Map<UUID, List<UUID>> ignoredPlayers = new HashMap<>();
 
     public FriendManager(FriendDatabaseService friendDatabaseService, IgnoredPlayerDatabaseService ignoredPlayerDatabaseService, InviteManager inviteManager) {
         this.friendDatabaseService = friendDatabaseService;

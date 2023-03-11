@@ -1,8 +1,5 @@
 package com.eternalcode.friends.database;
 
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
-
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,92 +9,92 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
-public class FriendDatabaseService{
+public class FriendDatabaseService {
 
-    private final Plugin plugin;
     private final DataSource dataSource;
 
-    public FriendDatabaseService(Plugin plugin, DataSource dataSource) {
-        this.plugin = plugin;
+    public FriendDatabaseService(DataSource dataSource) {
         this.dataSource = dataSource;
 
         initTable();
     }
 
     private void initTable() {
-        Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> {
-            try (
-                    Connection conn = dataSource.getConnection();
+        try (
+                Connection connection = dataSource.getConnection();
 
-                    PreparedStatement stmt = conn.prepareStatement(
-                            "CREATE TABLE IF NOT EXISTS eternalfriends_friends(" +
-                                    "id INT NOT NULL AUTO_INCREMENT, " +
-                                    "uuid_one VARCHAR(36) NOT NULL, " +
-                                    "uuid_two VARCHAR(36) NOT NULL, " +
-                                    "PRIMARY KEY (id)" +
-                                    ");"
-                    )
-            ) {
+                PreparedStatement statement = connection.prepareStatement(
+                        "CREATE TABLE IF NOT EXISTS eternalfriends_friends(" +
+                                "uuid_one VARCHAR(36) NOT NULL, " +
+                                "uuid_two VARCHAR(36) NOT NULL " +
+                                ");"
+                )
+        ) {
 
-                stmt.execute();
+            statement.execute();
 
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void add(UUID uuidOne, UUID uuidTwo) {
-        Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> {
+        CompletableFuture.runAsync(() -> {
             try (
-                    Connection conn = dataSource.getConnection();
+                    Connection connection = dataSource.getConnection();
 
-                    PreparedStatement stmt = conn.prepareStatement(
-                            "INSERT INTO eternalfriends_friends(uuid_one, uuid_two) VALUES (?, ?);"
+                    PreparedStatement statement = connection.prepareStatement(
+                            "INSERT INTO eternalfriends_friends VALUES (?, ?);"
                     )
             ) {
 
-                stmt.setString(1, uuidOne.toString());
-                stmt.setString(2, uuidTwo.toString());
+                statement.setString(1, uuidOne.toString());
+                statement.setString(2, uuidTwo.toString());
 
-                stmt.execute();
+                statement.execute();
 
-            } catch (SQLException e) {
+            }
+            catch (SQLException e) {
                 throw new RuntimeException(e);
             }
         });
     }
 
     public void remove(UUID uuidOne, UUID uuidTwo) {
-        Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> {
+        CompletableFuture.runAsync(() -> {
             try (
-                    Connection conn = dataSource.getConnection();
+                    Connection connection = dataSource.getConnection();
 
-                    PreparedStatement stmt = conn.prepareStatement(
-                            "DELETE FROM eternalfriends_friends WHERE uuid_one = '" + uuidOne + "' AND uuid_two = '" + uuidTwo + "';"
+                    PreparedStatement statement = connection.prepareStatement(
+                            "DELETE FROM eternalfriends_friends " +
+                                    "WHERE uuid_one = '" + uuidOne + "' AND uuid_two = '" + uuidTwo + "' " +
+                                    "OR uuid_one = '" + uuidTwo + "' AND uuid_two = '" + uuidOne + "';"
                     )
             ) {
 
-                stmt.execute();
+                statement.execute();
 
-            } catch (SQLException e) {
+            }
+            catch (SQLException e) {
                 throw new RuntimeException(e);
             }
         });
     }
 
     public void load(Map<UUID, List<UUID>> friends) {
-        Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> {
+        CompletableFuture.runAsync(() -> {
             try (
-                    Connection conn = dataSource.getConnection();
+                    Connection connection = dataSource.getConnection();
 
-                    PreparedStatement stmt = conn.prepareStatement(
+                    PreparedStatement statement = connection.prepareStatement(
                             "SELECT uuid_one, uuid_two FROM eternalfriends_friends;"
                     )
             ) {
 
-                ResultSet resultSet = stmt.executeQuery();
+                ResultSet resultSet = statement.executeQuery();
 
                 while (resultSet.next()) {
                     UUID uuidOne = UUID.fromString(resultSet.getString(1));
@@ -121,7 +118,8 @@ public class FriendDatabaseService{
                     friends.get(uuidTwo).add(uuidOne);
                 }
 
-            } catch (SQLException e) {
+            }
+            catch (SQLException e) {
                 throw new RuntimeException(e);
             }
         });

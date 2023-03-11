@@ -93,11 +93,11 @@ public class EternalFriends extends JavaPlugin {
         this.configManager.load(this.messages);
         this.configManager.load(this.guiConfig);
 
-        this.databaseDataSource = new DataSourceBuilder().buildHikariDataSource(this.config.database);
+        this.databaseDataSource = new DataSourceBuilder().buildHikariDataSource(this.config.database, this.getDataFolder());
 
-        this.friendDatabaseService = new FriendDatabaseService(this, this.databaseDataSource);
-        this.ignoredPlayerDatabaseService = new IgnoredPlayerDatabaseService(this, this.databaseDataSource);
-        this.inviteDatabaseService = new InviteDatabaseService(this, this.databaseDataSource);
+        this.friendDatabaseService = new FriendDatabaseService(this.databaseDataSource);
+        this.ignoredPlayerDatabaseService = new IgnoredPlayerDatabaseService(this.databaseDataSource);
+        this.inviteDatabaseService = new InviteDatabaseService(this.databaseDataSource);
 
         this.nameTagService = new NameTagService(this.protocolManager, this.config);
 

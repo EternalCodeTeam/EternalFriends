@@ -12,92 +12,90 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class IgnoredPlayerDatabaseService {
 
-    private final Plugin plugin;
     private final DataSource dataSource;
 
-    public IgnoredPlayerDatabaseService(Plugin plugin, DataSource dataSource) {
-        this.plugin = plugin;
+    public IgnoredPlayerDatabaseService(DataSource dataSource) {
         this.dataSource = dataSource;
 
         initTable();
     }
 
     public void initTable() {
-        Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> {
-            try (
-                    Connection conn = dataSource.getConnection();
+        try (
+                Connection connection = dataSource.getConnection();
 
-                    PreparedStatement stmt = conn.prepareStatement(
-                            "CREATE TABLE IF NOT EXISTS eternalfriends_ignored_players(" +
-                                    "id INT NOT NULL AUTO_INCREMENT, " +
-                                    "who_ignore CHAR(36) NOT NULL, " +
-                                    "is_ignored CHAR(36) NOT NULL, " +
-                                    "PRIMARY KEY (id)" +
-                                    ");"
-                    )
-            ) {
+                PreparedStatement statement = connection.prepareStatement(
+                        "CREATE TABLE IF NOT EXISTS eternalfriends_ignored_players(" +
+                                "who_ignore CHAR(36) NOT NULL, " +
+                                "is_ignored CHAR(36) NOT NULL " +
+                                ");"
+                )
+        ) {
 
-                stmt.execute();
+            statement.execute();
 
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void addIgnoredPlayer(UUID ignore, UUID ignored) {
-        Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> {
+        CompletableFuture.runAsync(() -> {
             try (
-                    Connection conn = dataSource.getConnection();
+                    Connection connection = dataSource.getConnection();
 
-                    PreparedStatement stmt = conn.prepareStatement(
-                            "INSERT INTO eternalfriends_ignored_players(who_ignore, is_ignored) VALUES (?, ?);"
+                    PreparedStatement statement = connection.prepareStatement(
+                            "INSERT INTO eternalfriends_ignored_players VALUES (?, ?);"
                     )
             ) {
 
-                stmt.setString(1, ignore.toString());
-                stmt.setString(2, ignored.toString());
+                statement.setString(1, ignore.toString());
+                statement.setString(2, ignored.toString());
 
-                stmt.execute();
+                statement.execute();
 
-            } catch (SQLException e) {
+            }
+            catch (SQLException e) {
                 throw new RuntimeException(e);
             }
         });
     }
 
     public void removeIgnoredPlayer(UUID ignore, UUID ignored) {
-        Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> {
+        CompletableFuture.runAsync(() -> {
             try (
-                    Connection conn = dataSource.getConnection();
+                    Connection connection = dataSource.getConnection();
 
-                    PreparedStatement stmt = conn.prepareStatement(
+                    PreparedStatement statement = connection.prepareStatement(
                             "DELETE FROM eternalfriends_ignored_players WHERE who_ignore = '" + ignore + "' AND is_ignored = '" + ignored + "';"
                     )
             ) {
 
-                stmt.execute();
+                statement.execute();
 
-            } catch (SQLException e) {
+            }
+            catch (SQLException e) {
                 throw new RuntimeException(e);
             }
         });
     }
 
     public void load(Map<UUID, List<UUID>> ignoredPlayers) {
-        Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> {
+        CompletableFuture.runAsync(() -> {
             try (
-                    Connection conn = dataSource.getConnection();
+                    Connection connection = dataSource.getConnection();
 
-                    PreparedStatement stmt = conn.prepareStatement(
+                    PreparedStatement statement = connection.prepareStatement(
                             "SELECT who_ignore, is_ignored FROM eternalfriends_ignored_players;"
                     )
             ) {
 
-                ResultSet resultSet = stmt.executeQuery();
+                ResultSet resultSet = statement.executeQuery();
 
                 while (resultSet.next()) {
                     UUID ignore = UUID.fromString(resultSet.getString(1));
@@ -121,7 +119,8 @@ public class IgnoredPlayerDatabaseService {
                     ignoredPlayers.get(ignored).add(ignore);
                 }
 
-            } catch (SQLException e) {
+            }
+            catch (SQLException e) {
                 throw new RuntimeException(e);
             }
         });
