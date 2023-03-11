@@ -17,8 +17,6 @@ repositories {
 
     maven { url = uri("https://papermc.io/repo/repository/maven-public/") }
     maven { url = uri("https://repo.panda-lang.org/releases") }
-    maven { url = uri("https://repo.eternalcode.pl/releases") }
-    maven { url = uri("https://repo.eternalcode.pl/snapshots")}
     maven { url = uri("https://repo.dmulloy2.net/repository/public/") }
 }
 
@@ -31,7 +29,7 @@ dependencies {
     implementation("net.kyori:adventure-text-minimessage:4.12.0")
 
     // litecommands
-    implementation("dev.rollczi.litecommands:bukkit-adventure:2.8.4-SNAPSHOT")
+    implementation("dev.rollczi.litecommands:bukkit-adventure:2.8.6")
 
     // cdn
     implementation("net.dzikoysk:cdn:1.14.4")
