@@ -48,13 +48,7 @@ public class NametagJoinQuitListener implements Listener {
                 continue;
             }
 
-            if (!this.friendManager.areFriends(uuid, playerUUID)) {
-                this.nameTagService.createTeamPacketOfTwoNoFriends(player, friend);
-
-                continue;
-            }
-
-            this.nameTagService.createTeamPacketOfTwoFriends(player, friend);
+            this.nameTagService.createTeamPacketOfTwoNoFriends(player, friend);
         }
     }
 }
