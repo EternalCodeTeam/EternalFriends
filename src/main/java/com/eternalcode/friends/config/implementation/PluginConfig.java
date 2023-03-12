@@ -23,6 +23,9 @@ public class PluginConfig implements ReloadableConfig {
     @Description("# Color of player's nametag displayed to his friends")
     public ChatColor friendColor = ChatColor.BLUE;
 
+    @Description("# Does server should message displayed to player when his friend joins the server?")
+    public boolean anounceFriendJoin = true;
+
     @Description("# Configuration of command and subcommands names")
     public Command friendCommand = new Command();
 

@@ -56,6 +56,7 @@ public class MessagesConfig implements ReloadableConfig {
         public String youIgnoredPlayer = "&cNie bedziesz juz otrzymywal zaproszen od gracza &7{player}";
         public String youUnignoredPlayer = "&aPonownie mozesz otrzymywac zaproszenia od gracza &7{player}.";
         public String inviteExpired = "&cZaproszenie do znajomych od tego gracza wygaslo!";
+        public String friendJoined = "&9{friend} &adolaczyl na serwer!";
         public List<String> helpCommand = List.of(
                 " ",
                 " &3Znajomi - komendy",

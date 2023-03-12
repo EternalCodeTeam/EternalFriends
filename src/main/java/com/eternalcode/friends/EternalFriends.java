@@ -108,7 +108,7 @@ public class EternalFriends extends JavaPlugin {
         this.mainGui = new MainGui(this.miniMessage, this.guiConfig, this, this.announcer, this.messages, this.inviteManager, this.friendManager, this.nameTagService);
 
         Stream.of(
-                new JoinQuitListener(this.protocolManager, this.nameTagService, this.friendManager),
+                new JoinQuitListener(this.protocolManager, this.nameTagService, this.friendManager, this.config, this.messages, this.announcer),
                 new EntityDamageByEntityListener(this.friendManager),
                 new AsyncPlayerChatListener(this.announcer, this.messages, this.friendManager)
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
