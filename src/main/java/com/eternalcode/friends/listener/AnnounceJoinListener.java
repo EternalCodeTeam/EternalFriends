@@ -35,14 +35,14 @@ public class AnnounceJoinListener implements Listener {
     private void anounceToFriends(Player player) {
         UUID playerUUID = player.getUniqueId();
 
-        for (UUID uuid : this.friendManager.getFriends(playerUUID)) {
-            Player friend = player.getServer().getPlayer(uuid);
+        for (UUID friendUuid : this.friendManager.getFriends(playerUUID)) {
+            Player friend = player.getServer().getPlayer(friendUuid);
 
             if (friend == null) {
                 continue;
             }
 
-            this.notificationAnnouncer.announceMessage(uuid, this.messagesConfig.friends.friendJoined
+            this.notificationAnnouncer.announceMessage(friendUuid, this.messagesConfig.friends.friendJoined
                     .replace("{friend}", friend.getName())
             );
         }

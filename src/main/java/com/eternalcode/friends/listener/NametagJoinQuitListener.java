@@ -37,12 +37,12 @@ public class NametagJoinQuitListener implements Listener {
     private void sendScoreboardPacket(Player player) {
         UUID playerUUID = player.getUniqueId();
 
-        for (UUID uuid : this.friendManager.getFriends(playerUUID)) {
-            if (playerUUID.equals(uuid)) {
+        for (UUID friendUuid : this.friendManager.getFriends(playerUUID)) {
+            if (playerUUID.equals(friendUuid)) {
                 continue;
             }
 
-            Player friend = player.getServer().getPlayer(uuid);
+            Player friend = player.getServer().getPlayer(friendUuid);
 
             if (friend == null) {
                 continue;
