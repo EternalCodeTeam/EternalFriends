@@ -32,6 +32,10 @@ public class FriendManager {
     public void addFriends(UUID uuid, UUID friendUUID) {
         checkPlayersExists(uuid, friendUUID);
 
+        if (areFriends(uuid, friendUUID)) {
+            return;
+        }
+
         this.friends.get(uuid).add(friendUUID);
         this.friends.get(friendUUID).add(uuid);
 
@@ -49,12 +53,14 @@ public class FriendManager {
         this.friendDatabaseService.remove(uuid, friendUUID);
     }
 
-    public void addIgnoredPlayer(UUID uuid, UUID ignoredPlayerUUID) {
-        checkPlayersExists(uuid, ignoredPlayerUUID);
+    public void addIgnoredPlayer(UUID ignore, UUID ignored) {
+        checkPlayersExists(ignore, ignored);
 
-        this.ignoredPlayers.get(uuid).add(ignoredPlayerUUID);
+        isIgnoredByPlayer(ignore, ignored);
 
-        this.ignoredPlayerDatabaseService.addIgnoredPlayer(uuid, ignoredPlayerUUID);
+        this.ignoredPlayers.get(ignore).add(ignored);
+
+        this.ignoredPlayerDatabaseService.addIgnoredPlayer(ignore, ignored);
     }
 
     public void removeIgnoredPlayer(UUID uuid, UUID ignoredPlayerUUID) {
@@ -77,10 +83,10 @@ public class FriendManager {
         return this.friends.get(uuid).contains(friendUUID);
     }
 
-    public boolean isIgnoredByPlayer(UUID uuid, UUID playerUUID) {
-        checkPlayersExists(uuid, playerUUID);
+    public boolean isIgnoredByPlayer(UUID ignored, UUID ignore) {
+        checkPlayersExists(ignore, ignored);
 
-        return this.ignoredPlayers.get(playerUUID).contains(uuid);
+        return this.ignoredPlayers.get(ignore).contains(ignored);
     }
 
     private void checkPlayerExists(UUID uuid) {
@@ -97,6 +103,4 @@ public class FriendManager {
             checkPlayerExists(uuid);
         }
     }
-
-
 }
