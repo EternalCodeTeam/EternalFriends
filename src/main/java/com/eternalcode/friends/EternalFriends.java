@@ -25,10 +25,11 @@ import com.eternalcode.friends.database.InviteDatabaseService;
 import com.eternalcode.friends.friend.FriendManager;
 import com.eternalcode.friends.gui.MainGui;
 import com.eternalcode.friends.invite.InviteManager;
+import com.eternalcode.friends.listener.AnnounceJoinListener;
 import com.eternalcode.friends.listener.AsyncPlayerChatListener;
 import com.eternalcode.friends.listener.EntityDamageByEntityListener;
 import com.eternalcode.friends.packet.NameTagService;
-import com.eternalcode.friends.listener.JoinQuitListener;
+import com.eternalcode.friends.listener.NametagJoinQuitListener;
 import com.eternalcode.friends.util.legacy.LegacyColorProcessor;
 import com.zaxxer.hikari.HikariDataSource;
 import dev.rollczi.litecommands.LiteCommands;
@@ -108,7 +109,8 @@ public class EternalFriends extends JavaPlugin {
         this.mainGui = new MainGui(this.miniMessage, this.guiConfig, this, this.announcer, this.messages, this.inviteManager, this.friendManager, this.nameTagService);
 
         Stream.of(
-                new JoinQuitListener(this.protocolManager, this.nameTagService, this.friendManager),
+                new NametagJoinQuitListener(this.protocolManager, this.nameTagService, this.friendManager),
+                new AnnounceJoinListener(this.config, this.messages, this.friendManager, this.announcer),
                 new EntityDamageByEntityListener(this.friendManager),
                 new AsyncPlayerChatListener(this.announcer, this.messages, this.friendManager)
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));

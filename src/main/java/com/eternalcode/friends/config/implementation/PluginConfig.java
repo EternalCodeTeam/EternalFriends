@@ -23,6 +23,9 @@ public class PluginConfig implements ReloadableConfig {
     @Description("# Color of player's nametag displayed to his friends")
     public ChatColor friendColor = ChatColor.BLUE;
 
+    @Description("# Does server should message displayed to player when his friend joins the server?")
+    public boolean anounceFriendJoin = true;
+
     @Description("# Configuration of command and subcommands names")
     public Command friendCommand = new Command();
 
@@ -49,7 +52,7 @@ public class PluginConfig implements ReloadableConfig {
 
     @Contextual
     public static class Database {
-        public DatabaseType databaseType = DatabaseType.MYSQL;
+        public DatabaseType databaseType = DatabaseType.SQLITE;
         public String host = "localhost";
         public int port = 3306;
         public String username = "admin";
