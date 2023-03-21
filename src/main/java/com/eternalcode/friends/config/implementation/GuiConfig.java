@@ -19,66 +19,64 @@ public class GuiConfig implements ReloadableConfig {
     public MenuItems menuItems = new MenuItems();
     public Guis guis = new Guis();
 
-    
     @Contextual
     public static class MenuItems {
-
         public FriendHead friendListHead = new FriendHead()
-                .setLore(List.of("&cKliknij LPM", "&caby usunąć znajomego"));
+                .setLore(List.of("&cClick LMB", "&c to remove a friend"));
         public FriendHead inviteListfriendHead = new FriendHead()
-                .setLore(List.of("&aKliknij LPM, aby zaakceptowac zaproszenie", "&cKliknij PPM, aby odrzucic zaproszenie"));
+                .setLore(List.of("&aClick LMB to accept invitation", "&cClick RMB to decline invitation"));
 
         public ConfigItem nextPageItem = new ConfigItem()
-                .setName("&aNastępna strona")
+                .setName("&aNext page")
                 .setType(Material.PAPER)
                 .setLore(List.of(
-                        "&7Kliknij aby przejść do następnej strony"
+                        "&7Click to go to the next page"
                 ));
 
         public ConfigItem previousPageItem = new ConfigItem()
-                .setName("&cPoprzednia strona")
+                .setName("&cPrevious page")
                 .setType(Material.PAPER)
                 .setLore(List.of(
-                        "&7Kliknij aby przejść do poprzedniej strony"
+                        "&7Click to go to the previous page"
                 ));
 
         public ConfigItem confirmItem = new ConfigItem()
-                .setName("&aTak")
+                .setName("&aYes")
                 .setType(Material.LIME_STAINED_GLASS_PANE)
                 .setLore(List.of(
-                        "&7Kliknij aby potwierdzić"
+                        "&7Click to confirm"
                 ));
 
         public ConfigItem denyItem = new ConfigItem()
-                .setName("&cNie")
+                .setName("&cNo")
                 .setType(Material.RED_STAINED_GLASS_PANE)
                 .setLore(List.of(
-                        "&7Kliknij aby anulować"
+                        "&7Click to cancel"
                 ));
 
         public ConfigItem receivedInvitesItem = new ConfigItem()
-                .setName("&aOtrzymane zaproszenia")
+                .setName("&aReceived invitations")
                 .setType(Material.BOOK)
                 .setLore(List.of(
-                        "&7Otrzymane zaproszenia",
-                        "&7Kliknij aby otworzyć"
+                        "&7Received invitations",
+                        "&7Click to open"
                 ));
         public ConfigItem sendInvitesItem = new ConfigItem()
-                .setName("&aWysyłanie zaproszeń")
+                .setName("&aSending invitations")
                 .setType(Material.WRITABLE_BOOK)
                 .setLore(List.of(
-                        "&7Wysyłanie zaproszeń",
-                        "&7Kliknij aby otworzyć"
+                        "&7Sending invitations",
+                        "&7Click to open"
                 ));
         public ConfigItem settingItem = new ConfigItem()
-                .setName("&aUstawienia")
+                .setName("&aSettings")
                 .setType(Material.REPEATER)
                 .setLore(List.of(
-                        "&7Ustawienia",
-                        "&7Kliknij aby otworzyć"
+                        "&7Settings",
+                        "&7Click to open"
                 ));
         public ConfigItem backToMainMenuItem = new ConfigItem()
-                .setName("&7Powrot do menu glownego")
+                .setName("&7Back to main menu")
                 .setType(Material.ARROW)
                 .setLore(List.of());
     }
@@ -86,8 +84,8 @@ public class GuiConfig implements ReloadableConfig {
     @Contextual
     public static class Guis {
         public String mainGuiTitle = "&bFriends";
-        public String confirmGuiTitle = "&cJestes pewien?";
-        public String receivedInvitesGuiTitle = "&bOtrzymane zaproszenia";
+        public String confirmGuiTitle = "&cAre you sure?";
+        public String receivedInvitesGuiTitle = "&bReceived invitations";
     }
 
     @Contextual

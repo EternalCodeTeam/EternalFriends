@@ -36,7 +36,7 @@ public class FriendListCommand {
     @Permission("eternalfriends.access.list")
     public void list(Player sender) {
 
-        this.announcer.announceMessage(sender.getUniqueId(), listOfFriends(sender.getUniqueId()));
+        this.announcer.announceMessage(sender.getUniqueId(), listOfFriends(sender.getUniqueId(), false));
 
     }
 
@@ -44,21 +44,32 @@ public class FriendListCommand {
     @Permission("eternalfriends.admin.list")
     public void listAdmin(CommandSender sender, @Arg @Name("player") Player target) {
 
-        this.announcer.announceMessage(sender, listOfFriends(target.getUniqueId()));
+        this.announcer.announceMessage(sender, listOfFriends(target.getUniqueId(), true));
 
     }
 
-    private String listOfFriends(UUID uuid) {
+    private String listOfFriends(UUID uuid, boolean adminMode) {
         StringBuilder builder = new StringBuilder();
 
         List<UUID> friendsList = this.friendManager.getFriends(uuid);
 
         if (friendsList.size() == 0) {
-            builder.append(friendsConfig.emptyFriendList);
+            if (adminMode) {
+                builder.append(friendsConfig.emptyFriendListAdmin);
+
+                return builder.toString();
+            }
+
+            builder.append(this.friendsConfig.emptyFriendList);
             return builder.toString();
         }
 
-        builder.append(friendsConfig.friendListHeader);
+        if (adminMode) {
+            builder.append(friendsConfig.friendListHeaderAdmin);
+        }
+        else {
+            builder.append(friendsConfig.friendListHeader);
+        }
 
         for (UUID friendUuid : friendsList) {
             builder.append(friendsConfig.friendListPlayer.replace("{player}", server.getOfflinePlayer(friendUuid).getName()));
