@@ -17,62 +17,55 @@ public class MessagesConfig implements ReloadableConfig {
 
     public Argument argument = new Argument();
     public Friends friends = new Friends();
-    //public Warnings warnings = new Warnings();
 
     @Contextual
     public static class Argument {
-        public String missingPermission = "&cNie masz permisji do tej komendy! &7({permission})";
-        public String invalidUsage = "&cBlad! Sprawdz poprawne uzycie komendy pod &f/znajomi pomoc&c.";
-        public String playerOnly = "&cTa komenda moze byc uzyta jedynie przez gracza!";
-        public String playerNotFound = "&cNie znaleziono gracza: &7{player}&c.";
+        public String missingPermission = "&cYou do not have permission to use this command! &7({permission})";
+        public String invalidUsage = "&cError! Check the correct usage of the command at &f/friends help&c.";
+        public String playerOnly = "&cThis command can only be used by players!";
+        public String playerNotFound = "&cPlayer not found: &7{player}&c.";
     }
 
     @Contextual
     public static class Friends {
-
-        public String chatFormat = "&9[ZNAJOMI] &f{player} &8» &7{message}";
-        public String profileNotFound = "&cNie znaleziono gracza o takiej nazwie!";
-        public String yourProfileNotFound = "&cBrak twojego profilu w bazie!";
-        public String inviteSent = "&aWyslano zaproszenie do znajomych graczowi &f{invited}";
-        public String inviteReceived = "&aOtrzymales zaproszenie do znajomych od gracza &f{player}&a. By je akceptowac uzyj komendy &7/friend accept {player}";
-        public String emptyFriendList = "&cbrak znajomych :(";
-        public String emptyFriendListAdmin = "&cTen gracz nie posiada znajomych.";
-        public String acceptedInvite = "&aZaakceptowales zaproszenie do znajomych od gracza &f{player}";
-        public String yourInvitationHasBeenAccepted = "&f{player} &azaakceptowal twoje zaproszenie do znajomych.";
-        public String alreadyFriend = "&cTen gracz jest juz na twojej liscie znajomych.";
-        public String yourselfCommand = "&cNie mozesz uzyc tej komendy na samym Sobie.";
-        public String inviteNotFound = "&cNie masz zaproszenia od tego gracza lub zaproszenie wygaslo!";
-        public String playerIsNotYourFriend = "&cNie masz tego gracza na liscie znajomych";
-        public String youKickedFriend = "&cGracz &f{player} &czostal wyrzucony z listy twoich znajomych!";
-        public String friendKickedYou = "&cGracz &f{player} &cwyrzucil Cie z znajomych!";
-        public String friendListHeader = "&3Twoi znajomi: ";
-        public String friendListHeaderAdmin = "&3Znajomi gracza &f{player}&3: ";
+        public String chatFormat = "&9[FRIENDS] &f{player} &8» &7{message}";
+        public String inviteSent = "&aInvitation to friends sent to player &f{invited}";
+        public String inviteReceived = "&aYou have received a friend request from player &f{player}&a. To accept it, use the command &7/friend accept {player}";
+        public String emptyFriendList = "&cYou have no friends :(";
+        public String emptyFriendListAdmin = "&cThis player has no friends.";
+        public String acceptedInvite = "&aYou accepted a friend request from player &f{player}";
+        public String yourInvitationHasBeenAccepted = "&f{player} &aaccepted your friend request.";
+        public String alreadyFriend = "&cThis player is already on your friends list.";
+        public String yourselfCommand = "&cYou cannot use this command on yourself.";
+        public String inviteNotFound = "&cYou have no friend request from this player or the request has expired!";
+        public String playerIsNotYourFriend = "&cThis player is not on your friends list";
+        public String youKickedFriend = "&cPlayer &f{player} &chas been removed from your friends list!";
+        public String friendKickedYou = "&cPlayer &f{player} &cremoved you from their friends list!";
+        public String friendListHeader = "&3Your friends: ";
+        public String friendListHeaderAdmin = "&3Friends of player &f{player}&3: ";
         public String friendListPlayer = "&7{player}, ";
-        public String alreadyReceivedInvite = "&cOtrzymales juz zaproszenie od tego gracza!";
-        public String alreadySentInvite = "&cWyslales juz zaproszenie od temu graczowi!";
-        public String inviteInstruction = "&aBy wyslac zaproszenie do znajomych uzyj komendy &7/friend zapros {nazwa_gracza}";
-        public String configReloaded = "&aPomyslnie przeładowano konfiguracje!";
-        public String inviteDenied = "&cOdrzucono zaproszenie od gracza &7{player}";
-        public String youIgnoredPlayer = "&cNie bedziesz juz otrzymywal zaproszen od gracza &7{player}";
-        public String youUnignoredPlayer = "&aPonownie mozesz otrzymywac zaproszenia od gracza &7{player}.";
-        public String inviteExpired = "&cZaproszenie do znajomych od tego gracza wygaslo!";
-        public String friendJoined = "&9{friend} &adolaczyl na serwer!";
+        public String alreadyReceivedInvite = "&cYou have already received a friend request from this player!";
+        public String alreadySentInvite = "&cYou have already sent an invite to this player!";
+        public String inviteInstruction = "&aTo send a friend request, use the command &7/friend invite {player_name}";
+        public String configReloaded = "&aConfiguration successfully reloaded!";
+        public String inviteDenied = "&cYou declined the friend request from player &7{player}";
+        public String youIgnoredPlayer = "&cYou will no longer receive friend requests from player &7{player}";
+        public String youUnignoredPlayer = "&aYou can now receive friend requests from player &7{player} again.";
+        public String inviteExpired = "&cThe friend request from this player has expired!";
+        public String friendJoined = "&9{friend} &ahas joined the server!";
         public List<String> helpCommand = List.of(
                 " ",
-                " &3Znajomi - komendy",
-                " &7/znajomi zapros <gracz> &8- &fWysyla zaproszenie do znajomych",
-                " &7/znajomi akceptuj <gracz> &8- &fAkceptuje zaproszenie do znajomych",
-                " &7/znajomi odrzuc <gracz> &8- &fOdrzuca zaproszenie do znajomych",
-                " &7/znajomi usun <gracz> &8- &fUsuwa gracza z listy znajomych",
-                " &7/znajomi lista &8- &fPokazuje liste znajomych",
-                " &7/znajomi reload &8- &fPrzeladowuje konfiguracje",
+                " &3Friends - Commands",
+                " &7/friends &8- &fDisplays friend menu",
+                " &7/friends invite <player> &8- &fSends a friend request",
+                " &7/friends accept <player> &8- &fAccepts a friend request",
+                " &7/friends deny <player> &8- &fDeclines a friend request",
+                " &7/friends remove <player> &8- &fRemoves a friend from the list",
+                " &7/friends ignore <player> &8- &fIgnores incoming friend requests from player or turns off ignoring",
+                " &7/friends help &8- &fDisplays available commands",
+                " &7/friends list &8- &fShows list of friends",
+                " &7/friends reload &8- &fReloads configuration",
                 " "
         );
     }
-
-    /*@Contextual
-    public static class Warnings {
-        public String targetHasDisabledFriendRequests = "&cGracz &7{player} &cma wylaczona mozliwosc otrzymywania zaproszen do znajomych.";
-        public String targetFriendsLimitIsReached = "&cGracz &7{player} &cMa maksymalna ilosc znajomych.";
-    }*/
 }
