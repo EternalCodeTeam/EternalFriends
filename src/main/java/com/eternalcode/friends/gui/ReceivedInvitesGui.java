@@ -108,7 +108,6 @@ public class ReceivedInvitesGui {
 
         for (Invite invite : receivedInvites) {
             if (this.inviteManager.isInviteExpired(invite.getFrom(), invite.getTo())) {
-
                 if (receivedInvites.size() == 1) {
                     player.closeInventory();
                     this.inviteManager.removeInvite(invite.getFrom(), invite.getTo());
@@ -150,13 +149,9 @@ public class ReceivedInvitesGui {
 
                 this.announcer.announceMessage(playerUuid, this.friendsConfig.acceptedInvite.replace("{player}", this.server.getOfflinePlayer(friendUuid).getName()));
                 this.announcer.announceMessage(friendUuid, this.friendsConfig.yourInvitationHasBeenAccepted.replace("{player}", player.getName()));
-
-                return;
             }
             else if (event.isRightClick()) {
                 this.inviteManager.removeInvite(friendUuid, playerUuid);
-
-                return;
             }
 
             reloadHeadGui(player, gui);
