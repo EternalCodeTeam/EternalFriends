@@ -2,6 +2,7 @@ package com.eternalcode.friends.config.implementation;
 
 import com.eternalcode.friends.config.ReloadableConfig;
 import net.dzikoysk.cdn.entity.Contextual;
+import net.dzikoysk.cdn.entity.Description;
 import net.dzikoysk.cdn.source.Resource;
 import net.dzikoysk.cdn.source.Source;
 import org.bukkit.Material;
@@ -21,59 +22,73 @@ public class GuiConfig implements ReloadableConfig {
 
     @Contextual
     public static class MenuItems {
+        @Description("# options of {status} placeholder")
+        public OnlineStatus onlineStatus = new OnlineStatus();
+
         public FriendHead friendListHead = new FriendHead()
-                .setLore(List.of("&cClick LMB", "&c to remove a friend"));
+                .setLore(List.of("", "&cClick LMB", "&cto remove a friend", ""));
         public FriendHead inviteListfriendHead = new FriendHead()
-                .setLore(List.of("&aClick LMB to accept invitation", "&cClick RMB to decline invitation"));
+                .setLore(List.of("", "&aClick LMB to accept invitation", "&cClick RMB to decline invitation", ""));
 
         public ConfigItem nextPageItem = new ConfigItem()
                 .setName("&aNext page")
                 .setType(Material.PAPER)
                 .setLore(List.of(
-                        "&7Click to go to the next page"
+                        "",
+                        "&7Click to go to the next page",
+                        ""
                 ));
 
         public ConfigItem previousPageItem = new ConfigItem()
                 .setName("&cPrevious page")
                 .setType(Material.PAPER)
                 .setLore(List.of(
-                        "&7Click to go to the previous page"
+                        "",
+                        "&7Click to go to the previous page",
+                        ""
                 ));
 
         public ConfigItem confirmItem = new ConfigItem()
                 .setName("&aYes")
                 .setType(Material.LIME_STAINED_GLASS_PANE)
                 .setLore(List.of(
-                        "&7Click to confirm"
+                        "",
+                        "&7Click to confirm",
+                        ""
                 ));
 
         public ConfigItem denyItem = new ConfigItem()
                 .setName("&cNo")
                 .setType(Material.RED_STAINED_GLASS_PANE)
                 .setLore(List.of(
-                        "&7Click to cancel"
+                        "",
+                        "&7Click to cancel",
+                        ""
                 ));
 
         public ConfigItem receivedInvitesItem = new ConfigItem()
                 .setName("&aReceived invitations")
                 .setType(Material.BOOK)
                 .setLore(List.of(
-                        "&7Received invitations",
-                        "&7Click to open"
+                        "",
+                        "&7Click to open",
+                        ""
                 ));
         public ConfigItem sendInvitesItem = new ConfigItem()
                 .setName("&aSending invitations")
                 .setType(Material.WRITABLE_BOOK)
                 .setLore(List.of(
-                        "&7Sending invitations",
-                        "&7Click to open"
+                        "",
+                        "&7Click to open",
+                        ""
                 ));
         public ConfigItem settingItem = new ConfigItem()
                 .setName("&aSettings")
                 .setType(Material.REPEATER)
                 .setLore(List.of(
-                        "&7Settings",
-                        "&7Click to open"
+                        "",
+                        "&7Click to open",
+                        ""
                 ));
         public ConfigItem backToMainMenuItem = new ConfigItem()
                 .setName("&7Back to main menu")
@@ -90,12 +105,18 @@ public class GuiConfig implements ReloadableConfig {
 
     @Contextual
     public static class FriendHead {
-        public String name = "&f%friend_name%";
+        public String name = "{status} &f{friend_name}";
         public List<String> lore = List.of("&fFirst line of lore", "&9Second line of lore");
 
         public FriendHead setLore(List<String> lore) {
             this.lore = lore;
             return this;
         }
+    }
+
+    @Contextual
+    public static class OnlineStatus {
+        public String online = "&a●";
+        public String offline = "&7●";
     }
 }

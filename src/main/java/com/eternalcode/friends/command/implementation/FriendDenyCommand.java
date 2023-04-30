@@ -41,7 +41,9 @@ public class FriendDenyCommand {
 
         if (inviteManager.hasReceivedInvite(targetUuid, senderUuid)) {
             this.inviteManager.removeInvite(targetUuid, senderUuid);
+
             this.announcer.announceMessage(senderUuid, friendsConfig.inviteDenied.replace("{player}", target.getName()));
+            this.announcer.announceMessage(targetUuid, friendsConfig.yourInvitationHasBeenDenied.replace("{player}", sender.getName()));
 
             return;
         }

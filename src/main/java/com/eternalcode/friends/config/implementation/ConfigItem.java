@@ -1,5 +1,6 @@
 package com.eternalcode.friends.config.implementation;
 
+import com.eternalcode.friends.util.AdventureUtil;
 import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.guis.GuiItem;
 import net.dzikoysk.cdn.entity.Contextual;
@@ -21,8 +22,8 @@ public class ConfigItem {
 
     public GuiItem toGuiItem(MiniMessage miniMessage) {
         return ItemBuilder.from(this.type)
-                .name(miniMessage.deserialize(this.name))
-                .lore(this.lore.stream().map(string -> miniMessage.deserialize(string)).toList())
+                .name(AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(this.name)))
+                .lore(this.lore.stream().map(line -> AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(line))).toList())
                 .flags(ItemFlag.HIDE_ATTRIBUTES)
                 .flags(ItemFlag.HIDE_ENCHANTS)
                 .asGuiItem();

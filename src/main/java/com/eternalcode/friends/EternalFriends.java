@@ -14,6 +14,7 @@ import com.eternalcode.friends.command.implementation.FriendInviteCommand;
 import com.eternalcode.friends.command.implementation.FriendKickCommand;
 import com.eternalcode.friends.command.implementation.FriendListCommand;
 import com.eternalcode.friends.command.implementation.FriendReloadCommand;
+import com.eternalcode.friends.config.ConfigBackupService;
 import com.eternalcode.friends.config.ConfigManager;
 import com.eternalcode.friends.config.implementation.GuiConfig;
 import com.eternalcode.friends.config.implementation.MessagesConfig;
@@ -44,6 +45,7 @@ import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import panda.std.stream.PandaStream;
 
 import java.util.stream.Stream;
 
@@ -65,6 +67,7 @@ public class EternalFriends extends JavaPlugin {
     private FriendDatabaseService friendDatabaseService;
     private IgnoredPlayerDatabaseService ignoredPlayerDatabaseService;
     private InviteDatabaseService inviteDatabaseService;
+    private ConfigBackupService configBackupService;
 
     private HikariDataSource databaseDataSource;
 
@@ -84,11 +87,15 @@ public class EternalFriends extends JavaPlugin {
 
         this.announcer = new NotificationAnnouncer(this.audienceProvider, this.miniMessage);
 
-        this.configManager = new ConfigManager(this.getDataFolder());
+        this.configBackupService = new ConfigBackupService(this.getDataFolder());
+
+        this.configManager = new ConfigManager(this.getDataFolder(), this.configBackupService);
 
         this.config = new PluginConfig();
         this.messages = new MessagesConfig();
         this.guiConfig = new GuiConfig();
+
+        this.configBackupService.createBackup();
 
         this.configManager.load(this.config);
         this.configManager.load(this.messages);
@@ -144,6 +151,8 @@ public class EternalFriends extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        this.liteCommands.getPlatform().unregisterAll();
+        if (this.liteCommands != null) {
+            this.liteCommands.getPlatform().unregisterAll();
+        }
     }
 }
