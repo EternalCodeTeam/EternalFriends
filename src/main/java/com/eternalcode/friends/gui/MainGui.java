@@ -86,13 +86,13 @@ public class MainGui {
                     gui.previous();
                 });
 
-        GuiItem sendInvitesItem = menuItems.sendInvitesItem.toGuiItem(this.miniMessage);
+        GuiItem sendInvitesItem = menuItems.sendInvitesItem.toGuiItem();
         sendInvitesItem.setAction(event -> {
             player.closeInventory();
             this.announcer.announceMessage(player.getUniqueId(), this.messages.friends.inviteInstruction);
         });
 
-        GuiItem receivedInvitesItem = menuItems.receivedInvitesItem.toGuiItem(this.miniMessage);
+        GuiItem receivedInvitesItem = menuItems.receivedInvitesItem.toGuiItem();
         receivedInvitesItem.setAction(event -> {
             receivedInvitesGui.openInventory(player, () -> {
                 this.openMainGui(player);

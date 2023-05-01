@@ -124,7 +124,7 @@ public class ReceivedInvitesGui {
             UUID friendUuid = invite.getFrom();
             GuiItem skull = ItemBuilder.skull()
                     .owner(offlinePlayer)
-                    .name(AdventureUtil.RESET_ITEM.append(this.miniMessage.deserialize(this.guiConfig.menuItems.inviteListfriendHead.name.replace("%friend_name%", offlinePlayer.getName()))))
+                    .name(AdventureUtil.RESET_ITEM.append(this.miniMessage.deserialize(this.guiConfig.menuItems.inviteListfriendHead.name.replace("{friend_name}", offlinePlayer.getName()))))
                     .lore(this.guiConfig.menuItems.inviteListfriendHead.lore.stream().map(line -> AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(line))).toList())
                     .asGuiItem();
 

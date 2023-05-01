@@ -16,7 +16,7 @@ public class FriendCommand {
     }
 
     @Execute(required = 0)
-    @Permission("eternalfriends.access")
+    @Permission("eternalfriends.access.gui")
     void main(Player player) {
         this.mainGui.openMainGui(player);
     }

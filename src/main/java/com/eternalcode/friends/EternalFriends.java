@@ -76,8 +76,6 @@ public class EternalFriends extends JavaPlugin {
         this.protocolManager = ProtocolLibrary.getProtocolManager();
     }
 
-    //TODO sprawdzac czy gracze juz sa znajomymi
-    //akceptowanie zaproszenia z gui nie usuwa glowki
     @Override
     public void onEnable() {
         Server server = this.getServer();

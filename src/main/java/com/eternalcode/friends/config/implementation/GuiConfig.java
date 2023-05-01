@@ -25,7 +25,7 @@ public class GuiConfig implements ReloadableConfig {
         @Description("# options of {status} placeholder")
         public OnlineStatus onlineStatus = new OnlineStatus();
 
-        public FriendHead friendListHead = new FriendHead()
+        public FriendHead friendListHead = new FriendHead().setName("{status} &f{friend_name}")
                 .setLore(List.of("", "&cClick LMB", "&cto remove a friend", ""));
         public FriendHead inviteListfriendHead = new FriendHead()
                 .setLore(List.of("", "&aClick LMB to accept invitation", "&cClick RMB to decline invitation", ""));
@@ -105,8 +105,13 @@ public class GuiConfig implements ReloadableConfig {
 
     @Contextual
     public static class FriendHead {
-        public String name = "{status} &f{friend_name}";
+        public String name = "&f{friend_name}";
         public List<String> lore = List.of("&fFirst line of lore", "&9Second line of lore");
+
+        public FriendHead setName(String name) {
+            this.name = name;
+            return this;
+        }
 
         public FriendHead setLore(List<String> lore) {
             this.lore = lore;

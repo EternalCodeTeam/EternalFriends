@@ -31,6 +31,7 @@ public class MessagesConfig implements ReloadableConfig {
         public String chatFormat = "&9[FRIENDS] &f{player} &8» &7{message}";
         public String inviteSent = "&aInvitation to friends sent to player &f{invited}";
         public String inviteReceived = "&aYou have received a friend request from player &f{player}&a. To accept it, use the command <hover:show_text:\"/friends accept {player}\"><click:suggest_command:/friends accept {player}>&7/friends accept {player} &8[click]</click></hover>, &cor to decline it, use the command <hover:show_text:\"/friends deny {player}\"><click:suggest_command:/friends deny {player}>&7/friends deny {player} &8[click]</click></hover>.";
+        public String youreIgnored = "&cYou cannot send invitation to this player!";
         public String emptyFriendList = "&cYou have no friends :(";
         public String emptyFriendListAdmin = "&cThis player has no friends.";
         public String acceptedInvite = "&aYou accepted a friend request from player &f{player}";

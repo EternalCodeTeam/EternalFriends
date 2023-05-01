@@ -65,8 +65,9 @@ bukkit {
     depend = listOf("ProtocolLib")
     description = "EternalFriends is a plugin that allows you to manage your friends list."
     permissions {
-        register("eternalfriends.access.*") {
+        register("eternalfriends.access.all") {
             children = listOf(
+                "eternalfriends.access.gui",
                 "eternalfriends.access.accept",
                 "eternalfriends.access.deny",
                 "eternalfriends.access.help",
@@ -77,7 +78,7 @@ bukkit {
             )
             default = Default.OP
         }
-        register("eternalfriends.admin.*") {
+        register("eternalfriends.admin.all") {
             children = listOf(
                 "eternalfriends.admin.list",
                 "eternalfriends.admin.reload"
