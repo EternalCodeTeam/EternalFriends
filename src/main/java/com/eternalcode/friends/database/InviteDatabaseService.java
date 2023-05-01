@@ -105,9 +105,9 @@ public class InviteDatabaseService {
                 ResultSet resultSet = statement.executeQuery();
 
                 while (resultSet.next()) {
-                    UUID from = UUID.fromString(resultSet.getString(0));
-                    UUID to = UUID.fromString(resultSet.getString(1));
-                    Instant expirationDate = resultSet.getTimestamp(2).toInstant();
+                    UUID from = UUID.fromString(resultSet.getString(1));
+                    UUID to = UUID.fromString(resultSet.getString(2));
+                    Instant expirationDate = resultSet.getTimestamp(3).toInstant();
 
                     Invite invite = new Invite(from, to, expirationDate);
 

@@ -43,6 +43,8 @@ public class FriendInviteCommand {
         }
 
         if (this.friendManager.isIgnoredByPlayer(senderUuid, targetUuid)) {
+            this.announcer.announceMessage(senderUuid, friendsConfig.youreIgnored);
+
             return;
         }
 

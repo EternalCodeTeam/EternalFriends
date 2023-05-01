@@ -109,14 +109,6 @@ public class IgnoredPlayerDatabaseService {
                     else {
                         ignoredPlayers.get(ignore).add(ignored);
                     }
-
-                    if (!ignoredPlayers.containsKey(ignored)) {
-                        List<UUID> newIgnoredPlayers = new ArrayList<>();
-                        newIgnoredPlayers.add(ignore);
-                        ignoredPlayers.put(ignored, newIgnoredPlayers);
-                        continue;
-                    }
-                    ignoredPlayers.get(ignored).add(ignore);
                 }
 
             }

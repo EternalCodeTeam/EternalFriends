@@ -65,7 +65,7 @@ public class FriendListCommand {
         }
 
         if (adminMode) {
-            builder.append(friendsConfig.friendListHeaderAdmin);
+            builder.append(friendsConfig.friendListHeaderAdmin.replace("{player}", server.getOfflinePlayer(uuid).getName()));
         }
         else {
             builder.append(friendsConfig.friendListHeader);

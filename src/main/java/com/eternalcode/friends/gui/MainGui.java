@@ -6,6 +6,7 @@ import com.eternalcode.friends.config.implementation.MessagesConfig;
 import com.eternalcode.friends.friend.FriendManager;
 import com.eternalcode.friends.invite.InviteManager;
 import com.eternalcode.friends.packet.NameTagService;
+import com.eternalcode.friends.util.AdventureUtil;
 import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.guis.Gui;
 import dev.triumphteam.gui.guis.GuiItem;
@@ -72,26 +73,26 @@ public class MainGui {
                 .create();
 
         GuiItem nextPageButton = ItemBuilder.from(Material.PAPER)
-                .name(this.miniMessage.deserialize(menuItems.nextPageItem.name))
-                .lore(menuItems.nextPageItem.lore.stream().map(string -> this.miniMessage.deserialize(string)).toList())
+                .name(AdventureUtil.RESET_ITEM.append(this.miniMessage.deserialize(menuItems.nextPageItem.name)))
+                .lore(menuItems.nextPageItem.lore.stream().map(line -> AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(line))).toList())
                 .asGuiItem(event -> {
                     gui.next();
                 });
 
         GuiItem backPageButton = ItemBuilder.from(Material.PAPER)
-                .name(this.miniMessage.deserialize(menuItems.previousPageItem.name))
-                .lore(menuItems.previousPageItem.lore.stream().map(string -> this.miniMessage.deserialize(string)).toList())
+                .name(AdventureUtil.RESET_ITEM.append(this.miniMessage.deserialize(menuItems.previousPageItem.name)))
+                .lore(menuItems.previousPageItem.lore.stream().map(line -> AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(line))).toList())
                 .asGuiItem(event -> {
                     gui.previous();
                 });
 
-        GuiItem sendInvitesItem = menuItems.sendInvitesItem.toGuiItem(this.miniMessage);
+        GuiItem sendInvitesItem = menuItems.sendInvitesItem.toGuiItem();
         sendInvitesItem.setAction(event -> {
             player.closeInventory();
             this.announcer.announceMessage(player.getUniqueId(), this.messages.friends.inviteInstruction);
         });
 
-        GuiItem receivedInvitesItem = menuItems.receivedInvitesItem.toGuiItem(this.miniMessage);
+        GuiItem receivedInvitesItem = menuItems.receivedInvitesItem.toGuiItem();
         receivedInvitesItem.setAction(event -> {
             receivedInvitesGui.openInventory(player, () -> {
                 this.openMainGui(player);
@@ -116,12 +117,18 @@ public class MainGui {
     }
 
     private GuiItem generateSkull(Player player, UUID friendUuid) {
+        Player friend = this.server.getPlayer(friendUuid);
+
+        boolean isFriendOnline = friend != null && friend.isOnline();
+
         final GuiItem skull = ItemBuilder.skull()
                 .owner(this.server.getOfflinePlayer(friendUuid))
-                .name(this.miniMessage.deserialize(this.guiConfig.menuItems.friendListHead.name
-                        .replace("%friend_name%", this.server.getOfflinePlayer(friendUuid).getName())))
+                .name(AdventureUtil.RESET_ITEM.append(this.miniMessage.deserialize(this.guiConfig.menuItems.friendListHead.name
+                        .replace("{friend_name}", isFriendOnline ? friend.getName() : this.server.getOfflinePlayer(friendUuid).getName())
+                        .replace("{status}", isFriendOnline ? this.guiConfig.menuItems.onlineStatus.online : this.guiConfig.menuItems.onlineStatus.offline)
+                )))
                 .lore(this.guiConfig.menuItems.friendListHead.lore.stream()
-                        .map(string -> miniMessage.deserialize(string)).toList())
+                        .map(line -> AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(line))).toList())
                 .asGuiItem();
 
         skull.setAction(event -> {

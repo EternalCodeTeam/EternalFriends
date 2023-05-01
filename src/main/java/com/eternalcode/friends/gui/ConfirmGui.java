@@ -25,10 +25,10 @@ public class ConfirmGui {
     }
 
     public void openInventory(Player player, Runnable onConfirm, Runnable onDeny) {
-        GuiItem confirmItem = this.guiConfig.menuItems.confirmItem.toGuiItem(this.miniMessage);
+        GuiItem confirmItem = this.guiConfig.menuItems.confirmItem.toGuiItem();
         confirmItem.setAction(event -> onConfirm.run());
 
-        GuiItem denyItem = this.guiConfig.menuItems.denyItem.toGuiItem(this.miniMessage);
+        GuiItem denyItem = this.guiConfig.menuItems.denyItem.toGuiItem();
         denyItem.setAction(event -> onDeny.run());
 
         Gui gui = Gui.gui()

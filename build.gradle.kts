@@ -1,4 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import net.minecrell.pluginyml.bukkit.BukkitPluginDescription.Permission.Default;
 
 plugins {
     id("java")
@@ -63,6 +64,28 @@ bukkit {
     version = "${project.version}"
     depend = listOf("ProtocolLib")
     description = "EternalFriends is a plugin that allows you to manage your friends list."
+    permissions {
+        register("eternalfriends.access.all") {
+            children = listOf(
+                "eternalfriends.access.gui",
+                "eternalfriends.access.accept",
+                "eternalfriends.access.deny",
+                "eternalfriends.access.help",
+                "eternalfriends.access.ignore",
+                "eternalfriends.access.invite",
+                "eternalfriends.access.kick",
+                "eternalfriends.access.list"
+            )
+            default = Default.OP
+        }
+        register("eternalfriends.admin.all") {
+            children = listOf(
+                "eternalfriends.admin.list",
+                "eternalfriends.admin.reload"
+            )
+            default = Default.OP
+        }
+    }
 }
 
 java {

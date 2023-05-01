@@ -9,6 +9,8 @@ import java.util.Set;
 
 public class ConfigManager {
 
+    private final ConfigBackupService configBackupService;
+
     private static final Cdn CDN = CdnFactory
             .createYamlLike()
             .getSettings()
@@ -17,8 +19,9 @@ public class ConfigManager {
     private final Set<ReloadableConfig> configs = new HashSet<>();
     private final File dataFolder;
 
-    public ConfigManager(File dataFolder) {
+    public ConfigManager(File dataFolder, ConfigBackupService configBackupService) {
         this.dataFolder = dataFolder;
+        this.configBackupService = configBackupService;
     }
 
     public <T extends ReloadableConfig> void load(T config) {
@@ -37,6 +40,8 @@ public class ConfigManager {
     }
 
     public void reload() {
+        configBackupService.createBackup();
+
         for (ReloadableConfig config : this.configs) {
             load(config);
         }

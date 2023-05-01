@@ -21,7 +21,7 @@ public class MessagesConfig implements ReloadableConfig {
     @Contextual
     public static class Argument {
         public String missingPermission = "&cYou do not have permission to use this command! &7({permission})";
-        public String invalidUsage = "&cError! Check the correct usage of the command at &f/friends help&c.";
+        public String invalidUsage = "&cError! Check the correct usage of the command at <click:suggest_command:/friends help>&f/friends help &8[click here]</click>&c.";
         public String playerOnly = "&cThis command can only be used by players!";
         public String playerNotFound = "&cPlayer not found: &7{player}&c.";
     }
@@ -30,7 +30,8 @@ public class MessagesConfig implements ReloadableConfig {
     public static class Friends {
         public String chatFormat = "&9[FRIENDS] &f{player} &8» &7{message}";
         public String inviteSent = "&aInvitation to friends sent to player &f{invited}";
-        public String inviteReceived = "&aYou have received a friend request from player &f{player}&a. To accept it, use the command &7/friend accept {player}";
+        public String inviteReceived = "&aYou have received a friend request from player &f{player}&a. To accept it, use the command <hover:show_text:\"/friends accept {player}\"><click:suggest_command:/friends accept {player}>&7/friends accept {player} &8[click]</click></hover>, &cor to decline it, use the command <hover:show_text:\"/friends deny {player}\"><click:suggest_command:/friends deny {player}>&7/friends deny {player} &8[click]</click></hover>.";
+        public String youreIgnored = "&cYou cannot send invitation to this player!";
         public String emptyFriendList = "&cYou have no friends :(";
         public String emptyFriendListAdmin = "&cThis player has no friends.";
         public String acceptedInvite = "&aYou accepted a friend request from player &f{player}";
@@ -46,9 +47,10 @@ public class MessagesConfig implements ReloadableConfig {
         public String friendListPlayer = "&7{player}, ";
         public String alreadyReceivedInvite = "&cYou have already received a friend request from this player!";
         public String alreadySentInvite = "&cYou have already sent an invite to this player!";
-        public String inviteInstruction = "&aTo send a friend request, use the command &7/friend invite {player_name}";
+        public String inviteInstruction = "&aTo send a friend request, use the command &7/friends invite {player_name}";
         public String configReloaded = "&aConfiguration successfully reloaded!";
         public String inviteDenied = "&cYou declined the friend request from player &7{player}";
+        public String yourInvitationHasBeenDenied = "&cYour inivtation to &7{player} &chas been denied.";
         public String youIgnoredPlayer = "&cYou will no longer receive friend requests from player &7{player}";
         public String youUnignoredPlayer = "&aYou can now receive friend requests from player &7{player} again.";
         public String inviteExpired = "&cThe friend request from this player has expired!";
