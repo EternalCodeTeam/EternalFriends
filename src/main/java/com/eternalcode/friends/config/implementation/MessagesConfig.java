@@ -52,7 +52,7 @@ public class MessagesConfig implements ReloadableConfig {
         public String inviteDenied = "&cYou declined the friend request from player &7{player}";
         public String yourInvitationHasBeenDenied = "&cYour invitation to &7{player} &chas been denied.";
         public String youIgnoredPlayer = "&cYou will no longer receive friend requests from player &7{player}";
-        public String playerIsNoLongerIgnored = "&aYou can now receive friend requests from player &7{player} again.";
+        public String playerNoLongerIgnored = "&aYou can now receive friend requests from player &7{player} again.";
         public String inviteExpired = "&cThe friend request from this player has expired!";
         public String friendJoined = "&9{friend} &ahas joined the server!";
         public List<String> helpCommand = List.of(
