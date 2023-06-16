@@ -27,12 +27,12 @@ public class AnnounceJoinListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        if (this.pluginConfig.anounceFriendJoin) {
-            this.anounceToFriends(event.getPlayer());
+        if (this.pluginConfig.announceFriendJoin) {
+            this.announceToFriends(event.getPlayer());
         }
     }
 
-    private void anounceToFriends(Player player) {
+    private void announceToFriends(Player player) {
         UUID playerUUID = player.getUniqueId();
 
         for (UUID friendUuid : this.friendManager.getFriends(playerUUID)) {

@@ -43,7 +43,7 @@ public class FriendInviteCommand {
         }
 
         if (this.friendManager.isIgnoredByPlayer(senderUuid, targetUuid)) {
-            this.announcer.announceMessage(senderUuid, friendsConfig.youreIgnored);
+            this.announcer.announceMessage(senderUuid, friendsConfig.cannotSendInvite);
 
             return;
         }
@@ -54,12 +54,12 @@ public class FriendInviteCommand {
             return;
         }
 
-        if (inviteManager.hasReceivedInvite(targetUuid, senderUuid) || this.inviteManager.hasSendedInvite(targetUuid, senderUuid)) {
+        if (inviteManager.hasReceivedInvite(targetUuid, senderUuid) || this.inviteManager.hasSentInvite(targetUuid, senderUuid)) {
             this.announcer.announceMessage(senderUuid, friendsConfig.alreadyReceivedInvite);
 
             return;
         }
-        if (inviteManager.hasSendedInvite(senderUuid, targetUuid) || this.inviteManager.hasReceivedInvite(senderUuid, targetUuid)) {
+        if (inviteManager.hasSentInvite(senderUuid, targetUuid) || this.inviteManager.hasReceivedInvite(senderUuid, targetUuid)) {
             this.announcer.announceMessage(senderUuid, friendsConfig.alreadySentInvite);
 
             return;

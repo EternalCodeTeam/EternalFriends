@@ -19,7 +19,7 @@ public class InvalidUsage implements InvalidUsageHandler<CommandSender> {
 
     @Override
     public void handle(CommandSender sender, LiteInvocation invocation, Schematic schematic) {
-        schematic.getSchematics().stream().forEach(str -> {
+        schematic.getSchematics().forEach(str -> {
             this.announcer.announceMessage(sender, str);
         });
 
