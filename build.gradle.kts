@@ -27,10 +27,10 @@ dependencies {
 
     // kyori adventure
     implementation("net.kyori:adventure-platform-bukkit:4.3.0")
-    implementation("net.kyori:adventure-text-minimessage:4.13.1")
+    implementation("net.kyori:adventure-text-minimessage:4.14.0")
 
     // litecommands
-    implementation("dev.rollczi.litecommands:bukkit-adventure:2.8.7")
+    implementation("dev.rollczi.litecommands:bukkit-adventure:2.8.8")
 
     // cdn
     implementation("net.dzikoysk:cdn:1.14.4")
@@ -39,7 +39,7 @@ dependencies {
     implementation("org.bstats:bstats-bukkit:3.0.2")
 
     // triumph gui
-    implementation("dev.triumphteam:triumph-gui:3.1.4")
+    implementation("dev.triumphteam:triumph-gui:3.1.5")
 
     // HikariCP
     implementation("com.zaxxer:HikariCP:5.0.1")
@@ -48,7 +48,7 @@ dependencies {
     implementation("com.mysql:mysql-connector-j:8.0.33")
 
     // protocollib
-    compileOnly("com.comphenix.protocol:ProtocolLib:5.0.0-SNAPSHOT")
+    compileOnly("com.comphenix.protocol:ProtocolLib:5.0.0")
 }
 
 tasks.withType<JavaCompile> {
