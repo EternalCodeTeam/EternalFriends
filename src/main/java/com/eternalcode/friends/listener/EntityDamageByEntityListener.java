@@ -16,17 +16,14 @@ public class EntityDamageByEntityListener implements Listener {
 
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent event) {
-        if (!(event.getDamager() instanceof Player)) {
+        if (!(event.getDamager() instanceof Player attacker)) {
             return;
         }
-        if (!(event.getEntity() instanceof Player)) {
+        if (!(event.getEntity() instanceof Player damaged)) {
             return;
         }
 
-        Player damager = (Player) event.getDamager();
-        Player damaged = (Player) event.getEntity();
-
-        if (this.friendManager.areFriends(damager.getUniqueId(), damaged.getUniqueId())) {
+        if (this.friendManager.areFriends(attacker.getUniqueId(), damaged.getUniqueId())) {
             event.setDamage(0D);
         }
     }

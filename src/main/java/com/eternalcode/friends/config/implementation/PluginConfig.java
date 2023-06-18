@@ -20,11 +20,11 @@ public class PluginConfig implements ReloadableConfig {
     @Description("# Configuration of Database")
     public Database database = new Database();
 
-    @Description("# Color of player's nametag displayed to his friends")
+    @Description("# Color of player's name tag displayed to his friends")
     public ChatColor friendColor = ChatColor.BLUE;
 
     @Description("# Does server should message displayed to player when his friend joins the server?")
-    public boolean anounceFriendJoin = true;
+    public boolean announceFriendJoin = true;
 
     @Description("# Configuration of command and subcommands names")
     public Command friendCommand = new Command();
@@ -47,7 +47,6 @@ public class PluginConfig implements ReloadableConfig {
         public String list = "list";
         public String help = "help";
         public String ignore = "ignore";
-        public String reload = "reload";
     }
 
     @Contextual

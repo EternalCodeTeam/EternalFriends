@@ -72,14 +72,14 @@ public class InviteManager {
         if (hasReceivedInvite(from, to)) {
             this.receivedInvites.get(to).removeIf(invite -> invite.getFrom().equals(from));
         }
-        if (hasSendedInvite(from, to)) {
+        if (hasSentInvite(from, to)) {
             this.sentInvites.get(from).removeIf(invite -> invite.getTo().equals(to));
         }
 
         this.inviteDatabaseService.removeInvite(from, to);
     }
 
-    public boolean hasSendedInvite(UUID from, UUID to) {
+    public boolean hasSentInvite(UUID from, UUID to) {
         if (!this.sentInvites.containsKey(from)) {
             return false;
         }

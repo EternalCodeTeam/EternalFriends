@@ -43,7 +43,7 @@ public class FriendIgnoreCommand {
         if (this.friendManager.isIgnoredByPlayer(targetUuid, senderUuid)) {
             this.friendManager.removeIgnoredPlayer(senderUuid, targetUuid);
 
-            this.announcer.announceMessage(senderUuid, friendsConfig.youUnignoredPlayer.replace("{player}", target.getName()));
+            this.announcer.announceMessage(senderUuid, friendsConfig.playerNoLongerIgnored.replace("{player}", target.getName()));
 
             return;
         }
