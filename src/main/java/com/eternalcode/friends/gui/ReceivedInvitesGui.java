@@ -1,7 +1,8 @@
 package com.eternalcode.friends.gui;
 
 import com.eternalcode.friends.NotificationAnnouncer;
-import com.eternalcode.friends.config.implementation.ConfigItem;
+import com.eternalcode.friends.config.implementation.ConfigItemImpl;
+import com.eternalcode.friends.config.implementation.ExampleConfigItem;
 import com.eternalcode.friends.config.implementation.GuiConfig;
 import com.eternalcode.friends.config.implementation.MessagesConfig;
 import com.eternalcode.friends.friend.FriendManager;
@@ -67,7 +68,7 @@ public class ReceivedInvitesGui {
                 .disableItemTake()
                 .create();
 
-        ConfigItem nextPageItem = menuItems.nextPageItem;
+        ExampleConfigItem nextPageItem = menuItems.nextPageItem;
         GuiItem nextPageButton = ItemBuilder.from(nextPageItem.type)
                 .name(AdventureUtil.RESET_ITEM.append(this.miniMessage.deserialize(nextPageItem.name)))
                 .lore(nextPageItem.lore.stream().map(line -> AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(line))).toList())
@@ -75,7 +76,7 @@ public class ReceivedInvitesGui {
                     gui.next();
                 });
 
-        ConfigItem previousPageItemCfg = menuItems.previousPageItem;
+        ConfigItemImpl previousPageItemCfg = menuItems.previousPageItem;
         GuiItem backPageButton = ItemBuilder.from(previousPageItemCfg.type)
                 .name(AdventureUtil.RESET_ITEM.append(this.miniMessage.deserialize(previousPageItemCfg.name)))
                 .lore(previousPageItemCfg.lore.stream().map(line -> AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(line))).toList())
@@ -83,7 +84,7 @@ public class ReceivedInvitesGui {
                     gui.previous();
                 });
 
-        ConfigItem backToMainMenuItemCfg = menuItems.backToMainMenuItem;
+        ConfigItemImpl backToMainMenuItemCfg = menuItems.backToMainMenuItem;
         GuiItem backToMainMenuButton = ItemBuilder.from(backToMainMenuItemCfg.type)
                 .name(AdventureUtil.RESET_ITEM.append(this.miniMessage.deserialize(backToMainMenuItemCfg.name)))
                 .lore(backToMainMenuItemCfg.lore.stream().map(line -> AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(line))).toList())
