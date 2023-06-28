@@ -28,7 +28,7 @@ public class CloseItem implements ConfigItem<CloseItem> {
     public List<String> lore = List.of("&fFirst line of lore");
 
     @Description("# List of commands triggered on click")
-    @Description("# available placeholders: {player}")
+    @Description("# Available placeholders: {player}")
     public List<String> commandOnClick = List.of("give {player} stone 1", "tell {player} you received stone!");
 
     @Override
