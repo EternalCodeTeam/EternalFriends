@@ -1,6 +1,7 @@
 package com.eternalcode.friends.gui;
 
 import com.eternalcode.friends.NotificationAnnouncer;
+import com.eternalcode.friends.config.implementation.CloseItem;
 import com.eternalcode.friends.config.implementation.GuiConfig;
 import com.eternalcode.friends.config.implementation.MessagesConfig;
 import com.eternalcode.friends.friend.FriendManager;
@@ -15,6 +16,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.Server;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -38,6 +40,7 @@ public class MainGui {
     private static final int NEXT_PAGE_ITEM_SLOT = 53;
     private static final int BACK_PAGE_ITEM_SLOT = 45;
     private static final int RECEIVED_ITEM_SLOT = 48;
+    private static final int CLOSE_ITEM_SLOT = 49;
     private static final int SEND_ITEM_SLOT = 50;
 
 
@@ -99,6 +102,18 @@ public class MainGui {
             });
         });
 
+        CloseItem closeItemConfig = menuItems.closeItem;
+        GuiItem closeButton = menuItems.closeItem.toGuiItem();
+        closeButton.setAction(event -> {
+            HumanEntity whoClicked = event.getWhoClicked();
+            whoClicked.closeInventory();
+
+            closeItemConfig.commandOnClick.forEach(command -> {
+                this.server.dispatchCommand(this.server.getConsoleSender(), command
+                        .replace("{player}", whoClicked.getName()));
+            });
+        });
+
         generateFriendsHeads(player, gui);
 
         gui.getFiller().fillBottom(ItemBuilder.from(Material.BLACK_STAINED_GLASS_PANE).name(Component.text(" ")).asGuiItem());
@@ -106,6 +121,7 @@ public class MainGui {
         gui.setItem(SEND_ITEM_SLOT, sendInvitesItem);
         gui.setItem(NEXT_PAGE_ITEM_SLOT, nextPageButton);
         gui.setItem(BACK_PAGE_ITEM_SLOT, backPageButton);
+        gui.setItem(CLOSE_ITEM_SLOT, closeButton);
 
         gui.open(player);
     }

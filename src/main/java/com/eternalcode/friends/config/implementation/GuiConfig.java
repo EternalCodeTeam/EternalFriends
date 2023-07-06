@@ -30,7 +30,7 @@ public class GuiConfig implements ReloadableConfig {
         public FriendHead inviteListfriendHead = new FriendHead()
                 .setLore(List.of("", "&aClick LMB to accept invitation", "&cClick RMB to decline invitation", ""));
 
-        public ConfigItem nextPageItem = new ConfigItem()
+        public ExampleConfigItem nextPageItem = new ExampleConfigItem()
                 .setName("&aNext page")
                 .setType(Material.PAPER)
                 .setLore(List.of(
@@ -39,7 +39,7 @@ public class GuiConfig implements ReloadableConfig {
                         ""
                 ));
 
-        public ConfigItem previousPageItem = new ConfigItem()
+        public ConfigItemImpl previousPageItem = new ConfigItemImpl()
                 .setName("&cPrevious page")
                 .setType(Material.PAPER)
                 .setLore(List.of(
@@ -48,7 +48,7 @@ public class GuiConfig implements ReloadableConfig {
                         ""
                 ));
 
-        public ConfigItem confirmItem = new ConfigItem()
+        public ConfigItemImpl confirmItem = new ConfigItemImpl()
                 .setName("&aYes")
                 .setType(Material.LIME_STAINED_GLASS_PANE)
                 .setLore(List.of(
@@ -57,7 +57,7 @@ public class GuiConfig implements ReloadableConfig {
                         ""
                 ));
 
-        public ConfigItem denyItem = new ConfigItem()
+        public ConfigItemImpl denyItem = new ConfigItemImpl()
                 .setName("&cNo")
                 .setType(Material.RED_STAINED_GLASS_PANE)
                 .setLore(List.of(
@@ -66,7 +66,7 @@ public class GuiConfig implements ReloadableConfig {
                         ""
                 ));
 
-        public ConfigItem receivedInvitesItem = new ConfigItem()
+        public ConfigItemImpl receivedInvitesItem = new ConfigItemImpl()
                 .setName("&aReceived invitations")
                 .setType(Material.BOOK)
                 .setLore(List.of(
@@ -74,7 +74,8 @@ public class GuiConfig implements ReloadableConfig {
                         "&7Click to open",
                         ""
                 ));
-        public ConfigItem sendInvitesItem = new ConfigItem()
+        
+        public ConfigItemImpl sendInvitesItem = new ConfigItemImpl()
                 .setName("&aSending invitations")
                 .setType(Material.WRITABLE_BOOK)
                 .setLore(List.of(
@@ -82,7 +83,8 @@ public class GuiConfig implements ReloadableConfig {
                         "&7Click to open",
                         ""
                 ));
-        public ConfigItem settingItem = new ConfigItem()
+        
+        public ConfigItemImpl settingItem = new ConfigItemImpl()
                 .setName("&aSettings")
                 .setType(Material.REPEATER)
                 .setLore(List.of(
@@ -90,9 +92,15 @@ public class GuiConfig implements ReloadableConfig {
                         "&7Click to open",
                         ""
                 ));
-        public ConfigItem backToMainMenuItem = new ConfigItem()
+        
+        public ConfigItemImpl backToMainMenuItem = new ConfigItemImpl()
                 .setName("&7Back to main menu")
                 .setType(Material.ARROW)
+                .setLore(List.of());
+        
+        public CloseItem closeItem = new CloseItem()
+                .setName("&cClose menu")
+                .setType(Material.BARRIER)
                 .setLore(List.of());
     }
 
