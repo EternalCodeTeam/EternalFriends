@@ -15,7 +15,7 @@ To build EternalFriends do the following (Make sure you have JDK 17 or higher)
 
 # Contributing
 
-Create a public EternalCore fork, make changes and then create a Pull Request
+Create a public EternalFriends fork, make changes and then create a Pull Request
 See [CONTRIBUTING.md](https://github.com/EternalCodeTeam/EternalCore/blob/master/.github/CONTRIBUTING.md) to find out
 more.
 
