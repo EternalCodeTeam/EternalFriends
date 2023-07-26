@@ -13,6 +13,7 @@
 [![Java](https://raw.githubusercontent.com/intergrav/devins-badges/v3/assets/cozy/built-with/java17_vector.svg)](https://www.java.com/)
 
 </div>
+
 # Building
 
 To build EternalFriends do the following (Make sure you have JDK 17 or higher)
