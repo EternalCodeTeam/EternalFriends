@@ -150,7 +150,8 @@ public class ReceivedInvitesGui {
 
                 this.announcer.announceMessage(playerUuid, this.friendsConfig.acceptedInvite.replace("{player}", this.server.getOfflinePlayer(friendUuid).getName()));
                 this.announcer.announceMessage(friendUuid, this.friendsConfig.yourInvitationHasBeenAccepted.replace("{player}", player.getName()));
-            } else if (event.isRightClick()) {
+            }
+            else if (event.isRightClick()) {
                 this.inviteManager.removeInvite(friendUuid, playerUuid);
             }
 

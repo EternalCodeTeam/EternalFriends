@@ -104,7 +104,8 @@ public class FriendDatabaseService {
                         List<UUID> newFriends = new ArrayList<>();
                         newFriends.add(uuidTwo);
                         friends.put(uuidOne, newFriends);
-                    } else {
+                    }
+                    else {
                         friends.get(uuidOne).add(uuidTwo);
                     }
 

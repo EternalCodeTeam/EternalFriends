@@ -114,7 +114,8 @@ public class InviteDatabaseService {
 
                     if (sentInvites.containsKey(from)) {
                         sentInvites.get(from).add(invite);
-                    } else {
+                    }
+                    else {
                         sentInvites.put(from, new ArrayList<>(List.of(invite)));
                     }
 
