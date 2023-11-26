@@ -18,8 +18,8 @@ public class CloseItem implements ConfigItem<CloseItem> {
 
     @Exclude
     private final MiniMessage miniMessage = MiniMessage.builder()
-            .postProcessor(new LegacyColorProcessor())
-            .build();
+        .postProcessor(new LegacyColorProcessor())
+        .build();
 
     public Material type = Material.STONE;
 
@@ -34,11 +34,11 @@ public class CloseItem implements ConfigItem<CloseItem> {
     @Override
     public GuiItem toGuiItem() {
         return ItemBuilder.from(this.type)
-                .name(AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(this.name)))
-                .lore(this.lore.stream().map(line -> AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(line))).toList())
-                .flags(ItemFlag.HIDE_ATTRIBUTES)
-                .flags(ItemFlag.HIDE_ENCHANTS)
-                .asGuiItem();
+            .name(AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(this.name)))
+            .lore(this.lore.stream().map(line -> AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(line))).toList())
+            .flags(ItemFlag.HIDE_ATTRIBUTES)
+            .flags(ItemFlag.HIDE_ENCHANTS)
+            .asGuiItem();
     }
 
     @Override

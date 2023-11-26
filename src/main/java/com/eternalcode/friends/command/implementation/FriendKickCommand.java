@@ -32,7 +32,7 @@ public class FriendKickCommand {
 
     @Execute(route = "kick", required = 1)
     @Permission("eternalfriends.access.kick")
-    public void kick(Player sender, @Arg @Name("player") Player target){
+    public void kick(Player sender, @Arg @Name("player") Player target) {
         UUID senderUuid = sender.getUniqueId();
         UUID targetUuid = target.getUniqueId();
 

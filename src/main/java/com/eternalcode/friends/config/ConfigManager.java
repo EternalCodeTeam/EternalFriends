@@ -9,13 +9,11 @@ import java.util.Set;
 
 public class ConfigManager {
 
-    private final ConfigBackupService configBackupService;
-
     private static final Cdn CDN = CdnFactory
-            .createYamlLike()
-            .getSettings()
-            .build();
-
+        .createYamlLike()
+        .getSettings()
+        .build();
+    private final ConfigBackupService configBackupService;
     private final Set<ReloadableConfig> configs = new HashSet<>();
     private final File dataFolder;
 
@@ -26,17 +24,17 @@ public class ConfigManager {
 
     public <T extends ReloadableConfig> void load(T config) {
         CDN.load(config.resource(this.dataFolder), config)
-                .orThrow(RuntimeException::new);
+            .orThrow(RuntimeException::new);
 
         CDN.render(config, config.resource(this.dataFolder))
-                .orThrow(RuntimeException::new);
+            .orThrow(RuntimeException::new);
 
         this.configs.add(config);
     }
 
     public <T extends ReloadableConfig> void save(T config) {
         CDN.render(config, config.resource(this.dataFolder))
-                .orThrow(RuntimeException::new);
+            .orThrow(RuntimeException::new);
     }
 
     public void reload() {

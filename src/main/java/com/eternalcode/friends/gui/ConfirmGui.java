@@ -12,12 +12,10 @@ import org.bukkit.inventory.ItemFlag;
 
 public class ConfirmGui {
 
-    private GuiConfig guiConfig;
-
-    private final MiniMessage miniMessage;
-
     private final static int CONFIRM_ITEM_SLOT = 11;
     private final static int DENY_ITEM_SLOT = 15;
+    private final GuiConfig guiConfig;
+    private final MiniMessage miniMessage;
 
     public ConfirmGui(GuiConfig guiConfig, MiniMessage miniMessage) {
         this.guiConfig = guiConfig;
@@ -32,10 +30,10 @@ public class ConfirmGui {
         denyItem.setAction(event -> onDeny.run());
 
         Gui gui = Gui.gui()
-                .title(this.miniMessage.deserialize(this.guiConfig.guis.confirmGuiTitle))
-                .rows(3)
-                .disableItemTake()
-                .create();
+            .title(this.miniMessage.deserialize(this.guiConfig.guis.confirmGuiTitle))
+            .rows(3)
+            .disableItemTake()
+            .create();
 
         gui.getFiller().fill(ItemBuilder.from(Material.GRAY_STAINED_GLASS_PANE).name(Component.text(" ")).flags(ItemFlag.HIDE_ATTRIBUTES).asGuiItem());
 

@@ -10,13 +10,13 @@ import java.util.List;
 
 public class MessagesConfig implements ReloadableConfig {
 
+    public Argument argument = new Argument();
+    public Friends friends = new Friends();
+
     @Override
     public Resource resource(File folder) {
         return Source.of(folder, "messages.yml");
     }
-
-    public Argument argument = new Argument();
-    public Friends friends = new Friends();
 
     @Contextual
     public static class Argument {
@@ -56,18 +56,18 @@ public class MessagesConfig implements ReloadableConfig {
         public String inviteExpired = "&cThe friend request from this player has expired!";
         public String friendJoined = "&9{friend} &ahas joined the server!";
         public List<String> helpCommand = List.of(
-                " ",
-                " &3Friends - Commands",
-                " &7/friends &8- &fDisplays friend menu",
-                " &7/friends invite <player> &8- &fSends a friend request",
-                " &7/friends accept <player> &8- &fAccepts a friend request",
-                " &7/friends deny <player> &8- &fDeclines a friend request",
-                " &7/friends remove <player> &8- &fRemoves a friend from the list",
-                " &7/friends ignore <player> &8- &fIgnores incoming friend requests from player or turns off ignoring",
-                " &7/friends help &8- &fDisplays available commands",
-                " &7/friends list &8- &fShows list of friends",
-                " &7/friends reload &8- &fReloads configuration",
-                " "
+            " ",
+            " &3Friends - Commands",
+            " &7/friends &8- &fDisplays friend menu",
+            " &7/friends invite <player> &8- &fSends a friend request",
+            " &7/friends accept <player> &8- &fAccepts a friend request",
+            " &7/friends deny <player> &8- &fDeclines a friend request",
+            " &7/friends remove <player> &8- &fRemoves a friend from the list",
+            " &7/friends ignore <player> &8- &fIgnores incoming friend requests from player or turns off ignoring",
+            " &7/friends help &8- &fDisplays available commands",
+            " &7/friends list &8- &fShows list of friends",
+            " &7/friends reload &8- &fReloads configuration",
+            " "
         );
     }
 }

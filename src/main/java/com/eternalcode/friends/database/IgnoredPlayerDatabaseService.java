@@ -1,8 +1,5 @@
 package com.eternalcode.friends.database;
 
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
-
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -26,14 +23,14 @@ public class IgnoredPlayerDatabaseService {
 
     public void initTable() {
         try (
-                Connection connection = dataSource.getConnection();
+            Connection connection = dataSource.getConnection();
 
-                PreparedStatement statement = connection.prepareStatement(
-                        "CREATE TABLE IF NOT EXISTS eternalfriends_ignored_players(" +
-                                "who_ignore CHAR(36) NOT NULL, " +
-                                "is_ignored CHAR(36) NOT NULL " +
-                                ");"
-                )
+            PreparedStatement statement = connection.prepareStatement(
+                "CREATE TABLE IF NOT EXISTS eternalfriends_ignored_players("
+                    + "who_ignore CHAR(36) NOT NULL, "
+                    + "is_ignored CHAR(36) NOT NULL "
+                    + ");"
+            )
         ) {
 
             statement.execute();
@@ -47,11 +44,11 @@ public class IgnoredPlayerDatabaseService {
     public void addIgnoredPlayer(UUID ignore, UUID ignored) {
         CompletableFuture.runAsync(() -> {
             try (
-                    Connection connection = dataSource.getConnection();
+                Connection connection = dataSource.getConnection();
 
-                    PreparedStatement statement = connection.prepareStatement(
-                            "INSERT INTO eternalfriends_ignored_players VALUES (?, ?);"
-                    )
+                PreparedStatement statement = connection.prepareStatement(
+                    "INSERT INTO eternalfriends_ignored_players VALUES (?, ?);"
+                )
             ) {
 
                 statement.setString(1, ignore.toString());
@@ -69,11 +66,11 @@ public class IgnoredPlayerDatabaseService {
     public void removeIgnoredPlayer(UUID ignore, UUID ignored) {
         CompletableFuture.runAsync(() -> {
             try (
-                    Connection connection = dataSource.getConnection();
+                Connection connection = dataSource.getConnection();
 
-                    PreparedStatement statement = connection.prepareStatement(
-                            "DELETE FROM eternalfriends_ignored_players WHERE who_ignore = '" + ignore + "' AND is_ignored = '" + ignored + "';"
-                    )
+                PreparedStatement statement = connection.prepareStatement(
+                    "DELETE FROM eternalfriends_ignored_players WHERE who_ignore = '" + ignore + "' AND is_ignored = '" + ignored + "';"
+                )
             ) {
 
                 statement.execute();
@@ -88,11 +85,11 @@ public class IgnoredPlayerDatabaseService {
     public void load(Map<UUID, List<UUID>> ignoredPlayers) {
         CompletableFuture.runAsync(() -> {
             try (
-                    Connection connection = dataSource.getConnection();
+                Connection connection = dataSource.getConnection();
 
-                    PreparedStatement statement = connection.prepareStatement(
-                            "SELECT who_ignore, is_ignored FROM eternalfriends_ignored_players;"
-                    )
+                PreparedStatement statement = connection.prepareStatement(
+                    "SELECT who_ignore, is_ignored FROM eternalfriends_ignored_players;"
+                )
             ) {
 
                 ResultSet resultSet = statement.executeQuery();
@@ -105,8 +102,7 @@ public class IgnoredPlayerDatabaseService {
                         List<UUID> newIgnoredPlayers = new ArrayList<>();
                         newIgnoredPlayers.add(ignored);
                         ignoredPlayers.put(ignore, newIgnoredPlayers);
-                    }
-                    else {
+                    } else {
                         ignoredPlayers.get(ignore).add(ignored);
                     }
                 }

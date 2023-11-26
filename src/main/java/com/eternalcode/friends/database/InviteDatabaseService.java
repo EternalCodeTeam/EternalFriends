@@ -28,15 +28,15 @@ public class InviteDatabaseService {
 
     public void initTable() {
         try (
-                Connection connection = dataSource.getConnection();
+            Connection connection = dataSource.getConnection();
 
-                PreparedStatement statement = connection.prepareStatement(
-                        "CREATE TABLE IF NOT EXISTS eternalfriends_invites(" +
-                                "uuid_from CHAR(36) NOT NULL, " +
-                                "uuid_to CHAR(36) NOT NULL, " +
-                                "expiration_date DATETIME NOT NULL " +
-                                ");"
-                )
+            PreparedStatement statement = connection.prepareStatement(
+                "CREATE TABLE IF NOT EXISTS eternalfriends_invites("
+                    + "uuid_from CHAR(36) NOT NULL, "
+                    + "uuid_to CHAR(36) NOT NULL, "
+                    + "expiration_date DATETIME NOT NULL "
+                    + ");"
+            )
         ) {
 
             statement.execute();
@@ -50,11 +50,11 @@ public class InviteDatabaseService {
     public void addInvite(Invite invite) {
         CompletableFuture.runAsync(() -> {
             try (
-                    Connection connection = dataSource.getConnection();
+                Connection connection = dataSource.getConnection();
 
-                    PreparedStatement statement = connection.prepareStatement(
-                            "INSERT INTO eternalfriends_invites VALUES (?, ?, ?);"
-                    )
+                PreparedStatement statement = connection.prepareStatement(
+                    "INSERT INTO eternalfriends_invites VALUES (?, ?, ?);"
+                )
             ) {
 
                 statement.setString(1, invite.getFrom().toString());
@@ -71,13 +71,14 @@ public class InviteDatabaseService {
     }
 
     public void removeInvite(Invite invite) {
-        CompletableFuture.runAsync(() -> {});
+        CompletableFuture.runAsync(() -> {
+        });
         try (
-                Connection connection = dataSource.getConnection();
+            Connection connection = dataSource.getConnection();
 
-                PreparedStatement statement = connection.prepareStatement(
-                        "DELETE FROM eternalfriends_invites WHERE uuid_from = '" + invite.getFrom() + "' AND uuid_to = '" + invite.getTo()+"';"
-                )
+            PreparedStatement statement = connection.prepareStatement(
+                "DELETE FROM eternalfriends_invites WHERE uuid_from = '" + invite.getFrom() + "' AND uuid_to = '" + invite.getTo() + "';"
+            )
         ) {
 
             statement.execute();
@@ -95,11 +96,11 @@ public class InviteDatabaseService {
     public void load(Map<UUID, List<Invite>> receivedInvites, Map<UUID, List<Invite>> sentInvites) {
         CompletableFuture.runAsync(() -> {
             try (
-                    Connection connection = dataSource.getConnection();
+                Connection connection = dataSource.getConnection();
 
-                    PreparedStatement statement = connection.prepareStatement(
-                            "SELECT uuid_from, uuid_to, expiration_date FROM eternalfriends_invites;"
-                    )
+                PreparedStatement statement = connection.prepareStatement(
+                    "SELECT uuid_from, uuid_to, expiration_date FROM eternalfriends_invites;"
+                )
             ) {
 
                 ResultSet resultSet = statement.executeQuery();
@@ -113,8 +114,7 @@ public class InviteDatabaseService {
 
                     if (sentInvites.containsKey(from)) {
                         sentInvites.get(from).add(invite);
-                    }
-                    else {
+                    } else {
                         sentInvites.put(from, new ArrayList<>(List.of(invite)));
                     }
 

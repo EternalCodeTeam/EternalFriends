@@ -9,6 +9,7 @@ import net.dzikoysk.cdn.entity.Exclude;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
+
 import java.util.List;
 
 @Contextual
@@ -16,8 +17,8 @@ public class ConfigItemImpl implements ConfigItem<ConfigItemImpl> {
 
     @Exclude
     private final MiniMessage miniMessage = MiniMessage.builder()
-            .postProcessor(new LegacyColorProcessor())
-            .build();
+        .postProcessor(new LegacyColorProcessor())
+        .build();
 
     public Material type = Material.STONE;
 
@@ -27,11 +28,11 @@ public class ConfigItemImpl implements ConfigItem<ConfigItemImpl> {
 
     public GuiItem toGuiItem() {
         return ItemBuilder.from(this.type)
-                .name(AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(this.name)))
-                .lore(this.lore.stream().map(line -> AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(line))).toList())
-                .flags(ItemFlag.HIDE_ATTRIBUTES)
-                .flags(ItemFlag.HIDE_ENCHANTS)
-                .asGuiItem();
+            .name(AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(this.name)))
+            .lore(this.lore.stream().map(line -> AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(line))).toList())
+            .flags(ItemFlag.HIDE_ATTRIBUTES)
+            .flags(ItemFlag.HIDE_ENCHANTS)
+            .asGuiItem();
     }
 
     @Override

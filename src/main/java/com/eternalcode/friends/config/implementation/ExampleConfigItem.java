@@ -18,8 +18,8 @@ public class ExampleConfigItem implements ConfigItem<ExampleConfigItem> {
 
     @Exclude
     private final MiniMessage miniMessage = MiniMessage.builder()
-            .postProcessor(new LegacyColorProcessor())
-            .build();
+        .postProcessor(new LegacyColorProcessor())
+        .build();
 
     @Description("# Material from https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html")
     public Material type = Material.STONE;
@@ -32,11 +32,11 @@ public class ExampleConfigItem implements ConfigItem<ExampleConfigItem> {
 
     public GuiItem toGuiItem() {
         return ItemBuilder.from(this.type)
-                .name(AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(this.name)))
-                .lore(this.lore.stream().map(line -> AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(line))).toList())
-                .flags(ItemFlag.HIDE_ATTRIBUTES)
-                .flags(ItemFlag.HIDE_ENCHANTS)
-                .asGuiItem();
+            .name(AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(this.name)))
+            .lore(this.lore.stream().map(line -> AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(line))).toList())
+            .flags(ItemFlag.HIDE_ATTRIBUTES)
+            .flags(ItemFlag.HIDE_ENCHANTS)
+            .asGuiItem();
     }
 
     @Override

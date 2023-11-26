@@ -12,25 +12,21 @@ import java.io.File;
 
 public class PluginConfig implements ReloadableConfig {
 
+    @Description("# Configuration of Database")
+    public Database database = new Database();
+    @Description("# Color of player's name tag displayed to his friends")
+    public ChatColor friendColor = ChatColor.BLUE;
+    @Description("# Does server should message displayed to player when his friend joins the server?")
+    public boolean announceFriendJoin = true;
+    @Description("# Configuration of command and subcommands names")
+    public Command friendCommand = new Command();
+    @Description("# Time in seconds after which invite will expire")
+    public int inviteExpirationTime = 60;
+
     @Override
     public Resource resource(File folder) {
         return Source.of(folder, "configuration.yml");
     }
-
-    @Description("# Configuration of Database")
-    public Database database = new Database();
-
-    @Description("# Color of player's name tag displayed to his friends")
-    public ChatColor friendColor = ChatColor.BLUE;
-
-    @Description("# Does server should message displayed to player when his friend joins the server?")
-    public boolean announceFriendJoin = true;
-
-    @Description("# Configuration of command and subcommands names")
-    public Command friendCommand = new Command();
-
-    @Description("# Time in seconds after which invite will expire")
-    public int inviteExpirationTime = 60;
 
     @Contextual
     public static class Command {

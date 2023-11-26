@@ -26,6 +26,9 @@ import java.util.UUID;
 
 public class ReceivedInvitesGui {
 
+    private static final int NEXT_PAGE_ITEM_SLOT = 53;
+    private static final int BACK_PAGE_ITEM_SLOT = 45;
+    private static final int BACK_TO_MAIN_ITEM_SLOT = 49;
     private final NotificationAnnouncer announcer;
     private final MessagesConfig messages;
     private final GuiConfig guiConfig;
@@ -35,10 +38,6 @@ public class ReceivedInvitesGui {
     private final FriendManager friendManager;
     private final NameTagService nameTagService;
     private final MessagesConfig.Friends friendsConfig;
-
-    private static final int NEXT_PAGE_ITEM_SLOT = 53;
-    private static final int BACK_PAGE_ITEM_SLOT = 45;
-    private static final int BACK_TO_MAIN_ITEM_SLOT = 49;
 
     public ReceivedInvitesGui(NotificationAnnouncer announcer,
                               MessagesConfig messages,
@@ -62,35 +61,35 @@ public class ReceivedInvitesGui {
     public void openInventory(Player player, Runnable onBack) {
         final GuiConfig.MenuItems menuItems = this.guiConfig.menuItems;
         PaginatedGui gui = Gui.paginated()
-                .title(this.miniMessage.deserialize(this.guiConfig.guis.receivedInvitesGuiTitle))
-                .rows(6)
-                .pageSize(45)
-                .disableItemTake()
-                .create();
+            .title(this.miniMessage.deserialize(this.guiConfig.guis.receivedInvitesGuiTitle))
+            .rows(6)
+            .pageSize(45)
+            .disableItemTake()
+            .create();
 
         ExampleConfigItem nextPageItem = menuItems.nextPageItem;
         GuiItem nextPageButton = ItemBuilder.from(nextPageItem.type)
-                .name(AdventureUtil.RESET_ITEM.append(this.miniMessage.deserialize(nextPageItem.name)))
-                .lore(nextPageItem.lore.stream().map(line -> AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(line))).toList())
-                .asGuiItem(event -> {
-                    gui.next();
-                });
+            .name(AdventureUtil.RESET_ITEM.append(this.miniMessage.deserialize(nextPageItem.name)))
+            .lore(nextPageItem.lore.stream().map(line -> AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(line))).toList())
+            .asGuiItem(event -> {
+                gui.next();
+            });
 
         ConfigItemImpl previousPageItemCfg = menuItems.previousPageItem;
         GuiItem backPageButton = ItemBuilder.from(previousPageItemCfg.type)
-                .name(AdventureUtil.RESET_ITEM.append(this.miniMessage.deserialize(previousPageItemCfg.name)))
-                .lore(previousPageItemCfg.lore.stream().map(line -> AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(line))).toList())
-                .asGuiItem(event -> {
-                    gui.previous();
-                });
+            .name(AdventureUtil.RESET_ITEM.append(this.miniMessage.deserialize(previousPageItemCfg.name)))
+            .lore(previousPageItemCfg.lore.stream().map(line -> AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(line))).toList())
+            .asGuiItem(event -> {
+                gui.previous();
+            });
 
         ConfigItemImpl backToMainMenuItemCfg = menuItems.backToMainMenuItem;
         GuiItem backToMainMenuButton = ItemBuilder.from(backToMainMenuItemCfg.type)
-                .name(AdventureUtil.RESET_ITEM.append(this.miniMessage.deserialize(backToMainMenuItemCfg.name)))
-                .lore(backToMainMenuItemCfg.lore.stream().map(line -> AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(line))).toList())
-                .asGuiItem(event -> {
-                    onBack.run();
-                });
+            .name(AdventureUtil.RESET_ITEM.append(this.miniMessage.deserialize(backToMainMenuItemCfg.name)))
+            .lore(backToMainMenuItemCfg.lore.stream().map(line -> AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(line))).toList())
+            .asGuiItem(event -> {
+                onBack.run();
+            });
 
         generateHeads(player, gui);
 
@@ -124,10 +123,10 @@ public class ReceivedInvitesGui {
             OfflinePlayer offlinePlayer = this.server.getOfflinePlayer(invite.getFrom());
             UUID friendUuid = invite.getFrom();
             GuiItem skull = ItemBuilder.skull()
-                    .owner(offlinePlayer)
-                    .name(AdventureUtil.RESET_ITEM.append(this.miniMessage.deserialize(this.guiConfig.menuItems.inviteListfriendHead.name.replace("{friend_name}", offlinePlayer.getName()))))
-                    .lore(this.guiConfig.menuItems.inviteListfriendHead.lore.stream().map(line -> AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(line))).toList())
-                    .asGuiItem();
+                .owner(offlinePlayer)
+                .name(AdventureUtil.RESET_ITEM.append(this.miniMessage.deserialize(this.guiConfig.menuItems.inviteListfriendHead.name.replace("{friend_name}", offlinePlayer.getName()))))
+                .lore(this.guiConfig.menuItems.inviteListfriendHead.lore.stream().map(line -> AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(line))).toList())
+                .asGuiItem();
 
             skull.setAction(skullClickAction(player, friendUuid, gui));
 
@@ -151,8 +150,7 @@ public class ReceivedInvitesGui {
 
                 this.announcer.announceMessage(playerUuid, this.friendsConfig.acceptedInvite.replace("{player}", this.server.getOfflinePlayer(friendUuid).getName()));
                 this.announcer.announceMessage(friendUuid, this.friendsConfig.yourInvitationHasBeenAccepted.replace("{player}", player.getName()));
-            }
-            else if (event.isRightClick()) {
+            } else if (event.isRightClick()) {
                 this.inviteManager.removeInvite(friendUuid, playerUuid);
             }
 

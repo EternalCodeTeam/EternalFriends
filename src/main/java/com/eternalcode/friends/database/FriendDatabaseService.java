@@ -23,14 +23,14 @@ public class FriendDatabaseService {
 
     private void initTable() {
         try (
-                Connection connection = dataSource.getConnection();
+            Connection connection = dataSource.getConnection();
 
-                PreparedStatement statement = connection.prepareStatement(
-                        "CREATE TABLE IF NOT EXISTS eternalfriends_friends(" +
-                                "uuid_one VARCHAR(36) NOT NULL, " +
-                                "uuid_two VARCHAR(36) NOT NULL " +
-                                ");"
-                )
+            PreparedStatement statement = connection.prepareStatement(
+                "CREATE TABLE IF NOT EXISTS eternalfriends_friends("
+                    + "uuid_one VARCHAR(36) NOT NULL, "
+                    + "uuid_two VARCHAR(36) NOT NULL "
+                    + ");"
+            )
         ) {
 
             statement.execute();
@@ -44,11 +44,11 @@ public class FriendDatabaseService {
     public void add(UUID uuidOne, UUID uuidTwo) {
         CompletableFuture.runAsync(() -> {
             try (
-                    Connection connection = dataSource.getConnection();
+                Connection connection = dataSource.getConnection();
 
-                    PreparedStatement statement = connection.prepareStatement(
-                            "INSERT INTO eternalfriends_friends VALUES (?, ?);"
-                    )
+                PreparedStatement statement = connection.prepareStatement(
+                    "INSERT INTO eternalfriends_friends VALUES (?, ?);"
+                )
             ) {
 
                 statement.setString(1, uuidOne.toString());
@@ -66,13 +66,13 @@ public class FriendDatabaseService {
     public void remove(UUID uuidOne, UUID uuidTwo) {
         CompletableFuture.runAsync(() -> {
             try (
-                    Connection connection = dataSource.getConnection();
+                Connection connection = dataSource.getConnection();
 
-                    PreparedStatement statement = connection.prepareStatement(
-                            "DELETE FROM eternalfriends_friends " +
-                                    "WHERE uuid_one = '" + uuidOne + "' AND uuid_two = '" + uuidTwo + "' " +
-                                    "OR uuid_one = '" + uuidTwo + "' AND uuid_two = '" + uuidOne + "';"
-                    )
+                PreparedStatement statement = connection.prepareStatement(
+                    "DELETE FROM eternalfriends_friends "
+                        + "WHERE uuid_one = '" + uuidOne + "' AND uuid_two = '" + uuidTwo + "' "
+                        + "OR uuid_one = '" + uuidTwo + "' AND uuid_two = '" + uuidOne + "';"
+                )
             ) {
 
                 statement.execute();
@@ -87,11 +87,11 @@ public class FriendDatabaseService {
     public void load(Map<UUID, List<UUID>> friends) {
         CompletableFuture.runAsync(() -> {
             try (
-                    Connection connection = dataSource.getConnection();
+                Connection connection = dataSource.getConnection();
 
-                    PreparedStatement statement = connection.prepareStatement(
-                            "SELECT uuid_one, uuid_two FROM eternalfriends_friends;"
-                    )
+                PreparedStatement statement = connection.prepareStatement(
+                    "SELECT uuid_one, uuid_two FROM eternalfriends_friends;"
+                )
             ) {
 
                 ResultSet resultSet = statement.executeQuery();
@@ -104,8 +104,7 @@ public class FriendDatabaseService {
                         List<UUID> newFriends = new ArrayList<>();
                         newFriends.add(uuidTwo);
                         friends.put(uuidOne, newFriends);
-                    }
-                    else {
+                    } else {
                         friends.get(uuidOne).add(uuidTwo);
                     }
 

@@ -33,15 +33,13 @@ public class InviteManager {
 
         if (this.sentInvites.containsKey(from)) {
             this.sentInvites.get(from).add(invite);
-        }
-        else {
+        } else {
             this.sentInvites.put(from, new ArrayList<>(List.of(invite)));
         }
 
         if (this.receivedInvites.containsKey(to)) {
             this.receivedInvites.get(to).add(invite);
-        }
-        else {
+        } else {
             this.receivedInvites.put(to, new ArrayList<>(List.of(invite)));
         }
 
@@ -53,15 +51,13 @@ public class InviteManager {
 
         if (this.sentInvites.containsKey(from)) {
             this.sentInvites.get(from).add(invite);
-        }
-        else {
+        } else {
             this.sentInvites.put(from, new ArrayList<>(List.of(invite)));
         }
 
         if (this.receivedInvites.containsKey(to)) {
             this.receivedInvites.get(to).add(invite);
-        }
-        else {
+        } else {
             this.receivedInvites.put(to, new ArrayList<>(List.of(invite)));
         }
 

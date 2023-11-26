@@ -29,8 +29,8 @@ import com.eternalcode.friends.invite.InviteManager;
 import com.eternalcode.friends.listener.AnnounceJoinListener;
 import com.eternalcode.friends.listener.AsyncPlayerChatListener;
 import com.eternalcode.friends.listener.EntityDamageByEntityListener;
-import com.eternalcode.friends.packet.NameTagService;
 import com.eternalcode.friends.listener.NametagJoinQuitListener;
+import com.eternalcode.friends.packet.NameTagService;
 import com.eternalcode.friends.util.legacy.LegacyColorProcessor;
 import com.zaxxer.hikari.HikariDataSource;
 import dev.rollczi.litecommands.LiteCommands;
@@ -45,7 +45,6 @@ import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import panda.std.stream.PandaStream;
 
 import java.util.stream.Stream;
 
@@ -114,37 +113,37 @@ public class EternalFriends extends JavaPlugin {
         this.mainGui = new MainGui(this.miniMessage, this.guiConfig, this, this.announcer, this.messages, this.inviteManager, this.friendManager, this.nameTagService);
 
         Stream.of(
-                new NametagJoinQuitListener(this.protocolManager, this.nameTagService, this.friendManager),
-                new AnnounceJoinListener(this.config, this.messages, this.friendManager, this.announcer),
-                new EntityDamageByEntityListener(this.friendManager),
-                new AsyncPlayerChatListener(this.announcer, this.messages, this.friendManager)
+            new NametagJoinQuitListener(this.protocolManager, this.nameTagService, this.friendManager),
+            new AnnounceJoinListener(this.config, this.messages, this.friendManager, this.announcer),
+            new EntityDamageByEntityListener(this.friendManager),
+            new AsyncPlayerChatListener(this.announcer, this.messages, this.friendManager)
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
 
-        Metrics metrics = new Metrics(this, 16297);
+        new Metrics(this, 16297);
 
         this.liteCommands = LitePaperAdventureFactory.builder(server, "eternalfriends")
-                .argument(Player.class, new BukkitPlayerArgument<>(server, this.messages.argument.playerNotFound))
+            .argument(Player.class, new BukkitPlayerArgument<>(server, this.messages.argument.playerNotFound))
 
-                .invalidUsageHandler(new InvalidUsage(this.messages, this.announcer))
-                .permissionHandler(new PermissionMessage(this.messages, this.announcer))
+            .invalidUsageHandler(new InvalidUsage(this.messages, this.announcer))
+            .permissionHandler(new PermissionMessage(this.messages, this.announcer))
 
-                .contextualBind(Player.class, new BukkitOnlyPlayerContextual<>(this.messages.argument.playerOnly))
+            .contextualBind(Player.class, new BukkitOnlyPlayerContextual<>(this.messages.argument.playerOnly))
 
-                .commandInstance(
-                        new FriendCommand(this.mainGui),
-                        new FriendAcceptCommand(this.announcer, this.inviteManager, this.messages, this.nameTagService, this.friendManager),
-                        new FriendDenyCommand(this.announcer, this.inviteManager, this.messages),
-                        new FriendInviteCommand(this.announcer, this.inviteManager, this.messages, this.friendManager),
-                        new FriendListCommand(this.announcer, this.messages, this.getServer(), this.friendManager),
-                        new FriendKickCommand(this.announcer, this.messages, this.nameTagService, this.friendManager),
-                        new FriendIgnoreCommand(this.announcer, this.messages, this.friendManager),
-                        new FriendHelpCommand(this.announcer, this.messages),
-                        new FriendReloadCommand(this.announcer, this.messages, this.configManager)
-                )
+            .commandInstance(
+                new FriendCommand(this.mainGui),
+                new FriendAcceptCommand(this.announcer, this.inviteManager, this.messages, this.nameTagService, this.friendManager),
+                new FriendDenyCommand(this.announcer, this.inviteManager, this.messages),
+                new FriendInviteCommand(this.announcer, this.inviteManager, this.messages, this.friendManager),
+                new FriendListCommand(this.announcer, this.messages, this.getServer(), this.friendManager),
+                new FriendKickCommand(this.announcer, this.messages, this.nameTagService, this.friendManager),
+                new FriendIgnoreCommand(this.announcer, this.messages, this.friendManager),
+                new FriendHelpCommand(this.announcer, this.messages),
+                new FriendReloadCommand(this.announcer, this.messages, this.configManager)
+            )
 
-                .commandEditor("friends", new CommandConfigurator(this.config))
+            .commandEditor("friends", new CommandConfigurator(this.config))
 
-                .register();
+            .register();
     }
 
     @Override
