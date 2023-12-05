@@ -1,120 +1,112 @@
 package com.eternalcode.friends.config.implementation;
 
-import com.eternalcode.friends.config.ReloadableConfig;
-import net.dzikoysk.cdn.entity.Contextual;
+import eu.okaeri.configs.OkaeriConfig;
+import eu.okaeri.configs.annotation.NameModifier;
+import eu.okaeri.configs.annotation.NameStrategy;
+import eu.okaeri.configs.annotation.Names;
 import net.dzikoysk.cdn.entity.Description;
-import net.dzikoysk.cdn.source.Resource;
-import net.dzikoysk.cdn.source.Source;
 import org.bukkit.Material;
 
-import java.io.File;
 import java.util.List;
 
-public class GuiConfig implements ReloadableConfig {
+@Names(strategy = NameStrategy.HYPHEN_CASE, modifier = NameModifier.TO_LOWER_CASE)
+public class GuiConfig extends OkaeriConfig {
 
     public MenuItems menuItems = new MenuItems();
     public Guis guis = new Guis();
 
-    @Override
-    public Resource resource(File folder) {
-        return Source.of(folder, "gui.yml");
-    }
-
-    @Contextual
-    public static class MenuItems {
+    public static class MenuItems extends OkaeriConfig {
         @Description("# options of {status} placeholder")
-        public OnlineStatus onlineStatus = new OnlineStatus();
+        public OnlineStatus onlineStatus =  new OnlineStatus();
 
-        public FriendHead friendListHead = new FriendHead().setName("{status} &f{friend_name}")
-            .setLore(List.of("", "&cClick LMB", "&cto remove a friend", ""));
+        public FriendHead friendListHead = new FriendHead().setName("{status} <white>{friend_name}")
+                .setLore(List.of("", "<red>Click LMB", "<red>to remove a friend", ""));
         public FriendHead inviteListfriendHead = new FriendHead()
-            .setLore(List.of("", "&aClick LMB to accept invitation", "&cClick RMB to decline invitation", ""));
+                .setLore(List.of("", "<green>Click LMB to accept invitation", "<red>Click RMB to decline invitation", ""));
 
         public ExampleConfigItem nextPageItem = new ExampleConfigItem()
-            .setName("&aNext page")
-            .setType(Material.PAPER)
-            .setLore(List.of(
-                "",
-                "&7Click to go to the next page",
-                ""
-            ));
+                .setName("<green>Next page")
+                .setType(Material.PAPER)
+                .setLore(List.of(
+                        "",
+                        "<gray>Click to go to the next page",
+                        ""
+                ));
 
         public ConfigItemImpl previousPageItem = new ConfigItemImpl()
-            .setName("&cPrevious page")
-            .setType(Material.PAPER)
-            .setLore(List.of(
-                "",
-                "&7Click to go to the previous page",
-                ""
-            ));
+                .setName("<red>Previous page")
+                .setType(Material.PAPER)
+                .setLore(List.of(
+                        "",
+                        "<gray>Click to go to the previous page",
+                        ""
+                ));
 
         public ConfigItemImpl confirmItem = new ConfigItemImpl()
-            .setName("&aYes")
-            .setType(Material.LIME_STAINED_GLASS_PANE)
-            .setLore(List.of(
-                "",
-                "&7Click to confirm",
-                ""
-            ));
+                .setName("<green>Yes")
+                .setType(Material.LIME_STAINED_GLASS_PANE)
+                .setLore(List.of(
+                        "",
+                        "<gray>Click to confirm",
+                        ""
+                ));
 
         public ConfigItemImpl denyItem = new ConfigItemImpl()
-            .setName("&cNo")
-            .setType(Material.RED_STAINED_GLASS_PANE)
-            .setLore(List.of(
-                "",
-                "&7Click to cancel",
-                ""
-            ));
+                .setName("<red>No")
+                .setType(Material.RED_STAINED_GLASS_PANE)
+                .setLore(List.of(
+                        "",
+                        "<gray>Click to cancel",
+                        ""
+                ));
 
         public ConfigItemImpl receivedInvitesItem = new ConfigItemImpl()
-            .setName("&aReceived invitations")
-            .setType(Material.BOOK)
-            .setLore(List.of(
-                "",
-                "&7Click to open",
-                ""
-            ));
+                .setName("<green>Received invitations")
+                .setType(Material.BOOK)
+                .setLore(List.of(
+                        "",
+                        "<gray>Click to open",
+                        ""
+                ));
 
         public ConfigItemImpl sendInvitesItem = new ConfigItemImpl()
-            .setName("&aSending invitations")
-            .setType(Material.WRITABLE_BOOK)
-            .setLore(List.of(
-                "",
-                "&7Click to open",
-                ""
-            ));
+                .setName("<green>Sending invitations")
+                .setType(Material.WRITABLE_BOOK)
+                .setLore(List.of(
+                        "",
+                        "<gray>Click to open",
+                        ""
+                ));
 
         public ConfigItemImpl settingItem = new ConfigItemImpl()
-            .setName("&aSettings")
-            .setType(Material.REPEATER)
-            .setLore(List.of(
-                "",
-                "&7Click to open",
-                ""
-            ));
+                .setName("<green>Settings")
+                .setType(Material.REPEATER)
+                .setLore(List.of(
+                        "",
+                        "<gray>Click to open",
+                        ""
+                ));
 
         public ConfigItemImpl backToMainMenuItem = new ConfigItemImpl()
-            .setName("&7Back to main menu")
-            .setType(Material.ARROW)
-            .setLore(List.of());
+                .setName("<gray>Back to main menu")
+                .setType(Material.ARROW)
+                .setLore(List.of());
 
         public CloseItem closeItem = new CloseItem()
-            .setName("&cClose menu")
-            .setType(Material.BARRIER)
-            .setLore(List.of());
+                .setName("<red>Close menu")
+                .setType(Material.BARRIER)
+                .setLore(List.of());
     }
 
-    @Contextual
-    public static class Guis {
-        public String mainGuiTitle = "&bFriends";
-        public String confirmGuiTitle = "&cAre you sure?";
-        public String receivedInvitesGuiTitle = "&bReceived invitations";
+    public static class Guis extends OkaeriConfig {
+        public String mainGuiTitle = "<aqua>Friends";
+        public String confirmGuiTitle = "<red>Are you sure?";
+        public String receivedInvitesGuiTitle = "<aqua>Received invitations";
     }
 
-    @Contextual
-    public static class FriendHead {
-        public String name = "&f{friend_name}";
-        public List<String> lore = List.of("&fFirst line of lore", "&9Second line of lore");
+    public static class FriendHead extends OkaeriConfig {
+        public String name = "<white>{friend_name}";
+        public List<String> lore = List.of("<white>First line of lore", "<blue>Second line of lore");
 
         public FriendHead setName(String name) {
             this.name = name;
@@ -127,9 +119,8 @@ public class GuiConfig implements ReloadableConfig {
         }
     }
 
-    @Contextual
-    public static class OnlineStatus {
-        public String online = "&a●";
-        public String offline = "&7●";
+    public static class OnlineStatus extends OkaeriConfig {
+        public String online = "<green>●";
+        public String offline = "<gray>●";
     }
 }

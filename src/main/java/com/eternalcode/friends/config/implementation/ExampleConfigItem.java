@@ -4,31 +4,30 @@ import com.eternalcode.friends.util.AdventureUtil;
 import com.eternalcode.friends.util.legacy.LegacyColorProcessor;
 import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.guis.GuiItem;
-import net.dzikoysk.cdn.entity.Contextual;
-import net.dzikoysk.cdn.entity.Description;
-import net.dzikoysk.cdn.entity.Exclude;
+import eu.okaeri.configs.OkaeriConfig;
+import eu.okaeri.configs.annotation.Comment;
+import eu.okaeri.configs.annotation.Exclude;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 
 import java.util.List;
 
-@Contextual
-public class ExampleConfigItem implements ConfigItem<ExampleConfigItem> {
+public class ExampleConfigItem extends OkaeriConfig implements ConfigurationItem<ExampleConfigItem> {
 
     @Exclude
     private final MiniMessage miniMessage = MiniMessage.builder()
         .postProcessor(new LegacyColorProcessor())
         .build();
 
-    @Description("# Material from https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html")
+    @Comment("# Material from https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html")
     public Material type = Material.STONE;
 
-    @Description("# Name of item")
-    public String name = "&fItem name";
+    @Comment("# Name of item")
+    public String name = "<white>Item name";
 
-    @Description("# Description of item")
-    public List<String> lore = List.of("&fFirst line of lore", "&9Second line of lore", "&cThird line of lore");
+    @Comment("# Description of item")
+    public List<String> lore = List.of("<white>First line of lore", "<blue>Second line of lore", "<red>Third line of lore");
 
     public GuiItem toGuiItem() {
         return ItemBuilder.from(this.type)

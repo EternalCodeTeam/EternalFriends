@@ -1,41 +1,36 @@
 package com.eternalcode.friends.config.implementation;
 
-import com.eternalcode.friends.config.ReloadableConfig;
 import com.eternalcode.friends.database.DatabaseType;
-import net.dzikoysk.cdn.entity.Contextual;
-import net.dzikoysk.cdn.entity.Description;
-import net.dzikoysk.cdn.source.Resource;
-import net.dzikoysk.cdn.source.Source;
+import eu.okaeri.configs.OkaeriConfig;
+import eu.okaeri.configs.annotation.*;
 import org.bukkit.ChatColor;
 
-import java.io.File;
+@Names(strategy = NameStrategy.HYPHEN_CASE, modifier = NameModifier.TO_LOWER_CASE)
+@Header("# ")
+@Header("# EternalFriends configuration file")
+@Header("# Permissions:")
+@Header("# - eternalfriends.access.all - gives access to all basic command functionality")
+@Header("# - eternalfriends.admin.all - gives access to all administrative commands")
+@Header("# ")
+public class PluginConfig extends OkaeriConfig {
 
-public class PluginConfig implements ReloadableConfig {
-
-    @Description("# Configuration of Database")
+    @Comment("# Configuration of Database")
     public Database database = new Database();
-    @Description("# Color of player's name tag displayed to his friends")
+    @Comment("# Color of player's name tag displayed to his friends")
     public ChatColor friendColor = ChatColor.BLUE;
-    @Description("# Does server should message displayed to player when his friend joins the server?")
+    @Comment("# Does server should message displayed to player when his friend joins the server?")
     public boolean announceFriendJoin = true;
-    @Description("# Configuration of command and subcommands names")
+    @Comment("# Configuration of command and subcommands names")
     public Command friendCommand = new Command();
-    @Description("# Time in seconds after which invite will expire")
+    @Comment("# Time in seconds after which invite will expire")
     public int inviteExpirationTime = 60;
 
-    @Override
-    public Resource resource(File folder) {
-        return Source.of(folder, "configuration.yml");
-    }
-
-    @Contextual
-    public static class Command {
+    public static class Command extends OkaeriConfig {
         public String main = "friends";
         public SubCommand subCommands = new SubCommand();
     }
 
-    @Contextual
-    public static class SubCommand {
+    public static class SubCommand extends OkaeriConfig {
         public String invite = "invite";
         public String accept = "accept";
         public String deny = "deny";
@@ -45,13 +40,12 @@ public class PluginConfig implements ReloadableConfig {
         public String ignore = "ignore";
     }
 
-    @Contextual
-    public static class Database {
+    public static class Database extends OkaeriConfig {
         public DatabaseType databaseType = DatabaseType.SQLITE;
         public String host = "localhost";
         public int port = 3306;
-        public String username = "admin";
-        public String password = "password";
-        public String database = "server";
+        public String username = "root";
+        public String password = "Us3$tr0ngP@$$w0rd!@#";
+        public String database = "eternalfriends";
     }
 }

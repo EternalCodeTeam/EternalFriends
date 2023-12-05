@@ -14,8 +14,7 @@ import com.eternalcode.friends.command.implementation.FriendInviteCommand;
 import com.eternalcode.friends.command.implementation.FriendKickCommand;
 import com.eternalcode.friends.command.implementation.FriendListCommand;
 import com.eternalcode.friends.command.implementation.FriendReloadCommand;
-import com.eternalcode.friends.config.ConfigBackupService;
-import com.eternalcode.friends.config.ConfigManager;
+import com.eternalcode.friends.config.ConfigurationService;
 import com.eternalcode.friends.config.implementation.GuiConfig;
 import com.eternalcode.friends.config.implementation.MessagesConfig;
 import com.eternalcode.friends.config.implementation.PluginConfig;
@@ -46,15 +45,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.stream.Stream;
 
 public class EternalFriends extends JavaPlugin {
 
     private NotificationAnnouncer announcer;
-    private ConfigManager configManager;
-    private PluginConfig config;
-    private MessagesConfig messages;
-    private GuiConfig guiConfig;
+    private ConfigurationService configurationService;
     private MainGui mainGui;
     private InviteManager inviteManager;
     private NameTagService nameTagService;
@@ -66,7 +63,6 @@ public class EternalFriends extends JavaPlugin {
     private FriendDatabaseService friendDatabaseService;
     private IgnoredPlayerDatabaseService ignoredPlayerDatabaseService;
     private InviteDatabaseService inviteDatabaseService;
-    private ConfigBackupService configBackupService;
 
     private HikariDataSource databaseDataSource;
 
@@ -84,64 +80,56 @@ public class EternalFriends extends JavaPlugin {
 
         this.announcer = new NotificationAnnouncer(this.audienceProvider, this.miniMessage);
 
-        this.configBackupService = new ConfigBackupService(this.getDataFolder());
+        this.configurationService = new ConfigurationService();
 
-        this.configManager = new ConfigManager(this.getDataFolder(), this.configBackupService);
+        PluginConfig config = configurationService.create(PluginConfig.class, new File(this.getDataFolder(), "config.yml"));
+        MessagesConfig messages = configurationService.create(MessagesConfig.class, new File(this.getDataFolder(), "messages.yml"));
+        GuiConfig guiConfig = configurationService.create(GuiConfig.class, new File(this.getDataFolder(), "gui.yml"));
 
-        this.config = new PluginConfig();
-        this.messages = new MessagesConfig();
-        this.guiConfig = new GuiConfig();
-
-        this.configBackupService.createBackup();
-
-        this.configManager.load(this.config);
-        this.configManager.load(this.messages);
-        this.configManager.load(this.guiConfig);
-
-        this.databaseDataSource = new DataSourceBuilder().buildHikariDataSource(this.config.database, this.getDataFolder());
+        this.databaseDataSource = new DataSourceBuilder().buildHikariDataSource(config.database, this.getDataFolder());
 
         this.friendDatabaseService = new FriendDatabaseService(this.databaseDataSource);
         this.ignoredPlayerDatabaseService = new IgnoredPlayerDatabaseService(this.databaseDataSource);
         this.inviteDatabaseService = new InviteDatabaseService(this.databaseDataSource);
 
-        this.nameTagService = new NameTagService(this.protocolManager, this.config);
+        this.nameTagService = new NameTagService(this.protocolManager, config);
 
-        this.inviteManager = new InviteManager(this.config, this.inviteDatabaseService);
+        this.inviteManager = new InviteManager(config, this.inviteDatabaseService);
 
         this.friendManager = new FriendManager(this.friendDatabaseService, this.ignoredPlayerDatabaseService, this.inviteManager);
 
-        this.mainGui = new MainGui(this.miniMessage, this.guiConfig, this, this.announcer, this.messages, this.inviteManager, this.friendManager, this.nameTagService);
+        this.mainGui = new MainGui(this.miniMessage, guiConfig, this, this.announcer, messages, this.inviteManager, this.friendManager, this.nameTagService);
 
         Stream.of(
             new NametagJoinQuitListener(this.protocolManager, this.nameTagService, this.friendManager),
-            new AnnounceJoinListener(this.config, this.messages, this.friendManager, this.announcer),
+            new AnnounceJoinListener(config, messages, this.friendManager, this.announcer),
             new EntityDamageByEntityListener(this.friendManager),
-            new AsyncPlayerChatListener(this.announcer, this.messages, this.friendManager)
+            new AsyncPlayerChatListener(this.announcer, messages, this.friendManager)
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
 
         new Metrics(this, 16297);
 
         this.liteCommands = LitePaperAdventureFactory.builder(server, "eternalfriends")
-            .argument(Player.class, new BukkitPlayerArgument<>(server, this.messages.argument.playerNotFound))
+            .argument(Player.class, new BukkitPlayerArgument<>(server, messages.argument.playerNotFound))
 
-            .invalidUsageHandler(new InvalidUsage(this.messages, this.announcer))
-            .permissionHandler(new PermissionMessage(this.messages, this.announcer))
+            .invalidUsageHandler(new InvalidUsage(messages, this.announcer))
+            .permissionHandler(new PermissionMessage(messages, this.announcer))
 
-            .contextualBind(Player.class, new BukkitOnlyPlayerContextual<>(this.messages.argument.playerOnly))
+            .contextualBind(Player.class, new BukkitOnlyPlayerContextual<>(messages.argument.playerOnly))
 
             .commandInstance(
                 new FriendCommand(this.mainGui),
-                new FriendAcceptCommand(this.announcer, this.inviteManager, this.messages, this.nameTagService, this.friendManager),
-                new FriendDenyCommand(this.announcer, this.inviteManager, this.messages),
-                new FriendInviteCommand(this.announcer, this.inviteManager, this.messages, this.friendManager),
-                new FriendListCommand(this.announcer, this.messages, this.getServer(), this.friendManager),
-                new FriendKickCommand(this.announcer, this.messages, this.nameTagService, this.friendManager),
-                new FriendIgnoreCommand(this.announcer, this.messages, this.friendManager),
-                new FriendHelpCommand(this.announcer, this.messages),
-                new FriendReloadCommand(this.announcer, this.messages, this.configManager)
+                new FriendAcceptCommand(this.announcer, this.inviteManager, messages, this.nameTagService, this.friendManager),
+                new FriendDenyCommand(this.announcer, this.inviteManager, messages),
+                new FriendInviteCommand(this.announcer, this.inviteManager, messages, this.friendManager),
+                new FriendListCommand(this.announcer, messages, this.getServer(), this.friendManager),
+                new FriendKickCommand(this.announcer, messages, this.nameTagService, this.friendManager),
+                new FriendIgnoreCommand(this.announcer, messages, this.friendManager),
+                new FriendHelpCommand(this.announcer, messages),
+                new FriendReloadCommand(this.announcer, messages, this.configurationService)
             )
 
-            .commandEditor("friends", new CommandConfigurator(this.config))
+            .commandEditor("friends", new CommandConfigurator(config))
 
             .register();
     }

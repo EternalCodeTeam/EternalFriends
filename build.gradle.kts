@@ -25,6 +25,7 @@ repositories {
     maven { url = uri("https://papermc.io/repo/repository/maven-public/") }
     maven { url = uri("https://repo.panda-lang.org/releases") }
     maven { url = uri("https://repo.dmulloy2.net/repository/public/") }
+    maven { url = uri("https://storehouse.okaeri.eu/repository/maven-public/") }
 }
 
 checkstyle {
@@ -48,8 +49,10 @@ dependencies {
     // litecommands
     implementation("dev.rollczi.litecommands:bukkit-adventure:2.8.9")
 
-    // cdn // TODO: Move to okaeri configs.
-    implementation("net.dzikoysk:cdn:1.14.4")
+    // okaeri configs
+    val okaeriConfigsVersion = "5.0.0-beta.5"
+    implementation("eu.okaeri:okaeri-configs-yaml-snakeyaml:${okaeriConfigsVersion}")
+    implementation("eu.okaeri:okaeri-configs-serdes-commons:${okaeriConfigsVersion}")
 
     // bstats
     implementation("org.bstats:bstats-bukkit:3.0.2")

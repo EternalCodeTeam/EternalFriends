@@ -4,41 +4,40 @@ import com.eternalcode.friends.util.AdventureUtil;
 import com.eternalcode.friends.util.legacy.LegacyColorProcessor;
 import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.guis.GuiItem;
-import net.dzikoysk.cdn.entity.Contextual;
-import net.dzikoysk.cdn.entity.Description;
-import net.dzikoysk.cdn.entity.Exclude;
+import eu.okaeri.configs.OkaeriConfig;
+import eu.okaeri.configs.annotation.Comment;
+import eu.okaeri.configs.annotation.Exclude;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 
 import java.util.List;
 
-@Contextual
-public class CloseItem implements ConfigItem<CloseItem> {
+public class CloseItem extends OkaeriConfig implements ConfigurationItem<CloseItem> {
 
     @Exclude
     private final MiniMessage miniMessage = MiniMessage.builder()
-        .postProcessor(new LegacyColorProcessor())
-        .build();
+            .postProcessor(new LegacyColorProcessor())
+            .build();
 
     public Material type = Material.STONE;
 
-    public String name = "&cClose";
+    public String name = "<red>Close";
 
-    public List<String> lore = List.of("&fFirst line of lore");
+    public List<String> lore = List.of("<white>First line of lore");
 
-    @Description("# List of commands triggered on click")
-    @Description("# Available placeholders: {player}")
+    @Comment("# List of commands triggered on click")
+    @Comment("# Available placeholders: {player}")
     public List<String> commandOnClick = List.of("give {player} stone 1", "tell {player} you received stone!");
 
     @Override
     public GuiItem toGuiItem() {
         return ItemBuilder.from(this.type)
-            .name(AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(this.name)))
-            .lore(this.lore.stream().map(line -> AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(line))).toList())
-            .flags(ItemFlag.HIDE_ATTRIBUTES)
-            .flags(ItemFlag.HIDE_ENCHANTS)
-            .asGuiItem();
+                .name(AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(this.name)))
+                .lore(this.lore.stream().map(line -> AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(line))).toList())
+                .flags(ItemFlag.HIDE_ATTRIBUTES)
+                .flags(ItemFlag.HIDE_ENCHANTS)
+                .asGuiItem();
     }
 
     @Override

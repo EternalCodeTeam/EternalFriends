@@ -4,16 +4,15 @@ import com.eternalcode.friends.util.AdventureUtil;
 import com.eternalcode.friends.util.legacy.LegacyColorProcessor;
 import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.guis.GuiItem;
-import net.dzikoysk.cdn.entity.Contextual;
-import net.dzikoysk.cdn.entity.Exclude;
+import eu.okaeri.configs.OkaeriConfig;
+import eu.okaeri.configs.annotation.Exclude;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 
 import java.util.List;
 
-@Contextual
-public class ConfigItemImpl implements ConfigItem<ConfigItemImpl> {
+public class ConfigItemImpl extends OkaeriConfig implements ConfigurationItem<ConfigItemImpl> {
 
     @Exclude
     private final MiniMessage miniMessage = MiniMessage.builder()
@@ -22,9 +21,9 @@ public class ConfigItemImpl implements ConfigItem<ConfigItemImpl> {
 
     public Material type = Material.STONE;
 
-    public String name = "&fItem name";
+    public String name = "<white>Item name";
 
-    public List<String> lore = List.of("&fFirst line of lore", "&9Second line of lore");
+    public List<String> lore = List.of("<white>First line of lore", "<blue>Second line of lore");
 
     public GuiItem toGuiItem() {
         return ItemBuilder.from(this.type)
