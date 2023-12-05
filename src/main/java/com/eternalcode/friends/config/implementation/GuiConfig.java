@@ -1,10 +1,10 @@
 package com.eternalcode.friends.config.implementation;
 
 import eu.okaeri.configs.OkaeriConfig;
+import eu.okaeri.configs.annotation.Comment;
 import eu.okaeri.configs.annotation.NameModifier;
 import eu.okaeri.configs.annotation.NameStrategy;
 import eu.okaeri.configs.annotation.Names;
-import net.dzikoysk.cdn.entity.Description;
 import org.bukkit.Material;
 
 import java.util.List;
@@ -16,7 +16,7 @@ public class GuiConfig extends OkaeriConfig {
     public Guis guis = new Guis();
 
     public static class MenuItems extends OkaeriConfig {
-        @Description("# options of {status} placeholder")
+        @Comment("# options of {status} placeholder")
         public OnlineStatus onlineStatus =  new OnlineStatus();
 
         public FriendHead friendListHead = new FriendHead().setName("{status} <white>{friend_name}")
