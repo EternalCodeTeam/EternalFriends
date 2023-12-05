@@ -25,8 +25,8 @@ public class FriendManager {
         this.ignoredPlayerDatabaseService = ignoredPlayerDatabaseService;
         this.inviteManager = inviteManager;
 
-         this.friendDatabaseService.load(this.friends);
-         this.ignoredPlayerDatabaseService.load(this.ignoredPlayers);
+        this.friendDatabaseService.load(this.friends);
+        this.ignoredPlayerDatabaseService.load(this.ignoredPlayers);
     }
 
     public void addFriends(UUID uuid, UUID friendUUID) {

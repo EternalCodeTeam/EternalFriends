@@ -16,13 +16,13 @@ public class CommandConfigurator implements CommandEditor {
         PluginConfig.SubCommand subCommandsCfg = config.friendCommand.subCommands;
 
         return state
-                .name(config.friendCommand.main)
-                .editChild("kick", child -> child.name(subCommandsCfg.kick))
-                .editChild("accept", child -> child.name(subCommandsCfg.accept))
-                .editChild("deny", child -> child.name(subCommandsCfg.deny))
-                .editChild("list", child -> child.name(subCommandsCfg.list))
-                .editChild("help", child -> child.name(subCommandsCfg.help))
-                .editChild("ignore", child -> child.name(subCommandsCfg.ignore))
-                .editChild("invite", child -> child.name(subCommandsCfg.invite));
+            .name(config.friendCommand.main)
+            .editChild("kick", child -> child.name(subCommandsCfg.kick))
+            .editChild("accept", child -> child.name(subCommandsCfg.accept))
+            .editChild("deny", child -> child.name(subCommandsCfg.deny))
+            .editChild("list", child -> child.name(subCommandsCfg.list))
+            .editChild("help", child -> child.name(subCommandsCfg.help))
+            .editChild("ignore", child -> child.name(subCommandsCfg.ignore))
+            .editChild("invite", child -> child.name(subCommandsCfg.invite));
     }
 }

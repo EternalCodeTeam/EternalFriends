@@ -11,16 +11,16 @@ public class Legacy {
 
     public static final GsonComponentSerializer GSON_SERIALIZER = GsonComponentSerializer.gson();
     public static final LegacyComponentSerializer SECTION_SERIALIZER = LegacyComponentSerializer.builder()
-            .character('§')
-            .hexColors()
-            .useUnusualXRepeatedCharacterHexFormat()
-            .build();
+        .character('§')
+        .hexColors()
+        .useUnusualXRepeatedCharacterHexFormat()
+        .build();
 
     public static final LegacyComponentSerializer AMPERSAND_SERIALIZER = LegacyComponentSerializer.builder()
-            .character('&')
-            .hexColors()
-            .useUnusualXRepeatedCharacterHexFormat()
-            .build();
+        .character('&')
+        .hexColors()
+        .useUnusualXRepeatedCharacterHexFormat()
+        .build();
 
     private Legacy() {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");

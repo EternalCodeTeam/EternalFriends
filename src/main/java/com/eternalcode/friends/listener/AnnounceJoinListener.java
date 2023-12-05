@@ -43,7 +43,7 @@ public class AnnounceJoinListener implements Listener {
             }
 
             this.notificationAnnouncer.announceMessage(friendUuid, this.messagesConfig.friends.friendJoined
-                    .replace("{friend}", friend.getName())
+                .replace("{friend}", friend.getName())
             );
         }
     }

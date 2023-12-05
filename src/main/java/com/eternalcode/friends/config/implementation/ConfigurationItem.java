@@ -5,7 +5,8 @@ import org.bukkit.Material;
 
 import java.util.List;
 
-public interface ConfigItem<T> {
+public interface ConfigurationItem<T> {
+
     T setType(Material type);
 
     T setName(String name);

@@ -1,8 +1,11 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import net.minecrell.pluginyml.bukkit.BukkitPluginDescription.Permission.Default;
+import net.minecrell.pluginyml.bukkit.BukkitPluginDescription.Permission.Default
 
 plugins {
-    id("java")
+    `java-library`
+    checkstyle
+
+    id("org.openrewrite.rewrite") version("6.5.6")
+
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("net.minecrell.plugin-yml.bukkit") version "0.6.0"
     id("xyz.jpenilla.run-paper") version "2.2.2"
@@ -11,19 +14,33 @@ plugins {
 group = "com.eternalcode"
 version = "1.0.0"
 
+rewrite {
+    activeRecipe("org.openrewrite.staticanalysis.CodeCleanup")
+}
+
 repositories {
     gradlePluginPortal()
     mavenCentral()
-    mavenLocal()
 
     maven { url = uri("https://papermc.io/repo/repository/maven-public/") }
     maven { url = uri("https://repo.panda-lang.org/releases") }
     maven { url = uri("https://repo.dmulloy2.net/repository/public/") }
+    maven { url = uri("https://storehouse.okaeri.eu/repository/maven-public/") }
+}
+
+checkstyle {
+    toolVersion = "10.12.4"
+
+    configFile = file("${rootDir}/checkstyle/checkstyle.xml")
+    configProperties["checkstyle.suppressions.file"] = "${rootDir}/checkstyle/suppressions.xml"
+
+    maxErrors = 0
+    maxWarnings = 0
 }
 
 dependencies {
     // spigot api
-    compileOnly("org.spigotmc:spigot-api:1.19.3-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.20.2-R0.1-SNAPSHOT")
 
     // kyori adventure
     implementation("net.kyori:adventure-platform-bukkit:4.3.1")
@@ -32,8 +49,10 @@ dependencies {
     // litecommands
     implementation("dev.rollczi.litecommands:bukkit-adventure:2.8.9")
 
-    // cdn
-    implementation("net.dzikoysk:cdn:1.14.4")
+    // okaeri configs
+    val okaeriConfigsVersion = "5.0.0-beta.5"
+    implementation("eu.okaeri:okaeri-configs-yaml-snakeyaml:${okaeriConfigsVersion}")
+    implementation("eu.okaeri:okaeri-configs-serdes-commons:${okaeriConfigsVersion}")
 
     // bstats
     implementation("org.bstats:bstats-bukkit:3.0.2")
@@ -41,17 +60,20 @@ dependencies {
     // triumph gui
     implementation("dev.triumphteam:triumph-gui:3.1.7")
 
-    // HikariCP
-    implementation("com.zaxxer:HikariCP:5.1.0")
+    // panda-utilities
+    implementation("org.panda-lang:panda-utilities:0.5.2-alpha")
 
-    // MySQL
+    // Database
+    implementation("com.zaxxer:HikariCP:5.1.0")
     implementation("com.mysql:mysql-connector-j:8.2.0")
 
-    // protocollib
+    // ProtocolLib for managing friendship nametag's
     compileOnly("com.comphenix.protocol:ProtocolLib:5.1.0")
+
+    rewrite("org.openrewrite.recipe:rewrite-static-analysis:1.1.0")
 }
 
-tasks.withType<JavaCompile> {
+tasks.compileJava {
     options.encoding = "UTF-8"
 }
 
@@ -92,7 +114,7 @@ java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
 
-tasks.withType<ShadowJar> {
+tasks.shadowJar {
     archiveFileName.set("EternalFriends v${project.version}.jar")
 
     exclude(
@@ -102,8 +124,10 @@ tasks.withType<ShadowJar> {
         "javax/**",
     )
 
+    dependsOn("rewriteRun")
+    dependsOn("test")
+
     mergeServiceFiles()
-    minimize()
 
     val prefix = "com.eternalcode.friends.libs"
 
@@ -115,13 +139,15 @@ tasks.withType<ShadowJar> {
         "net.kyori",
         "dev.rollczi",
         "dev.triumphteam",
-    ).forEach { pack ->
-        relocate(pack, "$prefix.$pack")
-    }
+    ).forEach { relocate(it, prefix) }
 }
 
 tasks {
     runServer {
-        minecraftVersion("1.19.4")
+        minecraftVersion("1.20.1")
+
+        downloadPlugins {
+            hangar("protocolib", "5.1.0")
+        }
     }
 }

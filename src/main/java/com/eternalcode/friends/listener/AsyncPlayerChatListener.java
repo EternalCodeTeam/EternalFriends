@@ -34,8 +34,8 @@ public class AsyncPlayerChatListener implements Listener {
         event.setCancelled(true);
 
         String message = this.messages.friends.chatFormat
-                .replace("{player}", player.getName())
-                .replace("{message}", inputMessage.substring(1));
+            .replace("{player}", player.getName())
+            .replace("{message}", inputMessage.substring(1));
         this.announcer.announceMessage(player.getUniqueId(), message);
 
         for (UUID friend : this.friendManager.getFriends(player.getUniqueId())) {

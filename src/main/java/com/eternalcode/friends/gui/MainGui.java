@@ -25,6 +25,12 @@ import java.util.UUID;
 
 public class MainGui {
 
+    private static final int SETTINGS_ITEM_SLOT = 49;
+    private static final int NEXT_PAGE_ITEM_SLOT = 53;
+    private static final int BACK_PAGE_ITEM_SLOT = 45;
+    private static final int RECEIVED_ITEM_SLOT = 48;
+    private static final int CLOSE_ITEM_SLOT = 49;
+    private static final int SEND_ITEM_SLOT = 50;
     private final MiniMessage miniMessage;
     private final GuiConfig guiConfig;
     private final NotificationAnnouncer announcer;
@@ -36,12 +42,6 @@ public class MainGui {
     private final Server server;
     private final FriendManager friendManager;
     private final NameTagService nameTagService;
-    private static final int SETTINGS_ITEM_SLOT = 49;
-    private static final int NEXT_PAGE_ITEM_SLOT = 53;
-    private static final int BACK_PAGE_ITEM_SLOT = 45;
-    private static final int RECEIVED_ITEM_SLOT = 48;
-    private static final int CLOSE_ITEM_SLOT = 49;
-    private static final int SEND_ITEM_SLOT = 50;
 
 
     public MainGui(MiniMessage miniMessage,
@@ -69,25 +69,25 @@ public class MainGui {
         final GuiConfig.MenuItems menuItems = this.guiConfig.menuItems;
 
         PaginatedGui gui = Gui.paginated()
-                .title(this.miniMessage.deserialize(this.guiConfig.guis.mainGuiTitle))
-                .rows(6)
-                .pageSize(45)
-                .disableItemTake()
-                .create();
+            .title(this.miniMessage.deserialize(this.guiConfig.guis.mainGuiTitle))
+            .rows(6)
+            .pageSize(45)
+            .disableItemTake()
+            .create();
 
         GuiItem nextPageButton = ItemBuilder.from(Material.PAPER)
-                .name(AdventureUtil.RESET_ITEM.append(this.miniMessage.deserialize(menuItems.nextPageItem.name)))
-                .lore(menuItems.nextPageItem.lore.stream().map(line -> AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(line))).toList())
-                .asGuiItem(event -> {
-                    gui.next();
-                });
+            .name(AdventureUtil.RESET_ITEM.append(this.miniMessage.deserialize(menuItems.nextPageItem.name)))
+            .lore(menuItems.nextPageItem.lore.stream().map(line -> AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(line))).toList())
+            .asGuiItem(event -> {
+                gui.next();
+            });
 
         GuiItem backPageButton = ItemBuilder.from(Material.PAPER)
-                .name(AdventureUtil.RESET_ITEM.append(this.miniMessage.deserialize(menuItems.previousPageItem.name)))
-                .lore(menuItems.previousPageItem.lore.stream().map(line -> AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(line))).toList())
-                .asGuiItem(event -> {
-                    gui.previous();
-                });
+            .name(AdventureUtil.RESET_ITEM.append(this.miniMessage.deserialize(menuItems.previousPageItem.name)))
+            .lore(menuItems.previousPageItem.lore.stream().map(line -> AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(line))).toList())
+            .asGuiItem(event -> {
+                gui.previous();
+            });
 
         GuiItem sendInvitesItem = menuItems.sendInvitesItem.toGuiItem();
         sendInvitesItem.setAction(event -> {
@@ -110,7 +110,7 @@ public class MainGui {
 
             closeItemConfig.commandOnClick.forEach(command -> {
                 this.server.dispatchCommand(this.server.getConsoleSender(), command
-                        .replace("{player}", whoClicked.getName()));
+                    .replace("{player}", whoClicked.getName()));
             });
         });
 
@@ -138,14 +138,14 @@ public class MainGui {
         boolean isFriendOnline = friend != null && friend.isOnline();
 
         final GuiItem skull = ItemBuilder.skull()
-                .owner(this.server.getOfflinePlayer(friendUuid))
-                .name(AdventureUtil.RESET_ITEM.append(this.miniMessage.deserialize(this.guiConfig.menuItems.friendListHead.name
-                        .replace("{friend_name}", isFriendOnline ? friend.getName() : this.server.getOfflinePlayer(friendUuid).getName())
-                        .replace("{status}", isFriendOnline ? this.guiConfig.menuItems.onlineStatus.online : this.guiConfig.menuItems.onlineStatus.offline)
-                )))
-                .lore(this.guiConfig.menuItems.friendListHead.lore.stream()
-                        .map(line -> AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(line))).toList())
-                .asGuiItem();
+            .owner(this.server.getOfflinePlayer(friendUuid))
+            .name(AdventureUtil.RESET_ITEM.append(this.miniMessage.deserialize(this.guiConfig.menuItems.friendListHead.name
+                .replace("{friend_name}", isFriendOnline ? friend.getName() : this.server.getOfflinePlayer(friendUuid).getName())
+                .replace("{status}", isFriendOnline ? this.guiConfig.menuItems.onlineStatus.online : this.guiConfig.menuItems.onlineStatus.offline)
+            )))
+            .lore(this.guiConfig.menuItems.friendListHead.lore.stream()
+                .map(line -> AdventureUtil.RESET_ITEM.append(miniMessage.deserialize(line))).toList())
+            .asGuiItem();
 
         skull.setAction(event -> {
             if (!event.isLeftClick()) {
@@ -155,16 +155,16 @@ public class MainGui {
             this.confirmGUI.openInventory(player, () -> {
                 this.friendManager.removeFriends(player.getUniqueId(), friendUuid);
 
-                if(this.server.getOfflinePlayer(friendUuid).isOnline()) {
+                if (this.server.getOfflinePlayer(friendUuid).isOnline()) {
                     this.nameTagService.updateNameTagOfTwoNoFriends(player, this.server.getPlayer(friendUuid));
                 }
 
                 this.announcer.announceMessage(player.getUniqueId(), this.messages.friends.youKickedFriend
-                        .replace("{player}", server.getOfflinePlayer(friendUuid).getName()));
+                    .replace("{player}", server.getOfflinePlayer(friendUuid).getName()));
 
                 if (server.getOfflinePlayer(friendUuid).isOnline()) {
                     this.announcer.announceMessage(friendUuid, this.messages.friends.friendKickedYou
-                            .replace("{player}", player.getName()));
+                        .replace("{player}", player.getName()));
                 }
 
                 openMainGui(player);

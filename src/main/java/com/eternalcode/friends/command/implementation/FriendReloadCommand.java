@@ -1,7 +1,7 @@
 package com.eternalcode.friends.command.implementation;
 
 import com.eternalcode.friends.NotificationAnnouncer;
-import com.eternalcode.friends.config.ConfigManager;
+import com.eternalcode.friends.config.ConfigurationService;
 import com.eternalcode.friends.config.implementation.MessagesConfig;
 import dev.rollczi.litecommands.command.execute.Execute;
 import dev.rollczi.litecommands.command.permission.Permission;
@@ -13,20 +13,20 @@ public class FriendReloadCommand {
 
     private final NotificationAnnouncer announcer;
     private final MessagesConfig messages;
-    private final ConfigManager configManager;
     private final MessagesConfig.Friends friendsConfig;
+    private final ConfigurationService configurationService;
 
-    public FriendReloadCommand(NotificationAnnouncer announcer, MessagesConfig messages, ConfigManager configManager) {
+    public FriendReloadCommand(NotificationAnnouncer announcer, MessagesConfig messages, ConfigurationService configurationService) {
         this.announcer = announcer;
         this.messages = messages;
-        this.configManager = configManager;
+        this.configurationService = configurationService;
         this.friendsConfig = this.messages.friends;
     }
 
     @Execute(route = "reload")
     @Permission("eternalfriends.admin.reload")
     public void reload(CommandSender sender) {
-        this.configManager.reload();
+        this.configurationService.reload();
 
         this.announcer.announceMessage(sender, friendsConfig.configReloaded);
     }
