@@ -6,7 +6,7 @@ import dev.rollczi.litecommands.command.LiteInvocation;
 import dev.rollczi.litecommands.command.permission.RequiredPermissions;
 import dev.rollczi.litecommands.handle.PermissionHandler;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import panda.utilities.text.Formatter;
 import panda.utilities.text.Joiner;
 
 public class PermissionMessage implements PermissionHandler<CommandSender> {
@@ -21,10 +21,13 @@ public class PermissionMessage implements PermissionHandler<CommandSender> {
 
     @Override
     public void handle(CommandSender sender, LiteInvocation invocation, RequiredPermissions requiredPermissions) {
-        Player player = (Player) sender;
+        String value = Joiner.on(", ")
+                .join(requiredPermissions.getPermissions())
+                .toString();
 
-        this.announcer.announceMessage(player.getUniqueId(), this.messages.argument.missingPermission.replace("{permission}", Joiner.on(", ")
-            .join(requiredPermissions.getPermissions())
-            .toString()));
+        Formatter formatter = new Formatter()
+                .register("{PERMISSION}", value);
+
+        this.announcer.announceMessage(sender, formatter.format(this.messages.argument.missingPermission));
     }
 }

@@ -6,6 +6,9 @@ import dev.rollczi.litecommands.command.LiteInvocation;
 import dev.rollczi.litecommands.handle.InvalidUsageHandler;
 import dev.rollczi.litecommands.schematic.Schematic;
 import org.bukkit.command.CommandSender;
+import panda.utilities.text.Formatter;
+
+import java.util.List;
 
 public class InvalidUsage implements InvalidUsageHandler<CommandSender> {
 
@@ -19,10 +22,18 @@ public class InvalidUsage implements InvalidUsageHandler<CommandSender> {
 
     @Override
     public void handle(CommandSender sender, LiteInvocation invocation, Schematic schematic) {
-        schematic.getSchematics().forEach(str -> {
-            this.announcer.announceMessage(sender, str);
-        });
+        List<String> schematics = schematic.getSchematics();
 
-        this.announcer.announceMessage(sender, messages.argument.invalidUsage);
+        if (schematic.isOnlyFirst()) {
+            this.announcer.announceMessage(sender, this.messages.argument.invalidUsage);
+            return;
+        }
+
+        for (String scheme : schematics) {
+            Formatter formatter = new Formatter()
+                    .register("{USAGE}", scheme);
+
+            this.announcer.announceMessage(sender, formatter.format(this.messages.argument.invalidUsage));
+        }
     }
 }

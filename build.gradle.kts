@@ -60,6 +60,9 @@ dependencies {
     // triumph gui
     implementation("dev.triumphteam:triumph-gui:3.1.7")
 
+    // panda-utilities
+    implementation("org.panda-lang:panda-utilities:0.5.2-alpha")
+
     // Database
     implementation("com.zaxxer:HikariCP:5.1.0")
     implementation("com.mysql:mysql-connector-j:8.2.0")
