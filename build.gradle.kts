@@ -5,7 +5,7 @@ plugins {
     id("java")
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("net.minecrell.plugin-yml.bukkit") version "0.6.0"
-    id("xyz.jpenilla.run-paper") version "2.2.2"
+    id("xyz.jpenilla.run-paper") version "2.3.1"
 }
 
 group = "com.eternalcode"
@@ -26,26 +26,26 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.19.3-R0.1-SNAPSHOT")
 
     // kyori adventure
-    implementation("net.kyori:adventure-platform-bukkit:4.3.1")
-    implementation("net.kyori:adventure-text-minimessage:4.14.0")
+    implementation("net.kyori:adventure-platform-bukkit:4.3.4")
+    implementation("net.kyori:adventure-text-minimessage:4.17.0")
 
     // litecommands
     implementation("dev.rollczi.litecommands:bukkit-adventure:2.8.9")
 
     // cdn
-    implementation("net.dzikoysk:cdn:1.14.4")
+    implementation("net.dzikoysk:cdn:1.14.5")
 
     // bstats
-    implementation("org.bstats:bstats-bukkit:3.0.2")
+    implementation("org.bstats:bstats-bukkit:3.1.0")
 
     // triumph gui
-    implementation("dev.triumphteam:triumph-gui:3.1.7")
+    implementation("dev.triumphteam:triumph-gui:3.1.10")
 
     // HikariCP
-    implementation("com.zaxxer:HikariCP:5.1.0")
+    implementation("com.zaxxer:HikariCP:6.0.0")
 
     // MySQL
-    implementation("com.mysql:mysql-connector-j:8.2.0")
+    implementation("com.mysql:mysql-connector-j:9.0.0")
 
     // protocollib
     compileOnly("com.comphenix.protocol:ProtocolLib:5.1.0")
